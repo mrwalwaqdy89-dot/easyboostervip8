@@ -1,0 +1,1715 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Easy Booster - Social Media Growth Platform</title>
+    <meta name="description" content="Grow your social media presence with Easy Booster. Automated delivery, fast processing, and secure payments for Instagram, TikTok, Twitter, WhatsApp and more.">
+    <meta name="theme-color" content="#050505">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* ===== RESET & BASE ===== */
+        *, *::before, *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg: #050505;
+            --bg-surface: #0a0a0a;
+            --bg-elevated: #111111;
+            --bg-hover: #1a1a1a;
+            --border: #1a1a1a;
+            --border-light: #262626;
+            --text-primary: #fafafa;
+            --text-secondary: #a3a3a3;
+            --text-muted: #525252;
+            --accent: #22c55e;
+            --accent-muted: rgba(34, 197, 94, 0.15);
+            --accent-glow: rgba(34, 197, 94, 0.4);
+        }
+
+        html {
+            scroll-behavior: smooth;
+            -webkit-text-size-adjust: 100%;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: var(--bg);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: var(--bg); }
+        ::-webkit-scrollbar-thumb { background: var(--border-light); border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #333; }
+
+        ::selection {
+            background: var(--accent-muted);
+            color: var(--accent);
+        }
+
+        a { text-decoration: none; color: inherit; }
+        button { cursor: pointer; border: none; background: none; font-family: inherit; }
+        img { max-width: 100%; display: block; }
+
+        /* ===== UTILITIES ===== */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        .accent-text {
+            color: var(--accent);
+        }
+
+        .gradient-text {
+            background: linear-gradient(135deg, #22c55e 0%, #10b981 50%, #06b6d4 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* ===== ANIMATED GRID BACKGROUND ===== */
+        .grid-bg {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        .grid-bg::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background-image:
+                linear-gradient(var(--border) 1px, transparent 1px),
+                linear-gradient(90deg, var(--border) 1px, transparent 1px);
+            background-size: 80px 80px;
+            opacity: 0.4;
+            mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, black 30%, transparent 80%);
+            -webkit-mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, black 30%, transparent 80%);
+        }
+
+        .grid-bg::after {
+            content: '';
+            position: absolute;
+            top: -200px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 800px;
+            height: 600px;
+            background: radial-gradient(ellipse, var(--accent-muted) 0%, transparent 70%);
+            opacity: 0.5;
+            animation: glowPulse 8s ease-in-out infinite;
+        }
+
+        @keyframes glowPulse {
+            0%, 100% { opacity: 0.4; transform: translateX(-50%) scale(1); }
+            50% { opacity: 0.6; transform: translateX(-50%) scale(1.05); }
+        }
+
+        /* ===== SCROLL ANIMATIONS ===== */
+        .reveal {
+            opacity: 0;
+            transform: translateY(32px);
+            transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1), transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .reveal-delay-1 { transition-delay: 0.1s; }
+        .reveal-delay-2 { transition-delay: 0.2s; }
+        .reveal-delay-3 { transition-delay: 0.3s; }
+        .reveal-delay-4 { transition-delay: 0.4s; }
+        .reveal-delay-5 { transition-delay: 0.5s; }
+
+        /* ===== NAVIGATION ===== */
+        .nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            background: rgba(5, 5, 5, 0.8);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border);
+            transition: background 0.3s ease;
+        }
+
+        .nav-inner {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 64px;
+        }
+
+        .nav-logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.125rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            letter-spacing: -0.02em;
+        }
+
+        .nav-logo-icon {
+            width: 32px;
+            height: 32px;
+            background: var(--accent);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.3s ease;
+        }
+
+        .nav-logo:hover .nav-logo-icon {
+            transform: rotate(10deg) scale(1.08);
+        }
+
+        .nav-logo-icon i {
+            color: #050505;
+            font-size: 14px;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .nav-link {
+            padding: 6px 14px;
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+            border-radius: 6px;
+            transition: color 0.2s ease, background 0.2s ease;
+        }
+
+        .nav-link:hover {
+            color: var(--text-primary);
+            background: var(--bg-hover);
+        }
+
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 10px 20px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            border-radius: 8px;
+            transition: all 0.2s ease;
+            white-space: nowrap;
+        }
+
+        .btn-ghost {
+            color: var(--text-secondary);
+            border: 1px solid var(--border-light);
+            background: transparent;
+        }
+
+        .btn-ghost:hover {
+            color: var(--text-primary);
+            border-color: #333;
+            background: var(--bg-hover);
+        }
+
+        .btn-primary {
+            color: #050505;
+            background: var(--accent);
+            font-weight: 700;
+            box-shadow: 0 0 20px var(--accent-muted);
+        }
+
+        .btn-primary:hover {
+            background: #16a34a;
+            box-shadow: 0 0 30px var(--accent-glow);
+            transform: translateY(-1px);
+        }
+
+        .btn-lg {
+            padding: 14px 28px;
+            font-size: 1rem;
+            border-radius: 10px;
+        }
+
+        /* Mobile nav */
+        .nav-toggle {
+            display: none;
+            width: 40px;
+            height: 40px;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            color: var(--text-secondary);
+            transition: color 0.2s, background 0.2s;
+        }
+
+        .nav-toggle:hover {
+            color: var(--text-primary);
+            background: var(--bg-hover);
+        }
+
+        .mobile-nav {
+            display: none;
+            position: fixed;
+            top: 64px;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(5, 5, 5, 0.98);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            z-index: 99;
+            padding: 24px;
+            opacity: 0;
+            transform: translateY(-10px);
+            transition: opacity 0.3s ease, transform 0.3s ease;
+            pointer-events: none;
+        }
+
+        .mobile-nav.open {
+            opacity: 1;
+            transform: translateY(0);
+            pointer-events: auto;
+        }
+
+        .mobile-nav a {
+            display: block;
+            padding: 16px 0;
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            border-bottom: 1px solid var(--border);
+            transition: color 0.2s ease;
+        }
+
+        .mobile-nav a:hover { color: var(--text-primary); }
+
+        .mobile-nav .mobile-cta {
+            margin-top: 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .mobile-nav .mobile-cta .btn {
+            width: 100%;
+            justify-content: center;
+        }
+
+        @media (max-width: 768px) {
+            .nav-links, .nav-actions { display: none; }
+            .nav-toggle { display: flex; }
+            .mobile-nav { display: block; }
+        }
+
+        /* ===== HERO ===== */
+        .hero {
+            position: relative;
+            z-index: 1;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 120px 24px 80px;
+            text-align: center;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 14px;
+            background: var(--accent-muted);
+            border: 1px solid rgba(34, 197, 94, 0.25);
+            border-radius: 100px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--accent);
+            margin-bottom: 32px;
+        }
+
+        .hero-badge-dot {
+            width: 6px;
+            height: 6px;
+            background: var(--accent);
+            border-radius: 50%;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; box-shadow: 0 0 0 0 var(--accent-glow); }
+            50% { opacity: 0.7; box-shadow: 0 0 0 6px transparent; }
+        }
+
+        .hero h1 {
+            font-size: clamp(2.75rem, 7vw, 5rem);
+            font-weight: 900;
+            line-height: 1.05;
+            letter-spacing: -0.04em;
+            margin-bottom: 24px;
+            color: var(--text-primary);
+        }
+
+        .hero p {
+            font-size: clamp(1rem, 2vw, 1.25rem);
+            color: var(--text-secondary);
+            max-width: 560px;
+            margin: 0 auto 40px;
+            line-height: 1.7;
+        }
+
+        .hero-cta {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+            margin-bottom: 64px;
+        }
+
+        /* Platform icons */
+        .platform-strip {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            padding-top: 16px;
+        }
+
+        .platform-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            background: var(--bg-elevated);
+            border: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-muted);
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+        }
+
+        .platform-icon:hover {
+            color: var(--text-primary);
+            border-color: var(--border-light);
+            transform: translateY(-4px);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+        }
+
+        .platform-icon svg {
+            width: 18px;
+            height: 18px;
+            fill: currentColor;
+        }
+
+        /* ===== SECTIONS ===== */
+        section {
+            position: relative;
+            z-index: 1;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 56px;
+        }
+
+        .section-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 5px 14px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--accent);
+            background: var(--accent-muted);
+            border: 1px solid rgba(34, 197, 94, 0.2);
+            border-radius: 100px;
+            margin-bottom: 16px;
+        }
+
+        .section-title {
+            font-size: clamp(1.75rem, 4vw, 2.75rem);
+            font-weight: 800;
+            letter-spacing: -0.03em;
+            margin-bottom: 12px;
+            color: var(--text-primary);
+            line-height: 1.15;
+        }
+
+        .section-desc {
+            font-size: 1.05rem;
+            color: var(--text-secondary);
+            max-width: 540px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+
+        /* ===== PLATFORMS SECTION ===== */
+        .platforms {
+            padding: 100px 24px;
+        }
+
+        .platforms-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1px;
+            background: var(--border);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            overflow: hidden;
+        }
+
+        .platform-card {
+            background: var(--bg-surface);
+            padding: 36px 28px;
+            transition: background 0.3s ease;
+            position: relative;
+        }
+
+        .platform-card:hover {
+            background: var(--bg-elevated);
+        }
+
+        .platform-card-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+            margin-bottom: 20px;
+            transition: transform 0.3s ease;
+        }
+
+        .platform-card:hover .platform-card-icon {
+            transform: scale(1.1);
+        }
+
+        .platform-card h3 {
+            font-size: 1.125rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: var(--text-primary);
+        }
+
+        .platform-card p {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            line-height: 1.6;
+            margin-bottom: 16px;
+        }
+
+        .platform-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+
+        .platform-tag {
+            font-size: 0.7rem;
+            font-weight: 600;
+            padding: 3px 10px;
+            border-radius: 100px;
+            border: 1px solid;
+        }
+
+        .tag-live {
+            color: var(--accent);
+            border-color: rgba(34, 197, 94, 0.3);
+            background: rgba(34, 197, 94, 0.08);
+        }
+
+        .tag-soon {
+            color: #eab308;
+            border-color: rgba(234, 179, 8, 0.25);
+            background: rgba(234, 179, 8, 0.06);
+        }
+
+        .tag-default {
+            color: var(--text-secondary);
+            border-color: var(--border-light);
+            background: var(--bg-hover);
+        }
+
+        @media (max-width: 768px) {
+            .platforms-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (min-width: 769px) and (max-width: 1024px) {
+            .platforms-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        /* ===== STATS ===== */
+        .stats {
+            padding: 80px 24px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .stat-card {
+            background: var(--bg-surface);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 32px;
+            text-align: center;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--accent), #06b6d4);
+            transform: scaleX(0);
+            transition: transform 0.4s ease;
+        }
+
+        .stat-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .stat-card:hover {
+            border-color: var(--border-light);
+            transform: translateY(-4px);
+            box-shadow: 0 16px 48px rgba(0,0,0,0.3);
+        }
+
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: 900;
+            letter-spacing: -0.03em;
+            margin-bottom: 4px;
+        }
+
+        .stat-label {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        .stat-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--accent);
+            margin-top: 8px;
+        }
+
+        @media (max-width: 500px) {
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* ===== FEATURES ===== */
+        .features {
+            padding: 100px 24px;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+        }
+
+        .feature-card {
+            background: var(--bg-surface);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 32px 28px;
+            transition: all 0.3s ease;
+        }
+
+        .feature-card:hover {
+            border-color: var(--border-light);
+            transform: translateY(-4px);
+            box-shadow: 0 16px 48px rgba(0,0,0,0.3);
+        }
+
+        .feature-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            background: var(--accent-muted);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--accent);
+            font-size: 1.15rem;
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .feature-card:hover .feature-icon {
+            background: var(--accent);
+            color: #050505;
+            transform: scale(1.08);
+        }
+
+        .feature-card h3 {
+            font-size: 1.05rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: var(--text-primary);
+        }
+
+        .feature-card p {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            line-height: 1.65;
+        }
+
+        @media (max-width: 768px) {
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (min-width: 769px) and (max-width: 1024px) {
+            .features-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        /* ===== HOW IT WORKS ===== */
+        .steps {
+            padding: 100px 24px;
+        }
+
+        .steps-list {
+            max-width: 700px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .step-card {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+            background: var(--bg-surface);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 28px 32px;
+            transition: all 0.3s ease;
+        }
+
+        .step-card:hover {
+            border-color: var(--border-light);
+            background: var(--bg-elevated);
+        }
+
+        .step-num {
+            width: 56px;
+            height: 56px;
+            min-width: 56px;
+            background: var(--accent);
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+            font-weight: 900;
+            color: #050505;
+        }
+
+        .step-content h3 {
+            font-size: 1.05rem;
+            font-weight: 700;
+            margin-bottom: 4px;
+            color: var(--text-primary);
+        }
+
+        .step-content p {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        @media (max-width: 500px) {
+            .step-card {
+                flex-direction: column;
+                text-align: center;
+                padding: 24px;
+            }
+        }
+
+        /* ===== FAQ ===== */
+        .faq {
+            padding: 100px 24px;
+        }
+
+        .faq-list {
+            max-width: 700px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .faq-item {
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            overflow: hidden;
+            transition: border-color 0.3s ease;
+        }
+
+        .faq-item:hover {
+            border-color: var(--border-light);
+        }
+
+        .faq-item.open {
+            border-color: rgba(34, 197, 94, 0.2);
+        }
+
+        .faq-trigger {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 18px 24px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            background: var(--bg-surface);
+            text-align: left;
+            transition: background 0.2s ease;
+        }
+
+        .faq-trigger:hover {
+            background: var(--bg-elevated);
+        }
+
+        .faq-chevron {
+            transition: transform 0.3s ease;
+            color: var(--text-muted);
+            font-size: 0.75rem;
+        }
+
+        .faq-item.open .faq-chevron {
+            transform: rotate(180deg);
+            color: var(--accent);
+        }
+
+        .faq-body {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .faq-item.open .faq-body {
+            max-height: 300px;
+        }
+
+        .faq-body-inner {
+            padding: 0 24px 20px;
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            line-height: 1.7;
+        }
+
+        /* ===== CTA SECTION ===== */
+        .cta-section {
+            padding: 80px 24px 100px;
+        }
+
+        .cta-box {
+            max-width: 700px;
+            margin: 0 auto;
+            text-align: center;
+            background: var(--bg-surface);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 56px 40px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-box::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 200px;
+            height: 200px;
+            background: radial-gradient(circle, var(--accent-muted) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .cta-box h2 {
+            font-size: clamp(1.5rem, 3vw, 2.25rem);
+            font-weight: 800;
+            letter-spacing: -0.03em;
+            margin-bottom: 12px;
+            position: relative;
+        }
+
+        .cta-box p {
+            font-size: 1rem;
+            color: var(--text-secondary);
+            margin-bottom: 28px;
+            position: relative;
+        }
+
+        .cta-box .btn {
+            position: relative;
+        }
+
+        /* ===== FOOTER ===== */
+        .footer {
+            position: relative;
+            z-index: 1;
+            border-top: 1px solid var(--border);
+            padding: 64px 24px 40px;
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: 1.5fr 1fr 1fr 1fr;
+            gap: 48px;
+            margin-bottom: 48px;
+        }
+
+        .footer-brand p {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            line-height: 1.7;
+            margin-top: 16px;
+            max-width: 280px;
+        }
+
+        .footer h4 {
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: var(--text-muted);
+            margin-bottom: 16px;
+        }
+
+        .footer-links {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .footer-links a {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            transition: color 0.2s ease;
+        }
+
+        .footer-links a:hover {
+            color: var(--text-primary);
+        }
+
+        .footer-social {
+            display: flex;
+            gap: 10px;
+            margin-top: 4px;
+        }
+
+        .footer-social a {
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            transition: all 0.2s ease;
+        }
+
+        .footer-social a:hover {
+            color: var(--text-primary);
+            border-color: var(--border-light);
+            background: var(--bg-hover);
+        }
+
+        .footer-bottom {
+            border-top: 1px solid var(--border);
+            padding-top: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .footer-bottom p {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        @media (max-width: 768px) {
+            .footer-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 32px;
+            }
+        }
+
+        @media (max-width: 500px) {
+            .footer-grid {
+                grid-template-columns: 1fr;
+                gap: 28px;
+            }
+        }
+
+        /* ===== DIVIDER ===== */
+        .divider {
+            height: 1px;
+            background: var(--border);
+            margin: 0 auto;
+            max-width: 1200px;
+        }
+
+        /* ===== SCROLLING MARQUEE (Live status) ===== */
+        .marquee-wrapper {
+            overflow: hidden;
+            padding: 20px 0;
+            border-top: 1px solid var(--border);
+            border-bottom: 1px solid var(--border);
+            background: var(--bg-surface);
+        }
+
+        .marquee-track {
+            display: flex;
+            gap: 48px;
+            animation: marqueeScroll 30s linear infinite;
+            width: max-content;
+        }
+
+        .marquee-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+            white-space: nowrap;
+        }
+
+        .marquee-item i {
+            color: var(--accent);
+            font-size: 0.75rem;
+        }
+
+        @keyframes marqueeScroll {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+    </style>
+</head>
+<body>
+    <!-- Grid Background -->
+    <div class="grid-bg" aria-hidden="true"></div>
+
+    <!-- Demo Mode Banner -->
+    <div id="demo-banner" style="display:none; position:fixed; top:0; left:0; right:0; z-index:9999; background:linear-gradient(90deg,#7c3aed,#db2777); color:#fff; text-align:center; padding:10px 16px; font-size:14px; font-weight:600; box-shadow:0 2px 12px rgba(0,0,0,0.4);" role="status" aria-live="polite">
+        <i class="fas fa-eye" aria-hidden="true" style="margin-right:8px;"></i>
+        Demo Mode — Read-only access. You are viewing a live preview of the user dashboard.
+        <a href="/demo/logout" style="margin-left:16px; padding:4px 14px; background:rgba(255,255,255,0.2); border-radius:20px; color:#fff; text-decoration:none; font-size:13px;" aria-label="Exit demo mode">Exit Demo</a>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="nav" role="navigation" aria-label="Main navigation">
+        <div class="container nav-inner">
+            <a href="/" class="nav-logo" aria-label="Easy Booster Home">
+                <div class="nav-logo-icon">
+                    <i class="fas fa-bolt"></i>
+                </div>
+                <span>Easy Booster</span>
+            </a>
+
+            <div class="nav-links" role="menubar">
+                <a href="#platforms" class="nav-link" role="menuitem">Platforms</a>
+                <a href="#features" class="nav-link" role="menuitem">Features</a>
+                <a href="#stats" class="nav-link" role="menuitem">Stats</a>
+                <a href="#how-it-works" class="nav-link" role="menuitem">How It Works</a>
+                <a href="#faq" class="nav-link" role="menuitem">FAQ</a>
+            </div>
+
+            <div class="nav-actions">
+                <a href="/login" class="btn btn-ghost">Log In</a>
+                <a href="#" onclick="handleStartReacting(event)" class="btn btn-primary">Get Started <i class="fas fa-arrow-right" style="font-size:0.75rem"></i></a>
+            </div>
+
+            <button class="nav-toggle" id="nav-toggle" aria-label="Toggle navigation menu" aria-expanded="false">
+                <i class="fas fa-bars" style="font-size:1.15rem"></i>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Mobile Navigation -->
+    <div class="mobile-nav" id="mobile-nav" role="navigation" aria-label="Mobile navigation">
+        <a href="#platforms" class="mobile-link">Platforms</a>
+        <a href="#features" class="mobile-link">Features</a>
+        <a href="#stats" class="mobile-link">Stats</a>
+        <a href="#how-it-works" class="mobile-link">How It Works</a>
+        <a href="#faq" class="mobile-link">FAQ</a>
+        <div class="mobile-cta">
+            <a href="/login" class="btn btn-ghost">Log In</a>
+            <a href="#" onclick="handleStartReacting(event)" class="btn btn-primary">Get Started</a>
+        </div>
+    </div>
+
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+        <div class="container" style="max-width:800px;">
+            <div class="reveal visible">
+                <div class="hero-badge">
+                    <span class="hero-badge-dot"></span>
+                    All Systems Online
+                </div>
+            </div>
+
+            <h1 class="reveal visible reveal-delay-1">
+                The all&#8209;in&#8209;one<br>
+                <span class="gradient-text">social growth</span> platform.
+            </h1>
+
+            <p class="reveal visible reveal-delay-2">
+                Automated delivery for Instagram, TikTok, Twitter, WhatsApp and more. Fast processing, secure payments, real results.
+            </p>
+
+            <div class="hero-cta reveal visible reveal-delay-3">
+                <a href="#" onclick="handleStartReacting(event)" class="btn btn-primary btn-lg">
+                    Start Growing
+                    <i class="fas fa-arrow-right" style="font-size:0.8rem"></i>
+                </a>
+                <a href="#platforms" class="btn btn-ghost btn-lg">
+                    View Platforms
+                </a>
+            </div>
+
+            <div class="platform-strip reveal visible reveal-delay-4">
+                <div class="platform-icon" title="Instagram">
+                    <i class="fab fa-instagram"></i>
+                </div>
+                <div class="platform-icon" title="TikTok">
+                    <i class="fab fa-tiktok"></i>
+                </div>
+                <div class="platform-icon" title="X (Twitter)">
+                    <svg viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+                </div>
+                <div class="platform-icon" title="WhatsApp">
+                    <i class="fab fa-whatsapp"></i>
+                </div>
+                <div class="platform-icon" title="Threads">
+                    <i class="fab fa-threads"></i>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Scrolling Marquee -->
+    <div class="marquee-wrapper" aria-hidden="true">
+        <div class="marquee-track">
+            <span class="marquee-item"><i class="fas fa-check-circle"></i> Instant Delivery</span>
+            <span class="marquee-item"><i class="fas fa-check-circle"></i> USDT Payments</span>
+            <span class="marquee-item"><i class="fas fa-check-circle"></i> 24/7 Automation</span>
+            <span class="marquee-item"><i class="fas fa-check-circle"></i> WhatsApp Reactions Live</span>
+            <span class="marquee-item"><i class="fas fa-check-circle"></i> Real-Time Dashboard</span>
+            <span class="marquee-item"><i class="fas fa-check-circle"></i> 99.9% Uptime</span>
+            <span class="marquee-item"><i class="fas fa-check-circle"></i> Secure & Private</span>
+            <span class="marquee-item"><i class="fas fa-check-circle"></i> Scalable Growth</span>
+            <!-- Duplicate for seamless loop -->
+            <span class="marquee-item"><i class="fas fa-check-circle"></i> Instant Delivery</span>
+            <span class="marquee-item"><i class="fas fa-check-circle"></i> USDT Payments</span>
+            <span class="marquee-item"><i class="fas fa-check-circle"></i> 24/7 Automation</span>
+            <span class="marquee-item"><i class="fas fa-check-circle"></i> WhatsApp Reactions Live</span>
+            <span class="marquee-item"><i class="fas fa-check-circle"></i> Real-Time Dashboard</span>
+            <span class="marquee-item"><i class="fas fa-check-circle"></i> 99.9% Uptime</span>
+            <span class="marquee-item"><i class="fas fa-check-circle"></i> Secure & Private</span>
+            <span class="marquee-item"><i class="fas fa-check-circle"></i> Scalable Growth</span>
+        </div>
+    </div>
+
+    <!-- Platforms Section -->
+    <section class="platforms" id="platforms">
+        <div class="container">
+            <div class="section-header">
+                <div class="section-tag reveal">
+                    <i class="fas fa-th-large" style="font-size:0.65rem"></i>
+                    Platforms
+                </div>
+                <h2 class="section-title reveal reveal-delay-1">Supported platforms</h2>
+                <p class="section-desc reveal reveal-delay-2">Grow your audience across all major social networks</p>
+            </div>
+
+            <div class="platforms-grid reveal reveal-delay-3">
+                <!-- Instagram -->
+                <div class="platform-card">
+                    <div class="platform-card-icon" style="background:rgba(225,48,108,0.12); color:#E1306C;">
+                        <i class="fab fa-instagram"></i>
+                    </div>
+                    <h3>Instagram</h3>
+                    <p>Followers, likes, comments, views, and story engagement to grow your presence.</p>
+                    <div class="platform-tags">
+                        <span class="platform-tag tag-default">Followers</span>
+                        <span class="platform-tag tag-default">Likes</span>
+                        <span class="platform-tag tag-live">Active</span>
+                    </div>
+                </div>
+
+                <!-- TikTok -->
+                <div class="platform-card">
+                    <div class="platform-card-icon" style="background:rgba(255,255,255,0.08); color:#fff;">
+                        <i class="fab fa-tiktok"></i>
+                    </div>
+                    <h3>TikTok</h3>
+                    <p>Boost your TikTok with followers, likes, shares, saves, and battle points.</p>
+                    <div class="platform-tags">
+                        <span class="platform-tag tag-default">Followers</span>
+                        <span class="platform-tag tag-default">Likes</span>
+                        <span class="platform-tag tag-live">Active</span>
+                    </div>
+                </div>
+
+                <!-- Twitter/X -->
+                <div class="platform-card">
+                    <div class="platform-card-icon" style="background:rgba(255,255,255,0.08); color:#fff;">
+                        <svg viewBox="0 0 24 24" style="width:20px;height:20px;fill:currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+                    </div>
+                    <h3>Twitter (X)</h3>
+                    <p>Increase your X presence with followers, likes, retweets, and engagement.</p>
+                    <div class="platform-tags">
+                        <span class="platform-tag tag-default">Followers</span>
+                        <span class="platform-tag tag-default">Likes</span>
+                        <span class="platform-tag tag-live">Active</span>
+                    </div>
+                </div>
+
+                <!-- WhatsApp -->
+                <div class="platform-card">
+                    <div class="platform-card-icon" style="background:rgba(37,211,102,0.12); color:#25D366;">
+                        <i class="fab fa-whatsapp"></i>
+                    </div>
+                    <h3>WhatsApp</h3>
+                    <p>Grow your WhatsApp Channel with followers and automated emoji reactions.</p>
+                    <div class="platform-tags">
+                        <span class="platform-tag tag-live">Followers</span>
+                        <span class="platform-tag tag-live">Reactions</span>
+                        <span class="platform-tag tag-live">Live</span>
+                    </div>
+                </div>
+
+                <!-- Threads -->
+                <div class="platform-card">
+                    <div class="platform-card-icon" style="background:rgba(255,255,255,0.08); color:#fff;">
+                        <i class="fab fa-threads"></i>
+                    </div>
+                    <h3>Threads</h3>
+                    <p>Build your Threads community with followers, likes, and engagement.</p>
+                    <div class="platform-tags">
+                        <span class="platform-tag tag-default">Followers</span>
+                        <span class="platform-tag tag-default">Likes</span>
+                        <span class="platform-tag tag-live">Active</span>
+                    </div>
+                </div>
+
+                <!-- More Coming -->
+                <div class="platform-card" style="border-left: 1px dashed var(--border-light);">
+                    <div class="platform-card-icon" style="background:var(--accent-muted); color:var(--accent);">
+                        <i class="fas fa-plus"></i>
+                    </div>
+                    <h3>More Coming</h3>
+                    <p>We are constantly adding new platforms. Stay tuned for updates.</p>
+                    <div class="platform-tags">
+                        <span class="platform-tag tag-default">YouTube</span>
+                        <span class="platform-tag tag-default">Telegram</span>
+                        <span class="platform-tag tag-default">+ More</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats Section -->
+    <section class="stats" id="stats">
+        <div class="container">
+            <div class="section-header">
+                <div class="section-tag reveal">
+                    <i class="fas fa-chart-bar" style="font-size:0.65rem"></i>
+                    Stats
+                </div>
+                <h2 class="section-title reveal reveal-delay-1">Trusted by thousands</h2>
+                <p class="section-desc reveal reveal-delay-2">Real-time metrics showing our platform's reliability</p>
+            </div>
+
+            <div class="stats-grid reveal reveal-delay-3">
+                <div class="stat-card">
+                    <div class="stat-value gradient-text" id="request-count">0</div>
+                    <div class="stat-label">Orders Delivered</div>
+                    <div class="stat-indicator">
+                        <i class="fas fa-check-circle"></i>
+                        <span>Successfully processed</span>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value gradient-text" id="uptime-display">0d 0h</div>
+                    <div class="stat-label">System Uptime</div>
+                    <div class="stat-indicator">
+                        <i class="fas fa-shield-alt"></i>
+                        <span>99.9% guarantee</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="divider"></div>
+
+    <!-- Features Section -->
+    <section class="features" id="features">
+        <div class="container">
+            <div class="section-header">
+                <div class="section-tag reveal">
+                    <i class="fas fa-star" style="font-size:0.65rem"></i>
+                    Features
+                </div>
+                <h2 class="section-title reveal reveal-delay-1">Why Easy Booster?</h2>
+                <p class="section-desc reveal reveal-delay-2">Everything you need to scale your social media presence</p>
+            </div>
+
+            <div class="features-grid">
+                <div class="feature-card reveal">
+                    <div class="feature-icon">
+                        <i class="fas fa-robot"></i>
+                    </div>
+                    <h3>Automated Delivery</h3>
+                    <p>Set up once, let automation do the work. Our system processes orders 24/7 without interruption.</p>
+                </div>
+
+                <div class="feature-card reveal reveal-delay-1">
+                    <div class="feature-icon">
+                        <i class="fas fa-bolt"></i>
+                    </div>
+                    <h3>Fast Processing</h3>
+                    <p>Lightning-fast order processing. See results within seconds to minutes, not hours or days.</p>
+                </div>
+
+                <div class="feature-card reveal reveal-delay-2">
+                    <div class="feature-icon">
+                        <i class="fas fa-lock"></i>
+                    </div>
+                    <h3>Secure Payments</h3>
+                    <p>Transactions protected with USDT-TRC20 payments. We never store sensitive data.</p>
+                </div>
+
+                <div class="feature-card reveal reveal-delay-3">
+                    <div class="feature-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <h3>Scalable Growth</h3>
+                    <p>Start small and scale up. Our platform grows with your needs, from beginners to power users.</p>
+                </div>
+
+                <div class="feature-card reveal reveal-delay-4">
+                    <div class="feature-icon">
+                        <i class="fas fa-gauge-high"></i>
+                    </div>
+                    <h3>Dashboard Control</h3>
+                    <p>Full control from your dashboard. Track orders, manage services, and monitor performance live.</p>
+                </div>
+
+                <div class="feature-card reveal reveal-delay-5">
+                    <div class="feature-icon">
+                        <i class="fas fa-headset"></i>
+                    </div>
+                    <h3>24/7 Support</h3>
+                    <p>Our support team is available around the clock via WhatsApp to assist you with anything.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works -->
+    <section class="steps" id="how-it-works">
+        <div class="container">
+            <div class="section-header">
+                <div class="section-tag reveal">
+                    <i class="fas fa-lightbulb" style="font-size:0.65rem"></i>
+                    How It Works
+                </div>
+                <h2 class="section-title reveal reveal-delay-1">Three simple steps</h2>
+                <p class="section-desc reveal reveal-delay-2">Start growing your social media in minutes</p>
+            </div>
+
+            <div class="steps-list">
+                <div class="step-card reveal">
+                    <div class="step-num">1</div>
+                    <div class="step-content">
+                        <h3>Create Your Account</h3>
+                        <p>Sign up in seconds with Google. No complicated forms or verification needed.</p>
+                    </div>
+                </div>
+
+                <div class="step-card reveal reveal-delay-1">
+                    <div class="step-num">2</div>
+                    <div class="step-content">
+                        <h3>Choose Your Service</h3>
+                        <p>Pick your platform, enter your target, and customize your order to fit your goals.</p>
+                    </div>
+                </div>
+
+                <div class="step-card reveal reveal-delay-2">
+                    <div class="step-num">3</div>
+                    <div class="step-content">
+                        <h3>Watch Your Growth</h3>
+                        <p>Sit back and track progress in real-time from your dashboard as your presence grows.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div style="text-align:center; margin-top:40px;" class="reveal reveal-delay-3">
+                <a href="#" onclick="handleStartReacting(event)" class="btn btn-primary btn-lg">
+                    Start Growing Now
+                    <i class="fas fa-arrow-right" style="font-size:0.8rem"></i>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <div class="divider"></div>
+
+    <!-- FAQ Section -->
+    <section class="faq" id="faq">
+        <div class="container">
+            <div class="section-header">
+                <div class="section-tag reveal">
+                    <i class="fas fa-circle-question" style="font-size:0.65rem"></i>
+                    FAQ
+                </div>
+                <h2 class="section-title reveal reveal-delay-1">Frequently asked questions</h2>
+                <p class="section-desc reveal reveal-delay-2">Everything you need to know about our services</p>
+            </div>
+
+            <div class="faq-list reveal reveal-delay-3">
+                <div class="faq-item">
+                    <button class="faq-trigger" aria-expanded="false">
+                        <span>What is Easy Booster?</span>
+                        <i class="fas fa-chevron-down faq-chevron"></i>
+                    </button>
+                    <div class="faq-body">
+                        <div class="faq-body-inner">Easy Booster is an all-in-one social media marketing platform that helps you grow your presence across Instagram, TikTok, Twitter (X), WhatsApp, and Threads. We offer automated services for followers, likes, comments, and engagement.</div>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <button class="faq-trigger" aria-expanded="false">
+                        <span>Which platforms do you support?</span>
+                        <i class="fas fa-chevron-down faq-chevron"></i>
+                    </button>
+                    <div class="faq-body">
+                        <div class="faq-body-inner">We currently support Instagram, TikTok, Twitter (X), Threads, Facebook, and WhatsApp. All platforms are live and actively delivering services. We are constantly expanding to support more networks.</div>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <button class="faq-trigger" aria-expanded="false">
+                        <span>Is your service safe to use?</span>
+                        <i class="fas fa-chevron-down faq-chevron"></i>
+                    </button>
+                    <div class="faq-body">
+                        <div class="faq-body-inner">Absolutely. We use secure connections, encrypted payments, and never store sensitive information. Your accounts and data are completely safe with us.</div>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <button class="faq-trigger" aria-expanded="false">
+                        <span>How fast are orders processed?</span>
+                        <i class="fas fa-chevron-down faq-chevron"></i>
+                    </button>
+                    <div class="faq-body">
+                        <div class="faq-body-inner">Our automated system processes orders in real-time. Most orders start within seconds to minutes. You can track progress directly from your dashboard.</div>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <button class="faq-trigger" aria-expanded="false">
+                        <span>What payment methods do you accept?</span>
+                        <i class="fas fa-chevron-down faq-chevron"></i>
+                    </button>
+                    <div class="faq-body">
+                        <div class="faq-body-inner">We accept USDT (TRC20) cryptocurrency payments, processed automatically and securely. Your transaction history is available in your dashboard at all times.</div>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <button class="faq-trigger" aria-expanded="false">
+                        <span>Do I need to install anything?</span>
+                        <i class="fas fa-chevron-down faq-chevron"></i>
+                    </button>
+                    <div class="faq-body">
+                        <div class="faq-body-inner">Not at all. Easy Booster is completely web-based. Simply sign in with Google and you are good to go. No downloads, no installations.</div>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <button class="faq-trigger" aria-expanded="false">
+                        <span>How can I get support?</span>
+                        <i class="fas fa-chevron-down faq-chevron"></i>
+                    </button>
+                    <div class="faq-body">
+                        <div class="faq-body-inner">Reach our support team anytime via WhatsApp or through the help section in your dashboard. We are committed to providing the best experience possible.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta-section">
+        <div class="container">
+            <div class="cta-box reveal">
+                <h2>Ready to grow?</h2>
+                <p>Join thousands of creators using Easy Booster to scale their social media.</p>
+                <a href="#" onclick="handleStartReacting(event)" class="btn btn-primary btn-lg">
+                    Get Started Free
+                    <i class="fas fa-arrow-right" style="font-size:0.8rem"></i>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-brand">
+                    <a href="/" class="nav-logo">
+                        <div class="nav-logo-icon">
+                            <i class="fas fa-bolt"></i>
+                        </div>
+                        <span>Easy Booster</span>
+                    </a>
+                    <p>Your all-in-one social media growth platform. Automated, reliable, and secure SMM services for creators and businesses.</p>
+                </div>
+
+                <div>
+                    <h4>Product</h4>
+                    <ul class="footer-links">
+                        <li><a href="#platforms">Platforms</a></li>
+                        <li><a href="#features">Features</a></li>
+                        <li><a href="#stats">Statistics</a></li>
+                        <li><a href="/pricing">Pricing</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h4>Support</h4>
+                    <ul class="footer-links">
+                        <li><a href="#faq">FAQ</a></li>
+                        <li><a href="/terms">Terms of Service</a></li>
+                        <li><a href="https://wa.me/13056978303" target="_blank" rel="noopener noreferrer">WhatsApp Support</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h4>Connect</h4>
+                    <div class="footer-social">
+                        <a href="https://wa.me/13056978303" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp">
+                            <i class="fab fa-whatsapp"></i>
+                        </a>
+                        <a href="#" aria-label="Telegram">
+                            <i class="fab fa-telegram-plane"></i>
+                        </a>
+                        <a href="#" aria-label="Instagram">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <p>&copy; 2025 Easy Booster. All rights reserved.</p>
+                <p>Powered by <span style="color:var(--accent)">Asitha</span></p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script>
+        // ===== SCROLL REVEAL =====
+        const revealObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, { threshold: 0.08, rootMargin: '0px 0px -60px 0px' });
+
+        document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+
+        // ===== MOBILE NAV =====
+        const navToggle = document.getElementById('nav-toggle');
+        const mobileNav = document.getElementById('mobile-nav');
+        let menuOpen = false;
+
+        navToggle.addEventListener('click', () => {
+            menuOpen = !menuOpen;
+            mobileNav.classList.toggle('open', menuOpen);
+            navToggle.querySelector('i').className = menuOpen ? 'fas fa-times' : 'fas fa-bars';
+            navToggle.setAttribute('aria-expanded', menuOpen);
+            document.body.style.overflow = menuOpen ? 'hidden' : '';
+        });
+
+        // Close mobile nav on link click
+        mobileNav.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => {
+                menuOpen = false;
+                mobileNav.classList.remove('open');
+                navToggle.querySelector('i').className = 'fas fa-bars';
+                navToggle.setAttribute('aria-expanded', 'false');
+                document.body.style.overflow = '';
+            });
+        });
+
+        // ===== FAQ ACCORDION =====
+        document.querySelectorAll('.faq-trigger').forEach(trigger => {
+            trigger.addEventListener('click', () => {
+                const item = trigger.closest('.faq-item');
+                const isOpen = item.classList.contains('open');
+
+                // Close all
+                document.querySelectorAll('.faq-item').forEach(i => {
+                    i.classList.remove('open');
+                    i.querySelector('.faq-trigger').setAttribute('aria-expanded', 'false');
+                });
+
+                // Open clicked if was closed
+                if (!isOpen) {
+                    item.classList.add('open');
+                    trigger.setAttribute('aria-expanded', 'true');
+                }
+            });
+        });
+
+        // ===== SMOOTH SCROLL (anchor links) =====
+        document.querySelectorAll('a[href^="#"]').forEach(a => {
+            a.addEventListener('click', (e) => {
+                const href = a.getAttribute('href');
+                if (href === '#') return;
+                e.preventDefault();
+                const target = document.querySelector(href);
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
+
+        // ===== AUTH CHECK FOR CTA =====
+        async function handleStartReacting(event) {
+            event.preventDefault();
+            try {
+                const response = await fetch('/api/auth/status');
+                const data = await response.json();
+                window.location.href = data.authenticated ? '/reactch' : '/login';
+            } catch (error) {
+                window.location.href = '/login';
+            }
+        }
+
+        // ===== LIVE STATS =====
+        async function updateStatistics() {
+            try {
+                const response = await fetch('/api/stats');
+                const result = await response.json();
+                if (result.success) {
+                    const { requestCount, uptime } = result.data;
+                    const el = document.getElementById('request-count');
+                    if (el) el.textContent = requestCount.toLocaleString();
+                    const up = document.getElementById('uptime-display');
+                    if (up) up.textContent = uptime.formatted;
+                }
+            } catch (e) {}
+        }
+
+        updateStatistics();
+        setInterval(updateStatistics, 10000);
+
+        // ===== NAV SCROLL EFFECT =====
+        const nav = document.querySelector('.nav');
+        window.addEventListener('scroll', () => {
+            nav.style.background = window.scrollY > 50
+                ? 'rgba(5, 5, 5, 0.95)'
+                : 'rgba(5, 5, 5, 0.8)';
+        }, { passive: true });
+
+        // ===== DEMO BANNER CHECK =====
+        (async function checkDemoMode() {
+            try {
+                const r = await fetch('/api/user/me');
+                if (!r.ok) return;
+                const data = await r.json();
+                if (data.success && data.data && data.data.isDemo) {
+                    const banner = document.getElementById('demo-banner');
+                    if (banner) {
+                        banner.style.display = 'block';
+                        document.body.style.paddingTop = '44px';
+                        // Shift fixed nav down so the mobile toggle is not hidden behind the banner
+                        const nav = document.querySelector('.nav');
+                        if (nav) nav.style.top = '44px';
+                    }
+                }
+            } catch (e) {}
+        })();
+    </script>
+</body>
+</html>
