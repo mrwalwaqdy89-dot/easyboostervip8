@@ -1,0 +1,1437 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Auto React Channels - ANDY RCH</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="dashboard-styles.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+        
+        * {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', sans-serif;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        body {
+            background: #0a0e14;
+            color: #E6EDF3;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        /* Premium Animated Background */
+        .animated-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            opacity: 0.15;
+            background: 
+                radial-gradient(ellipse at 20% 30%, rgba(102, 126, 234, 0.4) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 70%, rgba(118, 75, 162, 0.35) 0%, transparent 50%),
+                radial-gradient(ellipse at 50% 50%, rgba(240, 147, 251, 0.2) 0%, transparent 60%),
+                radial-gradient(ellipse at 10% 90%, rgba(102, 126, 234, 0.25) 0%, transparent 40%);
+            animation: float 25s ease-in-out infinite;
+            pointer-events: none;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) scale(1); }
+            50% { transform: translateY(-25px) scale(1.02); }
+        }
+
+        /* Premium Sidebar */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: -280px;
+            width: 280px;
+            height: 100vh;
+            background: rgba(18, 23, 31, 0.95);
+            backdrop-filter: blur(40px);
+            -webkit-backdrop-filter: blur(40px);
+            border-right: 1px solid rgba(102, 126, 234, 0.15);
+            z-index: 1000;
+            transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            overflow-y: auto;
+        }
+
+        .sidebar.open {
+            transform: translateX(280px);
+        }
+
+        .sidebar-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(10, 14, 20, 0.75);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            z-index: 999;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        .sidebar-overlay.open {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* Premium Sidebar Links */
+        .sidebar-link {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 14px 20px;
+            color: #8b949e;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 15px;
+            transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            border-radius: 14px;
+            margin: 4px 12px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .sidebar-link::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 50%;
+            width: 3px;
+            height: 0;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 0 4px 4px 0;
+            transform: translateY(-50%);
+            transition: height 0.3s ease;
+        }
+
+        .sidebar-link:hover {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.08));
+            color: #a78bfa;
+        }
+
+        .sidebar-link:hover::before {
+            height: 50%;
+        }
+
+        .sidebar-link.active {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.15), rgba(118, 75, 162, 0.1));
+            color: #a78bfa;
+            border: 1px solid rgba(102, 126, 234, 0.3);
+        }
+
+        .sidebar-link.active::before {
+            height: 60%;
+        }
+
+        .sidebar-link i {
+            width: 22px;
+            font-size: 18px;
+        }
+
+        /* Premium Top Navigation */
+        .top-nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 72px;
+            background: rgba(10, 14, 20, 0.85);
+            backdrop-filter: blur(40px);
+            -webkit-backdrop-filter: blur(40px);
+            border-bottom: 1px solid rgba(102, 126, 234, 0.1);
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 24px;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Premium Burger Button */
+        .burger-btn {
+            width: 46px;
+            height: 46px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 5px;
+            background: rgba(18, 23, 31, 0.8);
+            border: 1px solid rgba(102, 126, 234, 0.2);
+            border-radius: 14px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        .burger-btn:hover {
+            background: rgba(102, 126, 234, 0.15);
+            border-color: rgba(102, 126, 234, 0.4);
+            box-shadow: 0 4px 20px rgba(102, 126, 234, 0.2);
+        }
+
+        .burger-btn span {
+            width: 20px;
+            height: 2px;
+            background: linear-gradient(90deg, #667eea, #a78bfa);
+            border-radius: 2px;
+            transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        .burger-btn.active span:nth-child(1) {
+            transform: rotate(45deg) translate(5px, 5px);
+        }
+
+        .burger-btn.active span:nth-child(2) {
+            opacity: 0;
+        }
+
+        .burger-btn.active span:nth-child(3) {
+            transform: rotate(-45deg) translate(5px, -5px);
+        }
+
+        .profile-dropdown {
+            position: relative;
+        }
+
+        .profile-btn {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #1f6feb 0%, #58a6ff 100%);
+            border: 2px solid rgba(88, 166, 255, 0.5);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 16px;
+            color: white;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(31, 111, 235, 0.3);
+        }
+
+        .profile-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 20px rgba(31, 111, 235, 0.5);
+        }
+
+        .profile-menu {
+            position: absolute;
+            top: 55px;
+            right: 0;
+            width: 220px;
+            background: rgba(22, 27, 34, 0.98);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(48, 54, 61, 0.5);
+            border-radius: 16px;
+            padding: 8px;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px) scale(0.95);
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+        }
+
+        .profile-menu.open {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0) scale(1);
+        }
+
+        .profile-menu-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            color: #c9d1d9;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 14px;
+            border-radius: 10px;
+            transition: all 0.2s ease;
+        }
+
+        .profile-menu-item:hover {
+            background: rgba(31, 111, 235, 0.15);
+            color: #58a6ff;
+        }
+
+        .profile-menu-item.logout {
+            color: #f85149;
+        }
+
+        .profile-menu-item.logout:hover {
+            background: rgba(248, 81, 73, 0.15);
+            color: #ff7b72;
+        }
+
+        .profile-menu-divider {
+            height: 1px;
+            background: rgba(48, 54, 61, 0.5);
+            margin: 8px 0;
+        }
+
+        .main-content {
+            padding-top: 90px;
+            padding-bottom: 40px;
+            min-height: 100vh;
+        }
+
+        .glass-card {
+            background: rgba(22, 27, 34, 0.8);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(48, 54, 61, 0.5);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .glass-card:hover {
+            box-shadow: 0 20px 60px 0 rgba(31, 111, 235, 0.2);
+            border-color: rgba(31, 111, 235, 0.3);
+        }
+
+        .gradient-text {
+            background: linear-gradient(135deg, #1f6feb 0%, #58a6ff 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .page-title {
+            font-size: 28px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+
+        .channel-card {
+            background: rgba(22, 27, 34, 0.7);
+            border: 1px solid rgba(48, 54, 61, 0.5);
+            border-radius: 20px;
+            padding: 24px;
+            transition: all 0.3s ease;
+        }
+
+        .channel-card:hover {
+            border-color: rgba(31, 111, 235, 0.4);
+            box-shadow: 0 12px 40px rgba(31, 111, 235, 0.15);
+            transform: translateY(-4px);
+        }
+
+        .channel-card.active {
+            border-color: rgba(63, 185, 80, 0.4);
+        }
+
+        .channel-card.expired {
+            border-color: rgba(248, 81, 73, 0.4);
+            opacity: 0.7;
+        }
+
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .status-badge.active {
+            background: rgba(63, 185, 80, 0.15);
+            color: #3fb950;
+            border: 1px solid rgba(63, 185, 80, 0.3);
+        }
+
+        .status-badge.expired {
+            background: rgba(248, 81, 73, 0.15);
+            color: #f85149;
+            border: 1px solid rgba(248, 81, 73, 0.3);
+        }
+
+        .status-badge.pending {
+            background: rgba(210, 153, 34, 0.15);
+            color: #d29922;
+            border: 1px solid rgba(210, 153, 34, 0.3);
+        }
+
+        .info-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(48, 54, 61, 0.3);
+        }
+
+        .info-item:last-child {
+            border-bottom: none;
+        }
+
+        .info-item i {
+            width: 20px;
+            color: #8b949e;
+        }
+
+        .info-item .label {
+            flex: 1;
+            color: #8b949e;
+            font-size: 14px;
+        }
+
+        .info-item .value {
+            color: #c9d1d9;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+        }
+
+        .empty-state i {
+            font-size: 64px;
+            color: #30363d;
+            margin-bottom: 20px;
+        }
+
+        .animated-btn {
+            background: linear-gradient(135deg, #1f6feb 0%, #0969da 100%);
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(31, 111, 235, 0.3);
+        }
+
+        .animated-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.25), transparent);
+            transition: left 0.5s;
+        }
+
+        .animated-btn:hover::before {
+            left: 100%;
+        }
+
+        .animated-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(31, 111, 235, 0.5);
+        }
+
+        @keyframes pulse-status {
+            0%, 100% { 
+                opacity: 1;
+                transform: scale(1);
+            }
+            50% { 
+                opacity: 0.6;
+                transform: scale(1.1);
+            }
+        }
+
+        .status-indicator {
+            animation: pulse-status 2s infinite;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, rgba(22, 27, 34, 0.9) 0%, rgba(30, 37, 46, 0.9) 100%);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(48, 54, 61, 0.5);
+            border-radius: 20px;
+            padding: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(31, 111, 235, 0.4);
+            box-shadow: 0 12px 40px rgba(31, 111, 235, 0.2);
+        }
+
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #161b22;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(180deg, #1f6feb 0%, #0969da 100%);
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(180deg, #58a6ff 0%, #1f6feb 100%);
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .animate-in {
+            animation: fadeInUp 0.5s ease forwards;
+        }
+
+        /* Compact Ultra Premium Banner */
+        .ultra-premium-banner {
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.12) 0%, rgba(251, 191, 36, 0.08) 50%, rgba(236, 72, 153, 0.1) 100%);
+            border: 1px solid rgba(251, 191, 36, 0.3);
+            border-radius: 16px;
+            padding: 16px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            flex-wrap: wrap;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+
+        .ultra-premium-banner:hover {
+            border-color: rgba(251, 191, 36, 0.5);
+            box-shadow: 0 4px 24px rgba(251, 191, 36, 0.15);
+        }
+
+        .ultra-banner-content {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .ultra-banner-icon {
+            width: 42px;
+            height: 42px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            box-shadow: 0 4px 12px rgba(251, 191, 36, 0.3);
+        }
+
+        .ultra-banner-icon i {
+            color: #0d1117;
+            font-size: 18px;
+        }
+
+        .ultra-banner-text h4 {
+            font-size: 14px;
+            font-weight: 700;
+            color: #fbbf24;
+            margin: 0 0 2px 0;
+            letter-spacing: 0.02em;
+        }
+
+        .ultra-banner-text p {
+            font-size: 12px;
+            color: #9ca3af;
+            margin: 0;
+        }
+
+        .ultra-banner-price {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 0 12px;
+        }
+
+        .ultra-banner-price .original {
+            font-size: 14px;
+            color: #6b7280;
+            text-decoration: line-through;
+        }
+
+        .ultra-banner-price .current {
+            font-size: 22px;
+            font-weight: 800;
+            background: linear-gradient(135deg, #fbbf24, #f59e0b);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .ultra-banner-btn {
+            background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+            color: #0d1117;
+            padding: 10px 20px;
+            border-radius: 10px;
+            font-size: 13px;
+            font-weight: 700;
+            border: none;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+            box-shadow: 0 4px 16px rgba(251, 191, 36, 0.3);
+        }
+
+        .ultra-banner-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 24px rgba(251, 191, 36, 0.4);
+        }
+
+        .ultra-banner-btn:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+
+        .ultra-banner-btn.active-state {
+            background: linear-gradient(135deg, rgba(34, 197, 94, 0.2) 0%, rgba(22, 163, 74, 0.2) 100%);
+            border: 1px solid rgba(34, 197, 94, 0.4);
+            color: #4ade80;
+            box-shadow: none;
+        }
+
+        .ultra-countdown-mini {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 11px;
+            color: #9ca3af;
+            padding: 4px 10px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 8px;
+        }
+
+        .ultra-countdown-mini i {
+            color: #fbbf24;
+            font-size: 10px;
+        }
+
+        .ultra-countdown-mini span {
+            color: #fbbf24;
+            font-weight: 600;
+        }
+
+        @media (max-width: 640px) {
+            .ultra-premium-banner {
+                padding: 14px 16px;
+                flex-direction: column;
+                align-items: stretch;
+                text-align: center;
+            }
+
+            .ultra-banner-content {
+                justify-content: center;
+            }
+
+            .ultra-banner-price {
+                justify-content: center;
+                padding: 8px 0;
+            }
+
+            .ultra-banner-btn {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .ultra-countdown-mini {
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="animated-bg"></div>
+
+    <!-- Sidebar Overlay -->
+    <div class="sidebar-overlay" id="sidebar-overlay"></div>
+
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar" id="sidebar">
+        <div class="p-6 border-b border-gray-700/50">
+            <a href="/" class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center">
+                    <i class="fas fa-bolt text-white text-lg"></i>
+                </div>
+                <span class="text-xl font-bold text-white">ANDY RCH</span>
+            </a>
+        </div>
+        
+        <nav class="py-4">
+            <div class="px-4 mb-2">
+                <span class="text-xs font-semibold text-gray-500 uppercase tracking-wider">Main Menu</span>
+            </div>
+            <a href="/reactch" class="sidebar-link">
+                <i class="fas fa-home"></i>
+                <span>Dashboard</span>
+            </a>
+            <a href="/autoreact" class="sidebar-link active">
+                <i class="fas fa-robot"></i>
+                <span>Auto React Channels</span>
+            </a>
+            <a href="/history" class="sidebar-link">
+                <i class="fas fa-history"></i>
+                <span>Transaction History</span>
+            </a>
+            <a href="/profile" class="sidebar-link">
+                <i class="fas fa-user"></i>
+                <span>My Profile</span>
+            </a>
+            
+            <div class="px-4 mb-2 mt-6">
+                <span class="text-xs font-semibold text-gray-500 uppercase tracking-wider">Support</span>
+            </div>
+            <a href="/pricing" class="sidebar-link">
+                <i class="fas fa-coins text-yellow-500"></i>
+                <span>Add Balance</span>
+            </a>
+            <a href="/terms" class="sidebar-link">
+                <i class="fas fa-file-contract"></i>
+                <span>Terms of Service</span>
+            </a>
+            <a href="https://wa.me/13056978303" target="_blank" class="sidebar-link">
+                <i class="fab fa-whatsapp text-green-500"></i>
+                <span>Contact Support</span>
+            </a>
+        </nav>
+        
+        <div class="absolute bottom-0 left-0 right-0 p-4 border-t border-gray-700/50">
+            <div class="glass-card rounded-xl p-4">
+                <div class="flex items-center gap-3 mb-3">
+                    <div class="w-8 h-8 rounded-full bg-gradient-to-br from-yellow-500 to-orange-500 flex items-center justify-center">
+                        <i class="fas fa-coins text-white text-sm"></i>
+                    </div>
+                    <div>
+                        <p class="text-sm font-semibold text-white">Add Balance</p>
+                        <p class="text-xs text-gray-400">Get more reactions</p>
+                    </div>
+                </div>
+                <a href="/pricing" class="block w-full py-2 text-center text-sm font-semibold text-white bg-gradient-to-r from-yellow-500 to-orange-500 rounded-lg hover:opacity-90 transition">
+                    View Packages
+                </a>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Top Navigation -->
+    <header class="top-nav">
+        <div class="flex items-center gap-4">
+            <button class="burger-btn" id="burger-btn">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            <a href="/" class="hidden sm:flex items-center gap-2">
+                <span class="text-lg font-bold gradient-text">ANDY RCH</span>
+            </a>
+        </div>
+        
+        <div class="flex items-center gap-4">
+            <div class="hidden sm:flex items-center gap-2 px-3 py-1.5 bg-green-500/10 border border-green-500/30 rounded-full">
+                <div class="w-2 h-2 bg-green-500 rounded-full status-indicator"></div>
+                <span class="text-xs font-medium text-green-400">System Online</span>
+            </div>
+            
+            <div class="profile-dropdown">
+                <button class="profile-btn" id="profile-btn">
+                    <i class="fas fa-user"></i>
+                </button>
+                <div class="profile-menu" id="profile-menu">
+                    <div class="px-4 py-3 border-b border-gray-700/50">
+                        <p class="text-sm font-semibold text-white" id="user-name">Guest User</p>
+                        <p class="text-xs text-gray-400" id="user-plan">Free Plan</p>
+                    </div>
+                    <a href="/profile" class="profile-menu-item">
+                        <i class="fas fa-user-circle"></i>
+                        <span>My Profile</span>
+                    </a>
+                    <a href="/history" class="profile-menu-item">
+                        <i class="fas fa-history"></i>
+                        <span>History</span>
+                    </a>
+                    <div class="profile-menu-divider"></div>
+                    <a href="/" class="profile-menu-item logout" onclick="handleLogout()">
+                        <i class="fas fa-sign-out-alt"></i>
+                        <span>Logout</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content relative z-10">
+        <div class="container mx-auto px-4 sm:px-6 max-w-6xl">
+            
+            <!-- Page Header -->
+            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
+                <div>
+                    <h1 class="page-title text-white mb-2">Auto React Channels</h1>
+                    <p class="text-gray-400">Manage your automated reaction channels</p>
+                </div>
+                <a href="/reactch#auto-react-form" class="animated-btn px-6 py-3 rounded-xl font-semibold text-white flex items-center gap-2 w-fit">
+                    <i class="fas fa-plus"></i>
+                    Add New Channel
+                </a>
+            </div>
+
+            <!-- Quick Stats -->
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8">
+                <div class="stat-card">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-xl bg-green-500/20 flex items-center justify-center">
+                            <i class="fas fa-check-circle text-green-400"></i>
+                        </div>
+                        <div>
+                            <p class="text-xs text-gray-400">Active</p>
+                            <p class="text-lg font-bold text-white" id="active-count">0</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-xl bg-yellow-500/20 flex items-center justify-center">
+                            <i class="fas fa-clock text-yellow-400"></i>
+                        </div>
+                        <div>
+                            <p class="text-xs text-gray-400">Pending</p>
+                            <p class="text-lg font-bold text-white" id="pending-count">0</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-xl bg-red-500/20 flex items-center justify-center">
+                            <i class="fas fa-times-circle text-red-400"></i>
+                        </div>
+                        <div>
+                            <p class="text-xs text-gray-400">Expired</p>
+                            <p class="text-lg font-bold text-white" id="expired-count">0</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-xl bg-blue-500/20 flex items-center justify-center">
+                            <i class="fas fa-broadcast-tower text-blue-400"></i>
+                        </div>
+                        <div>
+                            <p class="text-xs text-gray-400">Total</p>
+                            <p class="text-lg font-bold text-white" id="total-count">0</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Compact Ultra Premium Banner -->
+            <div id="ultra-premium-banner" class="ultra-premium-banner mb-6 hidden">
+                <div class="ultra-banner-content">
+                    <div class="ultra-banner-icon">
+                        <i class="fas fa-crown"></i>
+                    </div>
+                    <div class="ultra-banner-text">
+                        <h4>ULTRA PREMIUM</h4>
+                        <p>14 Days Unlimited Access • No Limits • Priority Support</p>
+                    </div>
+                </div>
+                <div class="ultra-countdown-mini" id="ultra-countdown-mini">
+                    <i class="fas fa-clock"></i>
+                    <span id="countdown-timer">00:00:00</span>
+                </div>
+                <div class="ultra-banner-price">
+                    <span class="original">$30</span>
+                    <span class="current">$15</span>
+                </div>
+                <button id="ultra-buy-btn" class="ultra-banner-btn">
+                    <i class="fas fa-bolt"></i>
+                    Get Access
+                </button>
+            </div>
+
+            <!-- Filter Tabs -->
+            <div class="flex gap-2 mb-6 overflow-x-auto pb-2">
+                <button class="px-5 py-2 rounded-xl font-medium text-sm transition-all filter-tab active" data-filter="all">
+                    All Channels
+                </button>
+                <button class="px-5 py-2 rounded-xl font-medium text-sm transition-all filter-tab" data-filter="active">
+                    Active
+                </button>
+                <button class="px-5 py-2 rounded-xl font-medium text-sm transition-all filter-tab" data-filter="pending">
+                    Pending
+                </button>
+                <button class="px-5 py-2 rounded-xl font-medium text-sm transition-all filter-tab" data-filter="expired">
+                    Expired
+                </button>
+            </div>
+
+            <!-- Adsterra Ad Section -->
+            <div class="mb-6 flex justify-center">
+                <div class="glass-card rounded-xl p-6 inline-block">
+                    <script
+                      async="async"
+                      data-cfasync="false"
+                      src="//pl28210824.effectivegatecpm.com/fa62214052e77e775804e6aa96c3be86/invoke.js"
+                    ></script>
+                    <div id="container-fa62214052e77e775804e6aa96c3be86"></div>
+                </div>
+            </div>
+
+            <!-- Channels Grid -->
+            <div id="channels-container" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Channel cards will be inserted here -->
+            </div>
+
+            <!-- Empty State -->
+            <div id="empty-state" class="hidden">
+                <div class="glass-card rounded-2xl p-12 text-center">
+                    <div class="w-24 h-24 mx-auto bg-gray-800/50 rounded-full flex items-center justify-center mb-6">
+                        <i class="fas fa-robot text-gray-600 text-4xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-white mb-3">No Auto React Channels Yet</h3>
+                    <p class="text-gray-400 mb-6 max-w-md mx-auto">Set up automatic reactions for your WhatsApp channels to boost engagement around the clock.</p>
+                    <a href="/reactch#auto-react-form" class="animated-btn px-6 py-3 rounded-xl font-semibold text-white inline-flex items-center gap-2">
+                        <i class="fas fa-plus"></i>
+                        Add Your First Channel
+                    </a>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="relative z-10 py-8 px-6 border-t border-gray-800/50">
+        <div class="container mx-auto text-center">
+            <p class="text-gray-500 text-sm">© 2025 ANDY RCH. All rights reserved.</p>
+            <p class="text-gray-600 text-xs mt-1">Powered by <span class="text-blue-400">Asitha</span></p>
+        </div>
+    </footer>
+
+    <script>
+        // Helper function to format plan text (e.g., "free" -> "Free Plan")
+        function formatPlanText(plan) {
+            if (!plan) return 'Free Plan';
+            return plan.charAt(0).toUpperCase() + plan.slice(1) + ' Plan';
+        }
+
+        // Helper function to safely set avatar image
+        function safeSetAvatar(container, avatarUrl, cssClasses = 'w-full h-full rounded-full object-cover') {
+            if (!container || !avatarUrl) return false;
+            
+            // Validate that the URL is a valid image URL (starts with http/https)
+            try {
+                const url = new URL(avatarUrl);
+                if (url.protocol !== 'http:' && url.protocol !== 'https:') {
+                    return false;
+                }
+            } catch (e) {
+                return false;
+            }
+            
+            // Create image element safely
+            const img = document.createElement('img');
+            img.src = avatarUrl;
+            img.alt = 'Avatar';
+            img.className = cssClasses;
+            
+            // Clear container and append image
+            container.innerHTML = '';
+            container.appendChild(img);
+            return true;
+        }
+
+        // Channel data will be loaded from API
+        let channelData = [];
+
+        // DOM Elements
+        const sidebar = document.getElementById('sidebar');
+        const sidebarOverlay = document.getElementById('sidebar-overlay');
+        const burgerBtn = document.getElementById('burger-btn');
+        const profileBtn = document.getElementById('profile-btn');
+        const profileMenu = document.getElementById('profile-menu');
+        const channelsContainer = document.getElementById('channels-container');
+        const emptyState = document.getElementById('empty-state');
+        const filterTabs = document.querySelectorAll('.filter-tab');
+
+        // Toggle Sidebar
+        function toggleSidebar() {
+            sidebar.classList.toggle('open');
+            sidebarOverlay.classList.toggle('open');
+            burgerBtn.classList.toggle('active');
+        }
+
+        burgerBtn.addEventListener('click', toggleSidebar);
+        sidebarOverlay.addEventListener('click', toggleSidebar);
+
+        // Profile Dropdown
+        profileBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            profileMenu.classList.toggle('open');
+        });
+
+        document.addEventListener('click', () => {
+            profileMenu.classList.remove('open');
+        });
+
+        profileMenu.addEventListener('click', (e) => {
+            e.stopPropagation();
+        });
+
+        // Format Date
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            return date.toLocaleDateString('en-US', {
+                month: 'short',
+                day: 'numeric',
+                year: 'numeric'
+            });
+        }
+
+        // Calculate Days Left
+        function getDaysLeft(expiresAt) {
+            const now = new Date();
+            const expiry = new Date(expiresAt);
+            const diff = expiry - now;
+            const days = Math.ceil(diff / (1000 * 60 * 60 * 24));
+            return days > 0 ? days : 0;
+        }
+
+        // Helper function to format balance as USD
+        function formatUSD(amount) {
+            return '$' + parseFloat(amount).toFixed(2);
+        }
+
+        // Render Channel Card
+        function renderChannelCard(channel) {
+            const daysLeft = getDaysLeft(channel.expiresAt);
+            const statusClass = channel.status;
+            const statusText = channel.status.charAt(0).toUpperCase() + channel.status.slice(1);
+            
+            return `
+                <div class="channel-card ${statusClass} animate-in" data-status="${channel.status}">
+                    <div class="flex items-start justify-between mb-4">
+                        <div class="flex items-center gap-3">
+                            <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center">
+                                ${channel.channelPreview 
+                                    ? `<img src="${channel.channelPreview}" class="w-full h-full object-cover rounded-xl">`
+                                    : `<i class="fas fa-broadcast-tower text-white text-lg"></i>`
+                                }
+                            </div>
+                            <div class="flex-1 min-w-0">
+                                <h3 class="font-bold text-white truncate">${channel.channelName}</h3>
+                                <div class="flex items-center gap-1 text-sm text-gray-400">
+                                    <i class="fas fa-users text-xs"></i>
+                                    <span>${channel.followers.toLocaleString()}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <span class="status-badge ${statusClass}">
+                            <i class="fas fa-${channel.status === 'active' ? 'check-circle' : channel.status === 'pending' ? 'clock' : 'times-circle'}"></i>
+                            ${statusText}
+                        </span>
+                    </div>
+                    
+                    <div class="flex flex-wrap gap-1 mb-4">
+                        ${channel.emojis.map(e => `<span class="text-xl">${e}</span>`).join('')}
+                    </div>
+                    
+                    <div class="space-y-1 mb-4">
+                        <div class="info-item">
+                            <i class="fas fa-calendar-plus"></i>
+                            <span class="label">Registered</span>
+                            <span class="value">${formatDate(channel.registeredAt)}</span>
+                        </div>
+                        <div class="info-item">
+                            <i class="fas fa-calendar-times"></i>
+                            <span class="label">Expires</span>
+                            <span class="value">${formatDate(channel.expiresAt)}</span>
+                        </div>
+                        <div class="info-item">
+                            <i class="fas fa-coins"></i>
+                            <span class="label">Total Cost</span>
+                            <span class="value">${formatUSD(channel.totalCoins)}</span>
+                        </div>
+                        ${channel.status === 'active' ? `
+                        <div class="info-item">
+                            <i class="fas fa-hourglass-half"></i>
+                            <span class="label">Days Left</span>
+                            <span class="value text-green-400">${daysLeft} days</span>
+                        </div>
+                        ` : ''}
+                    </div>
+                    
+                    <div class="flex gap-2">
+                        ${channel.status === 'active' ? `
+                        <button class="flex-1 py-2 px-4 rounded-lg bg-blue-500/20 border border-blue-500/30 text-blue-400 text-sm font-medium hover:bg-blue-500/30 transition">
+                            <i class="fas fa-sync-alt mr-2"></i>Extend
+                        </button>
+                        ` : channel.status === 'expired' ? `
+                        <button class="flex-1 py-2 px-4 rounded-lg bg-green-500/20 border border-green-500/30 text-green-400 text-sm font-medium hover:bg-green-500/30 transition">
+                            <i class="fas fa-redo mr-2"></i>Renew
+                        </button>
+                        ` : `
+                        <button class="flex-1 py-2 px-4 rounded-lg bg-yellow-500/20 border border-yellow-500/30 text-yellow-400 text-sm font-medium hover:bg-yellow-500/30 transition">
+                            <i class="fas fa-clock mr-2"></i>Processing
+                        </button>
+                        `}
+                        <button class="py-2 px-4 rounded-lg bg-gray-700/50 border border-gray-600/30 text-gray-400 text-sm font-medium hover:bg-gray-700 transition">
+                            <i class="fas fa-ellipsis-h"></i>
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Render All Channels
+        function renderChannels(filter = 'all') {
+            let channels = channelData;
+            
+            if (filter !== 'all') {
+                channels = channelData.filter(c => c.status === filter);
+            }
+
+            if (channels.length === 0) {
+                channelsContainer.innerHTML = '';
+                emptyState.classList.remove('hidden');
+            } else {
+                emptyState.classList.add('hidden');
+                channelsContainer.innerHTML = channels.map(renderChannelCard).join('');
+            }
+        }
+
+        // Update stats display
+        function updateStats(stats) {
+            document.getElementById('active-count').textContent = stats.active_count || 0;
+            document.getElementById('pending-count').textContent = stats.pending_count || 0;
+            document.getElementById('expired-count').textContent = stats.expired_count || 0;
+            document.getElementById('total-count').textContent = stats.total_count || 0;
+        }
+
+        // Filter Tabs
+        filterTabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                filterTabs.forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                renderChannels(tab.dataset.filter);
+            });
+        });
+
+        // Add CSS for filter tabs
+        const style = document.createElement('style');
+        style.textContent = `
+            .filter-tab {
+                background: rgba(22, 27, 34, 0.6);
+                border: 1px solid rgba(48, 54, 61, 0.5);
+                color: #8b949e;
+            }
+            .filter-tab:hover {
+                background: rgba(31, 111, 235, 0.1);
+                border-color: rgba(31, 111, 235, 0.3);
+                color: #58a6ff;
+            }
+            .filter-tab.active {
+                background: linear-gradient(135deg, rgba(31, 111, 235, 0.2) 0%, rgba(88, 166, 255, 0.1) 100%);
+                border-color: rgba(31, 111, 235, 0.4);
+                color: #58a6ff;
+            }
+        `;
+        document.head.appendChild(style);
+
+        // Load channels from API
+        async function loadChannels() {
+            try {
+                const response = await fetch('/api/user/auto-react');
+                if (!response.ok) {
+                    console.error('Failed to load channels');
+                    return;
+                }
+                
+                const result = await response.json();
+                if (!result.success) {
+                    console.error('Failed to load channels:', result.message);
+                    return;
+                }
+                
+                // Transform API data to match expected format
+                channelData = result.data.channels.map(c => ({
+                    id: c.id,
+                    channelName: c.channel_name || 'Unknown Channel',
+                    channelLink: c.channel_link,
+                    channelPreview: c.channel_preview,
+                    followers: c.channel_followers || 0,
+                    emojis: Array.isArray(c.emojis) ? c.emojis : (typeof c.emojis === 'string' ? JSON.parse(c.emojis) : []),
+                    days: c.days,
+                    coinsPerDay: c.coins_per_day,
+                    totalCoins: c.total_coins,
+                    registeredAt: c.registered_at,
+                    expiresAt: c.expires_at,
+                    status: c.status
+                }));
+                
+                // Update stats
+                updateStats(result.data.stats);
+                
+                // Render channels
+                renderChannels();
+            } catch (error) {
+                console.error('Error loading channels:', error);
+                emptyState.classList.remove('hidden');
+            }
+        }
+
+        // Initialize page
+        async function initializePage() {
+            try {
+                const response = await fetch('/api/auth/status');
+                const data = await response.json();
+                
+                if (data.authenticated && data.user) {
+                    document.getElementById('user-name').textContent = data.user.name || 'User';
+                    
+                    // Update plan display
+                    const planEl = document.getElementById('user-plan');
+                    if (planEl) {
+                        planEl.textContent = formatPlanText(data.user.plan);
+                    }
+                    
+                    localStorage.setItem('user', JSON.stringify(data.user));
+                    localStorage.setItem('isLoggedIn', 'true');
+                    
+                    // Update profile button with avatar if available (safely)
+                    const profileBtnEl = document.getElementById('profile-btn');
+                    if (profileBtnEl && data.user.avatar) {
+                        safeSetAvatar(profileBtnEl, data.user.avatar);
+                    }
+                    
+                    // Load channels from API
+                    await loadChannels();
+                } else {
+                    // Not authenticated - clear stale data and redirect to login
+                    localStorage.removeItem('user');
+                    localStorage.removeItem('isLoggedIn');
+                    window.location.href = '/login';
+                }
+            } catch (error) {
+                console.error('Error initializing page:', error);
+                // On error, redirect to login
+                window.location.href = '/login';
+            }
+        }
+
+        function handleLogout() {
+            fetch('/api/auth/logout', { method: 'POST' })
+                .then(() => {
+                    localStorage.removeItem('user');
+                    localStorage.removeItem('isLoggedIn');
+                    window.location.href = '/login';
+                })
+                .catch(() => {
+                    localStorage.removeItem('user');
+                    localStorage.removeItem('isLoggedIn');
+                    window.location.href = '/login';
+                });
+        }
+
+        // Initialize
+        initializePage();
+
+        // Close sidebar on window resize
+        window.addEventListener('resize', () => {
+            if (window.innerWidth >= 768 && sidebar.classList.contains('open')) {
+                toggleSidebar();
+            }
+        });
+
+        // ================== ULTRA PREMIUM BANNER ==================
+        const ultraBanner = document.getElementById('ultra-premium-banner');
+        const ultraBuyBtn = document.getElementById('ultra-buy-btn');
+        const countdownTimer = document.getElementById('countdown-timer');
+        let ultraCountdownInterval = null;
+        let ultraOfferEndsAt = null;
+        let userHasUltra = false;
+
+        // Show toast notification
+        function showToast(message, type = 'info') {
+            const toast = document.createElement('div');
+            toast.className = `fixed bottom-4 right-4 px-6 py-3 rounded-xl font-medium z-50 animate-in ${
+                type === 'success' ? 'bg-green-500/20 border border-green-500/40 text-green-400' :
+                type === 'error' ? 'bg-red-500/20 border border-red-500/40 text-red-400' :
+                'bg-blue-500/20 border border-blue-500/40 text-blue-400'
+            }`;
+            toast.textContent = message;
+            document.body.appendChild(toast);
+            setTimeout(() => toast.remove(), 4000);
+        }
+
+        // Fetch Ultra offer status and user data
+        async function initUltraBanner() {
+            try {
+                // Check offer status
+                const offerResponse = await fetch('/api/ultra/offer-status');
+                const offerData = await offerResponse.json();
+                
+                // Check user status
+                let userData = null;
+                try {
+                    const userResponse = await fetch('/api/user/me');
+                    if (userResponse.ok) {
+                        const userResult = await userResponse.json();
+                        userData = userResult.data;
+                    }
+                } catch (e) {
+                    // Not logged in or error
+                }
+                
+                if (offerData.success && offerData.data.active) {
+                    ultraOfferEndsAt = new Date(offerData.data.endsAt);
+                    ultraBanner.classList.remove('hidden');
+                    startUltraCountdown();
+                    
+                    // Check if user already has Ultra
+                    if (userData && userData.planType === 'ultra' && userData.planExpiresAt && new Date(userData.planExpiresAt) > new Date()) {
+                        userHasUltra = true;
+                        showUserHasUltra(userData.planExpiresAt);
+                    }
+                } else {
+                    // Try auto-start offer
+                    try {
+                        const startResponse = await fetch('/api/ultra/auto-start-offer', { method: 'POST' });
+                        if (startResponse.ok) {
+                            const startData = await startResponse.json();
+                            if (startData.success && startData.data.active) {
+                                ultraOfferEndsAt = new Date(startData.data.endsAt);
+                                ultraBanner.classList.remove('hidden');
+                                startUltraCountdown();
+                                
+                                if (userData && userData.planType === 'ultra' && userData.planExpiresAt && new Date(userData.planExpiresAt) > new Date()) {
+                                    userHasUltra = true;
+                                    showUserHasUltra(userData.planExpiresAt);
+                                }
+                            }
+                        }
+                    } catch (e) {
+                        // Silent fail - Ultra offer simply not available
+                    }
+                    // Always show banner so the offer is visible to users
+                    ultraBanner.classList.remove('hidden');
+                    if (!ultraOfferEndsAt) {
+                        // Hide countdown when no offer timing data is available
+                        document.getElementById('ultra-countdown-mini').style.display = 'none';
+                    }
+                }
+            } catch (error) {
+                console.error('Error loading Ultra banner:', error);
+                // Show banner even on error so the offer is always visible
+                ultraBanner.classList.remove('hidden');
+                document.getElementById('ultra-countdown-mini').style.display = 'none';
+            }
+        }
+        
+        function showUserHasUltra(expiresAt) {
+            const expDate = new Date(expiresAt);
+            const daysLeft = Math.ceil((expDate - new Date()) / (1000 * 60 * 60 * 24));
+            
+            ultraBuyBtn.innerHTML = `<i class="fas fa-check-circle"></i> Active (${daysLeft}d)`;
+            ultraBuyBtn.disabled = true;
+            ultraBuyBtn.classList.add('active-state');
+        }
+        
+        function startUltraCountdown() {
+            if (ultraCountdownInterval) clearInterval(ultraCountdownInterval);
+            
+            function updateCountdown() {
+                const now = new Date();
+                const diff = ultraOfferEndsAt - now;
+                
+                if (diff <= 0) {
+                    clearInterval(ultraCountdownInterval);
+                    countdownTimer.textContent = '00:00:00';
+                    return;
+                }
+                
+                const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+                
+                if (days > 0) {
+                    countdownTimer.textContent = `${days}d ${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+                } else {
+                    countdownTimer.textContent = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+                }
+            }
+            
+            updateCountdown();
+            ultraCountdownInterval = setInterval(updateCountdown, 1000);
+        }
+        
+        // Ultra Buy Button Click Handler
+        ultraBuyBtn.addEventListener('click', async () => {
+            if (userHasUltra) return;
+            
+            ultraBuyBtn.disabled = true;
+            const originalHTML = ultraBuyBtn.innerHTML;
+            ultraBuyBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+            
+            try {
+                const response = await fetch('/api/create-ultra-payment', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({})
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    showToast('Redirecting to payment...', 'success');
+                    setTimeout(() => {
+                        window.location.href = result.data.paymentUrl;
+                    }, 1000);
+                } else {
+                    throw new Error(result.message || 'Failed to create payment');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                showToast(error.message || 'Please log in first.', 'error');
+                ultraBuyBtn.disabled = false;
+                ultraBuyBtn.innerHTML = originalHTML;
+            }
+        });
+        
+        // Initialize Ultra banner
+        initUltraBanner();
+    </script>
+</body>
+</html>

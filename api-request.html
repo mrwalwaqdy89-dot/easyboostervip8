@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Request API Key - ANDY RCH</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="dashboard-styles.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+        
+        * {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', sans-serif;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        body {
+            background: #0a0e14;
+            color: #E6EDF3;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .animated-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            opacity: 0.15;
+            background: 
+                radial-gradient(ellipse at 20% 30%, rgba(102, 126, 234, 0.4) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 70%, rgba(118, 75, 162, 0.35) 0%, transparent 50%),
+                radial-gradient(ellipse at 50% 50%, rgba(240, 147, 251, 0.2) 0%, transparent 60%);
+            animation: float 25s ease-in-out infinite;
+            pointer-events: none;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) scale(1); }
+            50% { transform: translateY(-25px) scale(1.02); }
+        }
+
+        .glass-card {
+            background: rgba(18, 23, 31, 0.7);
+            backdrop-filter: blur(40px);
+            border: 1px solid rgba(102, 126, 234, 0.15);
+            transition: all 0.3s ease;
+        }
+
+        .glass-card:hover {
+            border-color: rgba(102, 126, 234, 0.3);
+            box-shadow: 0 8px 32px rgba(102, 126, 234, 0.15);
+        }
+
+        .gradient-text {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            padding: 14px 32px;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .input-field {
+            background: rgba(18, 23, 31, 0.8);
+            border: 1px solid rgba(102, 126, 234, 0.2);
+            border-radius: 12px;
+            padding: 14px 18px;
+            color: white;
+            transition: all 0.3s ease;
+        }
+
+        .input-field:focus {
+            outline: none;
+            border-color: rgba(102, 126, 234, 0.6);
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .info-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .info-badge.success {
+            background: rgba(16, 185, 129, 0.15);
+            color: #10b981;
+            border: 1px solid rgba(16, 185, 129, 0.3);
+        }
+
+        .info-badge.warning {
+            background: rgba(245, 158, 11, 0.15);
+            color: #f59e0b;
+            border: 1px solid rgba(245, 158, 11, 0.3);
+        }
+
+        .info-badge.error {
+            background: rgba(239, 68, 68, 0.15);
+            color: #ef4444;
+            border: 1px solid rgba(239, 68, 68, 0.3);
+        }
+
+        .info-badge.info {
+            background: rgba(59, 130, 246, 0.15);
+            color: #3b82f6;
+            border: 1px solid rgba(59, 130, 246, 0.3);
+        }
+
+        .request-card {
+            background: rgba(18, 23, 31, 0.6);
+            border: 1px solid rgba(102, 126, 234, 0.1);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 16px;
+        }
+
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .status-badge.pending {
+            background: rgba(245, 158, 11, 0.15);
+            color: #f59e0b;
+        }
+
+        .status-badge.approved {
+            background: rgba(16, 185, 129, 0.15);
+            color: #10b981;
+        }
+
+        .status-badge.rejected {
+            background: rgba(239, 68, 68, 0.15);
+            color: #ef4444;
+        }
+
+        /* Toast Notification */
+        .toast {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(18, 23, 31, 0.95);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(102, 126, 234, 0.3);
+            border-radius: 12px;
+            padding: 16px 24px;
+            color: white;
+            font-weight: 500;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+            z-index: 9999;
+            animation: slideIn 0.3s ease-out;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            min-width: 300px;
+            max-width: 500px;
+        }
+
+        .toast.success {
+            border-color: rgba(16, 185, 129, 0.5);
+        }
+
+        .toast.error {
+            border-color: rgba(239, 68, 68, 0.5);
+        }
+
+        .toast.warning {
+            border-color: rgba(245, 158, 11, 0.5);
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(100px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .toast.fade-out {
+            animation: fadeOut 0.3s ease-out forwards;
+        }
+
+        @keyframes fadeOut {
+            to {
+                opacity: 0;
+                transform: translateX(100px);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="animated-bg"></div>
+
+    <!-- Header -->
+    <header class="relative z-10 border-b border-gray-800" style="background: rgba(18, 23, 31, 0.95); backdrop-filter: blur(20px);">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex items-center space-x-4">
+                    <a href="/reactch" class="text-gray-400 hover:text-white transition">
+                        <i class="fas fa-arrow-left text-lg"></i>
+                    </a>
+                    <h1 class="text-xl font-bold gradient-text">Request API Key</h1>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <div id="user-info" class="flex items-center space-x-3">
+                        <img id="user-avatar" class="w-10 h-10 rounded-full border-2 border-purple-500" alt="User">
+                        <div class="text-right hidden sm:block">
+                            <div id="user-name" class="text-sm font-semibold text-white"></div>
+                            <div class="flex items-center space-x-2 text-xs">
+                                <span id="user-balance" class="text-purple-400 font-bold"></span>
+                                <span id="user-plan" class="px-2 py-0.5 rounded-full text-xs font-semibold"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        
+        <!-- Requirements Info Card -->
+        <div class="glass-card rounded-2xl p-6 mb-8">
+            <h2 class="text-2xl font-bold text-white mb-4">
+                <i class="fas fa-info-circle text-blue-400 mr-2"></i>
+                API Key Requirements
+            </h2>
+            <div class="space-y-3">
+                <div class="flex items-start space-x-3">
+                    <i class="fas fa-check-circle text-green-400 mt-1"></i>
+                    <div>
+                        <p class="text-gray-300">Your account must have <span class="text-purple-400 font-bold">at least 100 coins</span> to be eligible for API access</p>
+                    </div>
+                </div>
+                <div class="flex items-start space-x-3">
+                    <i class="fas fa-crown text-yellow-400 mt-1"></i>
+                    <div>
+                        <p class="text-gray-300"><span class="text-yellow-400 font-bold">Premium accounts</span> have a higher chance of approval</p>
+                    </div>
+                </div>
+                <div class="flex items-start space-x-3">
+                    <i class="fas fa-chart-line text-blue-400 mt-1"></i>
+                    <div>
+                        <p class="text-gray-300">Your API key limit will be based on your coin balance <span class="text-gray-400">(1 coin = 1 request)</span></p>
+                    </div>
+                </div>
+                <div class="flex items-start space-x-3">
+                    <i class="fas fa-clock text-orange-400 mt-1"></i>
+                    <div>
+                        <p class="text-gray-300">If rejected, you can submit another request after <span class="text-orange-400 font-bold">3 days</span></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Eligibility Status -->
+        <div id="eligibility-status" class="mb-8"></div>
+
+        <!-- Request Form -->
+        <div id="request-form-container" class="glass-card rounded-2xl p-8 mb-8">
+            <h2 class="text-2xl font-bold text-white mb-6">
+                <i class="fas fa-file-alt text-purple-400 mr-2"></i>
+                Submit API Key Request
+            </h2>
+            
+            <form id="api-request-form" class="space-y-6">
+                <div>
+                    <label class="block text-sm font-semibold text-gray-300 mb-2">
+                        Purpose of API Key <span class="text-red-400">*</span>
+                    </label>
+                    <textarea 
+                        id="purpose-input" 
+                        rows="6" 
+                        class="input-field w-full resize-none"
+                        placeholder="Please describe why you need API access and how you plan to use it. Be specific about your use case, expected request volume, and how it will benefit your project. (Minimum 20 characters)"
+                        required
+                        minlength="20"
+                        maxlength="1000"
+                    ></textarea>
+                    <div class="flex justify-between mt-2">
+                        <span id="char-count" class="text-xs text-gray-500">0 / 1000 characters</span>
+                        <span id="min-char-warning" class="text-xs text-orange-400 hidden">Minimum 20 characters required</span>
+                    </div>
+                </div>
+
+                <div class="bg-blue-900/20 border border-blue-500/30 rounded-lg p-4">
+                    <p class="text-sm text-blue-300">
+                        <i class="fas fa-lightbulb mr-2"></i>
+                        <strong>Tip:</strong> Provide detailed information about your intended use to increase approval chances. Mention if you're building a tool, service, or integration.
+                    </p>
+                </div>
+
+                <button type="submit" class="btn-primary w-full text-white" id="submit-btn">
+                    <i class="fas fa-paper-plane mr-2"></i>
+                    Submit Request
+                </button>
+            </form>
+        </div>
+
+        <!-- Previous Requests -->
+        <div class="glass-card rounded-2xl p-8">
+            <h2 class="text-2xl font-bold text-white mb-6">
+                <i class="fas fa-history text-green-400 mr-2"></i>
+                Your Requests
+            </h2>
+            
+            <div id="requests-loading" class="text-center py-8">
+                <i class="fas fa-spinner fa-spin text-3xl text-purple-400 mb-3"></i>
+                <p class="text-gray-400">Loading your requests...</p>
+            </div>
+
+            <div id="requests-container" class="hidden space-y-4"></div>
+
+            <div id="requests-empty" class="hidden text-center py-12">
+                <i class="fas fa-inbox text-gray-600 text-5xl mb-4"></i>
+                <p class="text-gray-400 text-lg">No requests found</p>
+                <p class="text-gray-500 text-sm">Submit your first API key request above</p>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        let userData = null;
+        let requestsData = null;
+
+        // Load user data
+        async function loadUserData() {
+            try {
+                const response = await fetch('/api/auth/status');
+                const data = await response.json();
+                
+                if (!data.authenticated) {
+                    window.location.href = '/login?redirect=/api-request';
+                    return;
+                }
+
+                userData = data.user;
+                updateUserInfo();
+                checkEligibility();
+            } catch (error) {
+                console.error('Error loading user data:', error);
+            }
+        }
+
+        function updateUserInfo() {
+            document.getElementById('user-avatar').src = userData.avatar;
+            document.getElementById('user-name').textContent = userData.name;
+            document.getElementById('user-balance').textContent = `$${parseFloat(userData.balance).toFixed(2)} USD`;
+            
+            const planBadge = document.getElementById('user-plan');
+            if (userData.plan === 'premium') {
+                planBadge.textContent = 'Premium';
+                planBadge.className = 'px-2 py-0.5 rounded-full text-xs font-semibold bg-gradient-to-r from-yellow-400 to-orange-500 text-white';
+            } else {
+                planBadge.textContent = 'Free';
+                planBadge.className = 'px-2 py-0.5 rounded-full text-xs font-semibold bg-gray-600 text-gray-200';
+            }
+        }
+
+        function checkEligibility() {
+            const statusDiv = document.getElementById('eligibility-status');
+            const formContainer = document.getElementById('request-form-container');
+            
+            const meetsCoins = userData.balance >= 100;
+            const isPremium = userData.plan === 'premium';
+            
+            if (!meetsCoins) {
+                statusDiv.innerHTML = `
+                    <div class="info-badge error w-full justify-center text-center">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <span>You need at least $100 USD to request API access. Current balance: $${parseFloat(userData.balance).toFixed(2)} USD</span>
+                    </div>
+                `;
+                formContainer.style.display = 'none';
+            } else if (!isPremium) {
+                statusDiv.innerHTML = `
+                    <div class="info-badge warning w-full justify-center text-center">
+                        <i class="fas fa-info-circle"></i>
+                        <span>You meet the minimum requirements, but Premium accounts have higher approval priority</span>
+                    </div>
+                `;
+            } else {
+                statusDiv.innerHTML = `
+                    <div class="info-badge success w-full justify-center text-center">
+                        <i class="fas fa-check-circle"></i>
+                        <span>Your account is eligible for API access!</span>
+                    </div>
+                `;
+            }
+        }
+
+        // Load user requests
+        async function loadRequests() {
+            try {
+                const response = await fetch('/api/user/api-key-requests');
+                const data = await response.json();
+                
+                if (data.success) {
+                    requestsData = data.data;
+                    displayRequests(data.data.requests);
+                    updateFormBasedOnCooldown(data.data);
+                }
+            } catch (error) {
+                console.error('Error loading requests:', error);
+            } finally {
+                document.getElementById('requests-loading').classList.add('hidden');
+            }
+        }
+
+        function updateFormBasedOnCooldown(data) {
+            const formContainer = document.getElementById('request-form-container');
+            const submitBtn = document.getElementById('submit-btn');
+            const purposeInput = document.getElementById('purpose-input');
+            
+            if (!data.canSubmit && userData.balance >= 100) {
+                submitBtn.disabled = true;
+                purposeInput.disabled = true;
+                
+                const cooldownDiv = document.createElement('div');
+                cooldownDiv.className = 'info-badge error w-full justify-center text-center mb-4';
+                cooldownDiv.innerHTML = `
+                    <i class="fas fa-clock"></i>
+                    <span>${data.cooldownMessage}</span>
+                `;
+                
+                formContainer.insertBefore(cooldownDiv, formContainer.firstChild.nextSibling);
+            }
+        }
+
+        function displayRequests(requests) {
+            const container = document.getElementById('requests-container');
+            const empty = document.getElementById('requests-empty');
+            
+            if (requests.length === 0) {
+                empty.classList.remove('hidden');
+                return;
+            }
+            
+            container.classList.remove('hidden');
+            container.innerHTML = requests.map(req => {
+                const statusClass = req.status;
+                const statusIcon = req.status === 'approved' ? 'check-circle' : 
+                                  req.status === 'rejected' ? 'times-circle' : 'clock';
+                
+                return `
+                    <div class="request-card">
+                        <div class="flex items-start justify-between mb-3">
+                            <div class="flex-1">
+                                <div class="flex items-center space-x-3 mb-2">
+                                    <span class="status-badge ${statusClass}">
+                                        <i class="fas fa-${statusIcon}"></i>
+                                        ${req.status}
+                                    </span>
+                                    <span class="text-sm text-gray-500">
+                                        ${new Date(req.created_at).toLocaleDateString()} at ${new Date(req.created_at).toLocaleTimeString()}
+                                    </span>
+                                </div>
+                                <p class="text-gray-300 text-sm mb-3">${escapeHtml(req.purpose)}</p>
+                                
+                                ${req.status === 'approved' && req.api_key ? `
+                                    <div class="bg-green-900/20 border border-green-500/30 rounded-lg p-3 mt-3">
+                                        <p class="text-green-300 text-sm font-semibold mb-2">
+                                            <i class="fas fa-key mr-2"></i>API Key Generated
+                                        </p>
+                                        <div class="flex items-center space-x-2">
+                                            <code class="text-xs text-green-400 bg-gray-900/50 px-3 py-2 rounded flex-1 overflow-x-auto">${req.api_key}</code>
+                                            <button onclick="copyToClipboard('${req.api_key}')" class="text-green-400 hover:text-green-300 px-3 py-2">
+                                                <i class="fas fa-copy"></i>
+                                            </button>
+                                        </div>
+                                        <p class="text-xs text-gray-400 mt-2">
+                                            Request Limit: ${req.request_limit} | Status: ${req.key_active ? 'Active' : 'Inactive'}
+                                        </p>
+                                    </div>
+                                ` : ''}
+                                
+                                ${req.admin_reason ? `
+                                    <div class="bg-gray-800/50 border border-gray-700 rounded-lg p-3 mt-3">
+                                        <p class="text-xs text-gray-400 font-semibold mb-1">Admin Response:</p>
+                                        <p class="text-sm text-gray-300">${escapeHtml(req.admin_reason)}</p>
+                                        ${req.reviewed_by ? `<p class="text-xs text-gray-500 mt-1">By: ${req.reviewed_by}</p>` : ''}
+                                    </div>
+                                ` : ''}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Toast notification function
+        function showToast(message, type = 'success') {
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            
+            const icon = type === 'success' ? 'fa-check-circle' : 
+                        type === 'error' ? 'fa-exclamation-circle' : 
+                        'fa-info-circle';
+            
+            toast.innerHTML = `
+                <i class="fas ${icon} text-xl"></i>
+                <span>${message}</span>
+            `;
+            
+            document.body.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.classList.add('fade-out');
+                setTimeout(() => toast.remove(), 300);
+            }, 4000);
+        }
+
+        // Character counter
+        document.getElementById('purpose-input').addEventListener('input', function() {
+            const count = this.value.length;
+            const counter = document.getElementById('char-count');
+            const warning = document.getElementById('min-char-warning');
+            
+            counter.textContent = `${count} / 1000 characters`;
+            
+            if (count < 20 && count > 0) {
+                warning.classList.remove('hidden');
+            } else {
+                warning.classList.add('hidden');
+            }
+        });
+
+        // Form submission
+        document.getElementById('api-request-form').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const purpose = document.getElementById('purpose-input').value.trim();
+            const submitBtn = document.getElementById('submit-btn');
+            
+            if (purpose.length < 20) {
+                showToast('Purpose must be at least 20 characters long', 'error');
+                return;
+            }
+            
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Submitting...';
+            
+            try {
+                const response = await fetch('/api/user/api-key-request', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ purpose })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    showToast('Your API key request has been submitted successfully! You will be notified once it is reviewed.', 'success');
+                    document.getElementById('purpose-input').value = '';
+                    loadRequests();
+                } else {
+                    showToast(data.message, 'error');
+                }
+            } catch (error) {
+                console.error('Error submitting request:', error);
+                showToast('An error occurred while submitting your request', 'error');
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = '<i class="fas fa-paper-plane mr-2"></i> Submit Request';
+            }
+        });
+
+        function copyToClipboard(text) {
+            navigator.clipboard.writeText(text).then(() => {
+                showToast('API key copied to clipboard!', 'success');
+            }).catch(err => {
+                console.error('Failed to copy:', err);
+                showToast('Failed to copy to clipboard', 'error');
+            });
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        // Initialize
+        loadUserData();
+        loadRequests();
+    </script>
+</body>
+</html>

@@ -1,0 +1,37 @@
+{
+  "name": "andy-ch-react",
+  "version": "1.0.0",
+  "description": "Andy CH React - Auto React Channel Posts with All Emojis Support",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=9.0.0"
+  },
+  "keywords": [
+    "whatsapp",
+    "channel",
+    "reactions",
+    "emoji",
+    "auto-react"
+  ],
+  "author": "Andy CH React",
+  "license": "MIT",
+  "dependencies": {
+    "axios": "^1.13.2",
+    "connect-pg-simple": "^10.0.0",
+    "dotenv": "^17.3.1",
+    "express": "^4.18.2",
+    "express-session": "^1.18.2",
+    "multer": "^2.0.0",
+    "node-cron": "^4.2.1",
+    "node-fetch": "^2.7.0",
+    "nodemailer": "^7.0.11",
+    "passport": "^0.7.0",
+    "passport-google-oauth20": "^2.0.0",
+    "pg": "^8.16.3"
+  }
+}

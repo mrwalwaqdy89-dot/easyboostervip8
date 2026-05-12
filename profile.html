@@ -1,0 +1,1205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>My Profile - ANDY RCH</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="dashboard-styles.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+        
+        * {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', sans-serif;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        body {
+            background: #0a0e14;
+            color: #E6EDF3;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        /* Premium Animated Background */
+        .animated-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            opacity: 0.15;
+            background: 
+                radial-gradient(ellipse at 20% 30%, rgba(102, 126, 234, 0.4) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 70%, rgba(118, 75, 162, 0.35) 0%, transparent 50%),
+                radial-gradient(ellipse at 50% 50%, rgba(240, 147, 251, 0.2) 0%, transparent 60%),
+                radial-gradient(ellipse at 10% 90%, rgba(102, 126, 234, 0.25) 0%, transparent 40%);
+            animation: float 25s ease-in-out infinite;
+            pointer-events: none;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) scale(1); }
+            50% { transform: translateY(-25px) scale(1.02); }
+        }
+
+        /* Premium Sidebar */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: -280px;
+            width: 280px;
+            height: 100vh;
+            background: rgba(18, 23, 31, 0.95);
+            backdrop-filter: blur(40px);
+            -webkit-backdrop-filter: blur(40px);
+            border-right: 1px solid rgba(102, 126, 234, 0.15);
+            z-index: 1000;
+            transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            overflow-y: auto;
+        }
+
+        .sidebar.open {
+            transform: translateX(280px);
+        }
+
+        .sidebar-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(10, 14, 20, 0.75);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            z-index: 999;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        .sidebar-overlay.open {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* Premium Sidebar Links */
+        .sidebar-link {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 14px 20px;
+            color: #8b949e;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 15px;
+            transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            border-radius: 14px;
+            margin: 4px 12px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .sidebar-link::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 50%;
+            width: 3px;
+            height: 0;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 0 4px 4px 0;
+            transform: translateY(-50%);
+            transition: height 0.3s ease;
+        }
+
+        .sidebar-link:hover {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.08));
+            color: #a78bfa;
+        }
+
+        .sidebar-link:hover::before {
+            height: 50%;
+        }
+
+        .sidebar-link.active {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.15), rgba(118, 75, 162, 0.1));
+            color: #a78bfa;
+            border: 1px solid rgba(102, 126, 234, 0.3);
+        }
+
+        .sidebar-link.active::before {
+            height: 60%;
+        }
+
+        .sidebar-link i {
+            width: 22px;
+            font-size: 18px;
+        }
+
+        /* Premium Top Navigation */
+        .top-nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 72px;
+            background: rgba(10, 14, 20, 0.85);
+            backdrop-filter: blur(40px);
+            -webkit-backdrop-filter: blur(40px);
+            border-bottom: 1px solid rgba(102, 126, 234, 0.1);
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 24px;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Premium Burger Button */
+        .burger-btn {
+            width: 46px;
+            height: 46px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 5px;
+            background: rgba(18, 23, 31, 0.8);
+            border: 1px solid rgba(102, 126, 234, 0.2);
+            border-radius: 14px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        .burger-btn:hover {
+            background: rgba(102, 126, 234, 0.15);
+            border-color: rgba(102, 126, 234, 0.4);
+            box-shadow: 0 4px 20px rgba(102, 126, 234, 0.2);
+        }
+
+        .burger-btn span {
+            width: 20px;
+            height: 2px;
+            background: linear-gradient(90deg, #667eea, #a78bfa);
+            border-radius: 2px;
+            transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        .burger-btn.active span:nth-child(1) {
+            transform: rotate(45deg) translate(5px, 5px);
+        }
+
+        .burger-btn.active span:nth-child(2) {
+            opacity: 0;
+        }
+
+        .burger-btn.active span:nth-child(3) {
+            transform: rotate(-45deg) translate(5px, -5px);
+        }
+
+        .profile-dropdown {
+            position: relative;
+        }
+
+        /* Premium Profile Button */
+        .profile-btn {
+            width: 46px;
+            height: 46px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: 2px solid rgba(102, 126, 234, 0.5);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 16px;
+            color: white;
+            transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            box-shadow: 0 4px 20px rgba(102, 126, 234, 0.35);
+        }
+
+        .profile-btn:hover {
+            transform: scale(1.08);
+            box-shadow: 0 8px 30px rgba(102, 126, 234, 0.5);
+        }
+
+        /* Premium Profile Menu */
+        .profile-menu {
+            position: absolute;
+            top: 58px;
+            right: 0;
+            width: 240px;
+            background: rgba(18, 23, 31, 0.95);
+            backdrop-filter: blur(40px);
+            -webkit-backdrop-filter: blur(40px);
+            border: 1px solid rgba(102, 126, 234, 0.2);
+            border-radius: 20px;
+            padding: 10px;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-15px) scale(0.95);
+            transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            box-shadow: 0 25px 80px rgba(0, 0, 0, 0.5), 0 0 40px rgba(102, 126, 234, 0.1);
+        }
+
+        .profile-menu.open {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0) scale(1);
+        }
+
+        .profile-menu-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            color: #E6EDF3;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 14px;
+            border-radius: 12px;
+            transition: all 0.25s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        .profile-menu-item:hover {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.15), rgba(118, 75, 162, 0.1));
+            color: #a78bfa;
+        }
+
+        .profile-menu-item.logout {
+            color: #f87171;
+        }
+
+        .profile-menu-item.logout:hover {
+            background: rgba(248, 113, 113, 0.15);
+            color: #fca5a5;
+        }
+
+        .profile-menu-divider {
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(102, 126, 234, 0.3), transparent);
+            margin: 10px 0;
+        }
+
+        .main-content {
+            padding-top: 96px;
+            padding-bottom: 50px;
+            min-height: 100vh;
+        }
+
+        /* Premium Glass Card */
+        .glass-card {
+            background: rgba(18, 23, 31, 0.75);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border: 1px solid rgba(102, 126, 234, 0.12);
+            box-shadow: 0 8px 40px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+            transition: all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            border-radius: 24px;
+        }
+
+        .glass-card:hover {
+            box-shadow: 0 20px 70px rgba(102, 126, 234, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+            border-color: rgba(102, 126, 234, 0.25);
+            transform: translateY(-4px);
+        }
+
+        /* Premium Gradient Text */
+        .gradient-text {
+            background: linear-gradient(135deg, #667eea 0%, #a78bfa 50%, #f093fb 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* Premium Profile Avatar */
+        .profile-avatar {
+            width: 130px;
+            height: 130px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+            border: 4px solid rgba(102, 126, 234, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 52px;
+            font-weight: 700;
+            color: white;
+            box-shadow: 0 12px 40px rgba(102, 126, 234, 0.4), 0 0 60px rgba(102, 126, 234, 0.2);
+            position: relative;
+            transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        .profile-avatar:hover {
+            transform: scale(1.08);
+            box-shadow: 0 16px 50px rgba(102, 126, 234, 0.5), 0 0 80px rgba(102, 126, 234, 0.3);
+        }
+
+        .profile-avatar-ring {
+            position: absolute;
+            inset: -10px;
+            border-radius: 50%;
+            border: 3px solid rgba(102, 126, 234, 0.35);
+            animation: pulse-ring 2.5s infinite;
+        }
+
+        @keyframes pulse-ring {
+            0%, 100% { 
+                transform: scale(1);
+                opacity: 1;
+                border-color: rgba(102, 126, 234, 0.35);
+            }
+            50% { 
+                transform: scale(1.08);
+                opacity: 0.5;
+                border-color: rgba(118, 75, 162, 0.5);
+            }
+        }
+
+        /* Premium Info Row */
+        .info-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 18px 22px;
+            background: rgba(18, 23, 31, 0.5);
+            border-radius: 16px;
+            border: 1px solid rgba(102, 126, 234, 0.1);
+            transition: all 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        .info-row:hover {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.08), rgba(118, 75, 162, 0.05));
+            border-color: rgba(102, 126, 234, 0.25);
+            transform: translateX(4px);
+        }
+
+        /* Premium Balance Card */
+        .balance-card {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.15) 0%, rgba(118, 75, 162, 0.12) 50%, rgba(240, 147, 251, 0.08) 100%);
+            border: 2px solid rgba(102, 126, 234, 0.3);
+            border-radius: 28px;
+            padding: 36px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 0 60px rgba(102, 126, 234, 0.15);
+        }
+
+        .balance-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.08), transparent);
+            animation: shimmer 4s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+            100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+        }
+
+        /* Premium Coin Icon */
+        .coin-icon {
+            width: 90px;
+            height: 90px;
+            margin: 0 auto 24px;
+            background: linear-gradient(135deg, #FFD700 0%, #FFA500 50%, #FF8C00 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+            box-shadow: 0 12px 40px rgba(255, 215, 0, 0.45), 0 0 60px rgba(255, 215, 0, 0.25);
+            animation: coin-pulse 2.5s infinite;
+        }
+
+        @keyframes coin-pulse {
+            0%, 100% { 
+                transform: scale(1);
+                box-shadow: 0 12px 40px rgba(255, 215, 0, 0.45), 0 0 60px rgba(255, 215, 0, 0.25);
+            }
+            50% { 
+                transform: scale(1.08);
+                box-shadow: 0 16px 55px rgba(255, 215, 0, 0.55), 0 0 80px rgba(255, 215, 0, 0.35);
+            }
+        }
+
+        .balance-amount {
+            font-size: 48px;
+            font-weight: 800;
+            background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 8px;
+            letter-spacing: -1px;
+        }
+
+        .stat-mini {
+            background: rgba(22, 27, 34, 0.6);
+            border: 1px solid rgba(48, 54, 61, 0.5);
+            border-radius: 16px;
+            padding: 20px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .stat-mini:hover {
+            transform: translateY(-4px);
+            border-color: rgba(31, 111, 235, 0.4);
+            box-shadow: 0 12px 40px rgba(31, 111, 235, 0.2);
+        }
+
+        .page-title {
+            font-size: 28px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+
+        @keyframes pulse-status {
+            0%, 100% { 
+                opacity: 1;
+                transform: scale(1);
+            }
+            50% { 
+                opacity: 0.6;
+                transform: scale(1.1);
+            }
+        }
+
+        .status-indicator {
+            animation: pulse-status 2s infinite;
+        }
+
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #161b22;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(180deg, #1f6feb 0%, #0969da 100%);
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(180deg, #58a6ff 0%, #1f6feb 100%);
+        }
+
+        .quick-action {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 20px 16px;
+            background: rgba(22, 27, 34, 0.6);
+            border: 1px solid rgba(48, 54, 61, 0.5);
+            border-radius: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            color: #c9d1d9;
+        }
+
+        .quick-action:hover {
+            background: rgba(31, 111, 235, 0.1);
+            border-color: rgba(31, 111, 235, 0.4);
+            transform: translateY(-3px);
+        }
+
+        .quick-action-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+
+        .premium-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 14px;
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.2) 0%, rgba(255, 165, 0, 0.1) 100%);
+            border: 1px solid rgba(255, 215, 0, 0.4);
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+            color: #FFD700;
+        }
+
+        .free-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 14px;
+            background: rgba(139, 148, 158, 0.15);
+            border: 1px solid rgba(139, 148, 158, 0.3);
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+            color: #8b949e;
+        }
+
+        /* Ultra Premium Badge - Glowing Effect */
+        .ultra-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 14px;
+            background: linear-gradient(135deg, rgba(251, 191, 36, 0.3) 0%, rgba(245, 158, 11, 0.3) 100%);
+            border: 1px solid rgba(251, 191, 36, 0.6);
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 700;
+            color: #fbbf24;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            box-shadow: 
+                0 0 10px rgba(251, 191, 36, 0.4),
+                0 0 20px rgba(251, 191, 36, 0.2),
+                inset 0 0 8px rgba(251, 191, 36, 0.1);
+            animation: ultra-badge-glow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes ultra-badge-glow {
+            0% { 
+                box-shadow: 0 0 10px rgba(251, 191, 36, 0.4), 0 0 20px rgba(251, 191, 36, 0.2), inset 0 0 8px rgba(251, 191, 36, 0.1);
+            }
+            100% { 
+                box-shadow: 0 0 15px rgba(251, 191, 36, 0.6), 0 0 30px rgba(251, 191, 36, 0.3), inset 0 0 12px rgba(251, 191, 36, 0.15);
+            }
+        }
+
+        .ultra-badge i {
+            color: #fcd34d;
+        }
+    </style>
+</head>
+<body>
+    <div class="animated-bg"></div>
+
+    <!-- Sidebar Overlay -->
+    <div class="sidebar-overlay" id="sidebar-overlay"></div>
+
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar" id="sidebar">
+        <div class="p-6 border-b border-gray-700/50">
+            <a href="/" class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center">
+                    <i class="fas fa-bolt text-white text-lg"></i>
+                </div>
+                <span class="text-xl font-bold text-white">ANDY RCH</span>
+            </a>
+        </div>
+        
+        <nav class="py-4">
+            <div class="px-4 mb-2">
+                <span class="text-xs font-semibold text-gray-500 uppercase tracking-wider">Main Menu</span>
+            </div>
+            <a href="/reactch" class="sidebar-link">
+                <i class="fas fa-home"></i>
+                <span>Dashboard</span>
+            </a>
+            <a href="/autoreact" class="sidebar-link">
+                <i class="fas fa-robot"></i>
+                <span>Auto React Channels</span>
+            </a>
+            <a href="/history" class="sidebar-link">
+                <i class="fas fa-history"></i>
+                <span>Transaction History</span>
+            </a>
+            <a href="/profile" class="sidebar-link active">
+                <i class="fas fa-user"></i>
+                <span>My Profile</span>
+            </a>
+            
+            <div class="px-4 mb-2 mt-6">
+                <span class="text-xs font-semibold text-gray-500 uppercase tracking-wider">Support</span>
+            </div>
+            <a href="/pricing" class="sidebar-link">
+                <i class="fas fa-coins text-yellow-500"></i>
+                <span>Add Balance</span>
+            </a>
+            <a href="/terms" class="sidebar-link">
+                <i class="fas fa-file-contract"></i>
+                <span>Terms of Service</span>
+            </a>
+            <a href="https://wa.me/13056978303" target="_blank" class="sidebar-link">
+                <i class="fab fa-whatsapp text-green-500"></i>
+                <span>Contact Support</span>
+            </a>
+        </nav>
+        
+        <div class="absolute bottom-0 left-0 right-0 p-4 border-t border-gray-700/50">
+            <div class="glass-card rounded-xl p-4">
+                <div class="flex items-center gap-3 mb-3">
+                    <div class="w-8 h-8 rounded-full bg-gradient-to-br from-yellow-500 to-orange-500 flex items-center justify-center">
+                        <i class="fas fa-coins text-white text-sm"></i>
+                    </div>
+                    <div>
+                        <p class="text-sm font-semibold text-white">Add Balance</p>
+                        <p class="text-xs text-gray-400">Get more reactions</p>
+                    </div>
+                </div>
+                <a href="/pricing" class="block w-full py-2 text-center text-sm font-semibold text-white bg-gradient-to-r from-yellow-500 to-orange-500 rounded-lg hover:opacity-90 transition">
+                    View Packages
+                </a>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Top Navigation -->
+    <header class="top-nav">
+        <div class="flex items-center gap-4">
+            <button class="burger-btn" id="burger-btn">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            <a href="/" class="hidden sm:flex items-center gap-2">
+                <span class="text-lg font-bold gradient-text">ANDY RCH</span>
+            </a>
+        </div>
+        
+        <div class="flex items-center gap-4">
+            <div class="hidden sm:flex items-center gap-2 px-3 py-1.5 bg-green-500/10 border border-green-500/30 rounded-full">
+                <div class="w-2 h-2 bg-green-500 rounded-full status-indicator"></div>
+                <span class="text-xs font-medium text-green-400">System Online</span>
+            </div>
+            
+            <div class="profile-dropdown">
+                <button class="profile-btn" id="profile-btn">
+                    <i class="fas fa-user"></i>
+                </button>
+                <div class="profile-menu" id="profile-menu">
+                    <div class="px-4 py-3 border-b border-gray-700/50">
+                        <p class="text-sm font-semibold text-white" id="menu-user-name">Guest User</p>
+                        <p class="text-xs text-gray-400" id="menu-user-plan">Free Plan</p>
+                    </div>
+                    <a href="/profile" class="profile-menu-item">
+                        <i class="fas fa-user-circle"></i>
+                        <span>My Profile</span>
+                    </a>
+                    <a href="/pricing" class="profile-menu-item">
+                        <i class="fas fa-coins text-yellow-500"></i>
+                        <span>Add Balance</span>
+                    </a>
+                    <div class="profile-menu-divider"></div>
+                    <a href="/" class="profile-menu-item logout">
+                        <i class="fas fa-sign-out-alt"></i>
+                        <span>Back to Home</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content relative z-10">
+        <div class="container mx-auto px-4 sm:px-6 max-w-4xl">
+            
+            <!-- Page Header -->
+            <div class="mb-8">
+                <h1 class="page-title text-white mb-2">My Profile</h1>
+                <p class="text-gray-400">Manage your account settings and preferences</p>
+            </div>
+
+            <!-- Profile Card -->
+            <div class="glass-card rounded-2xl p-8 mb-8">
+                <div class="flex flex-col sm:flex-row items-center gap-8">
+                    <!-- Avatar -->
+                    <div class="relative">
+                        <div class="profile-avatar">
+                            <div class="profile-avatar-ring"></div>
+                            <i class="fas fa-user"></i>
+                        </div>
+                    </div>
+                    
+                    <!-- User Info -->
+                    <div class="flex-1 text-center sm:text-left">
+                        <div class="flex flex-col sm:flex-row sm:items-center gap-3 mb-3">
+                            <h2 id="profile-user-name" class="text-2xl font-bold text-white">Guest User</h2>
+                            <span id="plan-badge" class="free-badge">
+                                <i class="fas fa-circle text-xs"></i>
+                                Free Plan
+                            </span>
+                            <!-- Ultra Badge (hidden by default) -->
+                            <span id="ultra-badge" class="ultra-badge hidden">
+                                <i class="fas fa-crown text-xs"></i>
+                                ULTRA
+                            </span>
+                        </div>
+                        <p class="text-gray-400 mb-4">Welcome to ANDY RCH! Boost your channel engagement with automated reactions.</p>
+                        <a href="/pricing" class="inline-flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-yellow-500 to-orange-500 rounded-xl text-white font-semibold text-sm hover:opacity-90 transition">
+                            <i class="fas fa-coins"></i>
+                            Add Balance
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Balance Card -->
+            <div class="balance-card mb-8">
+                <div class="coin-icon">
+                    <i class="fas fa-coins text-white"></i>
+                </div>
+                <p class="text-gray-400 text-sm mb-2">Your Balance</p>
+                <p class="balance-amount">0</p>
+                <p class="text-gray-400 text-sm">Coins Available</p>
+                <div class="mt-6 flex flex-col sm:flex-row gap-3 justify-center">
+                    <a href="/pricing" class="inline-flex items-center justify-center gap-2 px-6 py-3 bg-gradient-to-r from-yellow-500 to-orange-500 rounded-xl text-white font-semibold text-sm hover:opacity-90 transition">
+                        <i class="fas fa-plus"></i>
+                        Add Balance
+                    </a>
+                    <a href="/history" class="inline-flex items-center justify-center gap-2 px-6 py-3 bg-gray-700/50 border border-gray-600/50 rounded-xl text-white font-semibold text-sm hover:bg-gray-700 transition">
+                        <i class="fas fa-history"></i>
+                        Transaction History
+                    </a>
+                </div>
+            </div>
+
+            <!-- Account Information -->
+            <div class="glass-card rounded-2xl p-6 sm:p-8 mb-8">
+                <div class="flex items-center gap-3 mb-6">
+                    <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center">
+                        <i class="fas fa-id-card text-white"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-white">Account Information</h3>
+                </div>
+
+                <div class="space-y-4">
+                    <div class="info-row">
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-lg bg-blue-500/20 flex items-center justify-center">
+                                <i class="fas fa-user text-blue-400"></i>
+                            </div>
+                            <div>
+                                <p class="text-xs text-gray-500 uppercase tracking-wide">Username</p>
+                                <p class="text-white font-medium">Guest User</p>
+                            </div>
+                        </div>
+                        <button class="text-blue-400 hover:text-blue-300 text-sm font-medium">
+                            <i class="fas fa-copy"></i>
+                        </button>
+                    </div>
+
+                    <div class="info-row">
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-lg bg-purple-500/20 flex items-center justify-center">
+                                <i class="fas fa-fingerprint text-purple-400"></i>
+                            </div>
+                            <div>
+                                <p class="text-xs text-gray-500 uppercase tracking-wide">User ID</p>
+                                <p class="text-white font-medium font-mono">GUEST-0000</p>
+                            </div>
+                        </div>
+                        <button class="text-blue-400 hover:text-blue-300 text-sm font-medium">
+                            <i class="fas fa-copy"></i>
+                        </button>
+                    </div>
+
+                    <div class="info-row">
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-lg bg-green-500/20 flex items-center justify-center">
+                                <i class="fas fa-envelope text-green-400"></i>
+                            </div>
+                            <div>
+                                <p class="text-xs text-gray-500 uppercase tracking-wide">Email</p>
+                                <p class="text-white font-medium">Not registered</p>
+                            </div>
+                        </div>
+                        <span class="text-gray-500 text-sm">—</span>
+                    </div>
+
+                    <div class="info-row">
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-lg bg-yellow-500/20 flex items-center justify-center">
+                                <i class="fas fa-crown text-yellow-400"></i>
+                            </div>
+                            <div>
+                                <p class="text-xs text-gray-500 uppercase tracking-wide">Plan Status</p>
+                                <p class="text-white font-medium">Free Plan</p>
+                            </div>
+                        </div>
+                        <a href="/pricing" class="text-yellow-400 hover:text-yellow-300 text-sm font-medium">
+                            Add Balance <i class="fas fa-arrow-right ml-1"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Usage Statistics -->
+            <div class="grid sm:grid-cols-3 gap-4 mb-8">
+                <div class="stat-mini">
+                    <div class="w-12 h-12 mx-auto rounded-xl bg-gradient-to-br from-blue-500/20 to-blue-600/20 flex items-center justify-center mb-3">
+                        <i class="fas fa-paper-plane text-blue-400 text-xl"></i>
+                    </div>
+                    <p class="text-2xl font-bold text-white mb-1">12</p>
+                    <p class="text-xs text-gray-400">Daily Limit Left</p>
+                </div>
+                <div class="stat-mini">
+                    <div class="w-12 h-12 mx-auto rounded-xl bg-gradient-to-br from-green-500/20 to-green-600/20 flex items-center justify-center mb-3">
+                        <i class="fas fa-check-circle text-green-400 text-xl"></i>
+                    </div>
+                    <p class="text-2xl font-bold text-white mb-1">0</p>
+                    <p class="text-xs text-gray-400">Total Sent</p>
+                </div>
+                <div class="stat-mini">
+                    <div class="w-12 h-12 mx-auto rounded-xl bg-gradient-to-br from-purple-500/20 to-purple-600/20 flex items-center justify-center mb-3">
+                        <i class="fas fa-calendar text-purple-400 text-xl"></i>
+                    </div>
+                    <p class="text-2xl font-bold text-white mb-1">Today</p>
+                    <p class="text-xs text-gray-400">Member Since</p>
+                </div>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="grid grid-cols-3 gap-4">
+                <a href="/reactch" class="quick-action">
+                    <div class="quick-action-icon bg-gradient-to-br from-blue-500 to-blue-600">
+                        <i class="fas fa-bolt text-white"></i>
+                    </div>
+                    <span class="text-sm font-medium">Dashboard</span>
+                </a>
+                <a href="/pricing" class="quick-action">
+                    <div class="quick-action-icon bg-gradient-to-br from-yellow-500 to-orange-500">
+                        <i class="fas fa-coins text-white"></i>
+                    </div>
+                    <span class="text-sm font-medium">Add Balance</span>
+                </a>
+                <a href="https://wa.me/13056978303" target="_blank" class="quick-action">
+                    <div class="quick-action-icon bg-gradient-to-br from-green-500 to-green-600">
+                        <i class="fab fa-whatsapp text-white"></i>
+                    </div>
+                    <span class="text-sm font-medium">Support</span>
+                </a>
+            </div>
+
+            <!-- Adsterra Ad Section -->
+            <div class="mt-8 flex justify-center">
+                <div class="glass-card rounded-xl p-6 inline-block">
+                    <script
+                      async="async"
+                      data-cfasync="false"
+                      src="//pl28210824.effectivegatecpm.com/fa62214052e77e775804e6aa96c3be86/invoke.js"
+                    ></script>
+                    <div id="container-fa62214052e77e775804e6aa96c3be86"></div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="relative z-10 py-8 px-6 border-t border-gray-800/50">
+        <div class="container mx-auto text-center">
+            <p class="text-gray-500 text-sm">© 2025 ANDY RCH. All rights reserved.</p>
+            <p class="text-gray-600 text-xs mt-1">Powered by <span class="text-blue-400">Asitha</span></p>
+        </div>
+    </footer>
+
+    <script>
+        // Helper function to format plan text (e.g., "free" -> "Free Plan")
+        function formatPlanText(plan) {
+            if (!plan) return 'Free Plan';
+            return plan.charAt(0).toUpperCase() + plan.slice(1) + ' Plan';
+        }
+
+        // Helper function to safely set avatar image
+        function safeSetAvatar(container, avatarUrl, cssClasses = 'w-full h-full rounded-full object-cover') {
+            if (!container || !avatarUrl) return false;
+            
+            // Validate that the URL is a valid image URL (starts with http/https)
+            try {
+                const url = new URL(avatarUrl);
+                if (url.protocol !== 'http:' && url.protocol !== 'https:') {
+                    return false;
+                }
+            } catch (e) {
+                return false;
+            }
+            
+            // Create image element safely
+            const img = document.createElement('img');
+            img.src = avatarUrl;
+            img.alt = 'Avatar';
+            img.className = cssClasses;
+            
+            // Clear container and append image
+            container.innerHTML = '';
+            container.appendChild(img);
+            return true;
+        }
+
+        // Helper function to replace an element with an avatar image
+        function safeReplaceWithAvatar(element, avatarUrl, cssClasses = 'w-full h-full rounded-full object-cover') {
+            if (!element || !avatarUrl) return false;
+            
+            // Validate that the URL is a valid image URL (starts with http/https)
+            try {
+                const url = new URL(avatarUrl);
+                if (url.protocol !== 'http:' && url.protocol !== 'https:') {
+                    return false;
+                }
+            } catch (e) {
+                return false;
+            }
+            
+            // Create image element safely
+            const img = document.createElement('img');
+            img.src = avatarUrl;
+            img.alt = 'Avatar';
+            img.className = cssClasses;
+            
+            // Replace the element with the image
+            element.replaceWith(img);
+            return true;
+        }
+
+        // Sidebar functionality
+        const sidebar = document.getElementById('sidebar');
+        const sidebarOverlay = document.getElementById('sidebar-overlay');
+        const burgerBtn = document.getElementById('burger-btn');
+
+        function toggleSidebar() {
+            sidebar.classList.toggle('open');
+            sidebarOverlay.classList.toggle('open');
+            burgerBtn.classList.toggle('active');
+        }
+
+        burgerBtn.addEventListener('click', toggleSidebar);
+        sidebarOverlay.addEventListener('click', toggleSidebar);
+
+        // Profile dropdown functionality
+        const profileBtn = document.getElementById('profile-btn');
+        const profileMenu = document.getElementById('profile-menu');
+
+        profileBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            profileMenu.classList.toggle('open');
+        });
+
+        document.addEventListener('click', () => {
+            profileMenu.classList.remove('open');
+        });
+
+        profileMenu.addEventListener('click', (e) => {
+            e.stopPropagation();
+        });
+
+        // Close sidebar on window resize (for desktop)
+        window.addEventListener('resize', () => {
+            if (window.innerWidth >= 768 && sidebar.classList.contains('open')) {
+                toggleSidebar();
+            }
+        });
+
+        // Copy functionality
+        document.querySelectorAll('.info-row button').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const text = this.closest('.info-row').querySelector('p.text-white').textContent;
+                navigator.clipboard.writeText(text).then(() => {
+                    const originalHtml = this.innerHTML;
+                    this.innerHTML = '<i class="fas fa-check"></i>';
+                    setTimeout(() => {
+                        this.innerHTML = originalHtml;
+                    }, 2000);
+                });
+            });
+        });
+
+        // Load user data from API
+        async function loadUserProfile() {
+            try {
+                const response = await fetch('/api/auth/status');
+                const data = await response.json();
+                
+                if (data.authenticated && data.user) {
+                    const user = data.user;
+                    
+                    // Update localStorage
+                    localStorage.setItem('user', JSON.stringify(user));
+                    localStorage.setItem('isLoggedIn', 'true');
+                    
+                    // Update profile avatar safely using helper function
+                    const avatarContainer = document.querySelector('.profile-avatar');
+                    if (avatarContainer && user.avatar) {
+                        const iconEl = avatarContainer.querySelector('i');
+                        if (iconEl) {
+                            safeReplaceWithAvatar(iconEl, user.avatar, 'w-full h-full rounded-full object-cover');
+                        }
+                    }
+                    
+                    // Update profile name using the correct ID
+                    const profileNameEl = document.getElementById('profile-user-name');
+                    if (profileNameEl) {
+                        profileNameEl.textContent = user.name || 'User';
+                    }
+                    
+                    // Update profile button in top nav safely
+                    const profileBtn = document.getElementById('profile-btn');
+                    if (profileBtn && user.avatar) {
+                        safeSetAvatar(profileBtn, user.avatar);
+                    }
+                    
+                    // Update profile menu info using IDs
+                    const menuNameEl = document.getElementById('menu-user-name');
+                    if (menuNameEl) {
+                        menuNameEl.textContent = user.name || 'User';
+                    }
+                    
+                    const menuPlanEl = document.getElementById('menu-user-plan');
+                    if (menuPlanEl) {
+                        menuPlanEl.textContent = formatPlanText(user.plan);
+                    }
+                    
+                    // Update info rows
+                    const infoRows = document.querySelectorAll('.info-row');
+                    infoRows.forEach(row => {
+                        const labelEl = row.querySelector('.text-xs');
+                        const valueEl = row.querySelector('.text-white.font-medium');
+                        
+                        if (labelEl && valueEl) {
+                            const label = labelEl.textContent;
+                            if (label.includes('Username')) {
+                                valueEl.textContent = user.name || 'User';
+                            } else if (label.includes('User ID')) {
+                                valueEl.textContent = `USER-${user.id.toString().padStart(4, '0')}`;
+                            } else if (label.includes('Email')) {
+                                valueEl.textContent = user.email || 'Not available';
+                            } else if (label.includes('Plan')) {
+                                valueEl.textContent = formatPlanText(user.plan);
+                            }
+                        }
+                    });
+                    
+                    // Update balance
+                    const balanceEl = document.querySelector('.balance-amount');
+                    if (balanceEl) {
+                        // Check if user has unlimited access
+                        if (user.isUnlimited || user.planType === 'ultra') {
+                            balanceEl.innerHTML = '<span class="text-yellow-400">♾️</span>';
+                        } else {
+                            balanceEl.textContent = user.balance || 0;
+                        }
+                    }
+                    
+                    // Update plan badge
+                    const planBadgeEl = document.getElementById('plan-badge');
+                    const ultraBadgeEl = document.getElementById('ultra-badge');
+                    
+                    if (user.planType === 'ultra' && user.planExpiresAt && new Date(user.planExpiresAt) > new Date()) {
+                        // User has active Ultra subscription
+                        if (planBadgeEl) planBadgeEl.classList.add('hidden');
+                        if (ultraBadgeEl) ultraBadgeEl.classList.remove('hidden');
+                    } else if (user.plan === 'premium') {
+                        if (planBadgeEl) {
+                            planBadgeEl.className = 'premium-badge';
+                            planBadgeEl.innerHTML = '<i class="fas fa-crown text-xs"></i> Premium';
+                        }
+                        if (ultraBadgeEl) ultraBadgeEl.classList.add('hidden');
+                    } else {
+                        if (planBadgeEl) {
+                            planBadgeEl.className = 'free-badge';
+                            planBadgeEl.innerHTML = '<i class="fas fa-circle text-xs"></i> Free Plan';
+                        }
+                        if (ultraBadgeEl) ultraBadgeEl.classList.add('hidden');
+                    }
+                    
+                    // Load stats
+                    await loadUserStats();
+                } else {
+                    // Not authenticated - redirect to login
+                    localStorage.removeItem('user');
+                    localStorage.removeItem('isLoggedIn');
+                    window.location.href = '/login';
+                }
+            } catch (error) {
+                console.error('Error loading profile:', error);
+                // On error, redirect to login
+                window.location.href = '/login';
+            }
+        }
+
+        // Load user stats
+        async function loadUserStats() {
+            try {
+                const response = await fetch('/api/user/stats');
+                if (!response.ok) return;
+                
+                const result = await response.json();
+                if (!result.success) return;
+                
+                const stats = result.data;
+                
+                // Update balance
+                document.querySelector('.balance-amount').textContent = stats.balance;
+                
+                // Update stat cards
+                const statMiniCards = document.querySelectorAll('.stat-mini');
+                statMiniCards.forEach(card => {
+                    const label = card.querySelector('.text-xs').textContent;
+                    const valueEl = card.querySelector('.text-2xl');
+                    
+                    if (label.includes('Daily Limit')) {
+                        // Show "Unlimited" badge for premium users
+                        if (stats.unlimited || stats.remainingToday === 'unlimited') {
+                            valueEl.innerHTML = '<span class="inline-flex items-center gap-1 text-yellow-400 text-lg"><i class="fas fa-infinity text-sm"></i> ∞</span>';
+                            // Update label too
+                            card.querySelector('.text-xs').textContent = 'Unlimited';
+                        } else {
+                            valueEl.textContent = stats.remainingToday;
+                        }
+                    } else if (label.includes('Total Sent')) {
+                        valueEl.textContent = stats.totalSent;
+                    } else if (label.includes('Member Since')) {
+                        const date = new Date(stats.memberSince);
+                        valueEl.textContent = date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+                    }
+                });
+            } catch (error) {
+                console.error('Error loading stats:', error);
+            }
+        }
+
+        function handleLogout() {
+            fetch('/api/auth/logout', { method: 'POST' })
+                .then(() => {
+                    localStorage.removeItem('user');
+                    localStorage.removeItem('isLoggedIn');
+                    window.location.href = '/login';
+                })
+                .catch(() => {
+                    localStorage.removeItem('user');
+                    localStorage.removeItem('isLoggedIn');
+                    window.location.href = '/login';
+                });
+        }
+
+        // Initialize
+        loadUserProfile();
+    </script>
+</body>
+</html>

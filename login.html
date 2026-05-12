@@ -1,0 +1,680 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Login - ANDY RCH</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+        
+        * {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', sans-serif;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        body {
+            background: #0d1117;
+            color: #c9d1d9;
+            min-height: 100vh;
+            overflow-x: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .animated-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            opacity: 0.1;
+            background: 
+                radial-gradient(circle at 20% 30%, rgba(31, 111, 235, 0.4) 0%, transparent 40%),
+                radial-gradient(circle at 80% 70%, rgba(88, 166, 255, 0.3) 0%, transparent 40%),
+                radial-gradient(circle at 50% 50%, rgba(31, 111, 235, 0.2) 0%, transparent 60%);
+            animation: float 25s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) scale(1) rotate(0deg); }
+            33% { transform: translateY(-15px) scale(1.02) rotate(1deg); }
+            66% { transform: translateY(10px) scale(0.98) rotate(-1deg); }
+        }
+
+        .glass-card {
+            background: rgba(22, 27, 34, 0.85);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border: 1px solid rgba(48, 54, 61, 0.6);
+            box-shadow: 
+                0 25px 50px -12px rgba(0, 0, 0, 0.5),
+                0 0 0 1px rgba(255, 255, 255, 0.05) inset,
+                0 1px 0 0 rgba(255, 255, 255, 0.1) inset;
+        }
+
+        .gradient-text {
+            background: linear-gradient(135deg, #1f6feb 0%, #58a6ff 50%, #79c0ff 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .google-btn {
+            background: #fff;
+            color: #1f2937;
+            font-weight: 600;
+            padding: 14px 32px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 14px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 2px solid transparent;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .google-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+            transition: left 0.5s;
+        }
+
+        .google-btn:hover::before {
+            left: 100%;
+        }
+
+        .google-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 35px rgba(0, 0, 0, 0.3);
+            border-color: rgba(31, 111, 235, 0.5);
+        }
+
+        .google-btn:active {
+            transform: translateY(-1px);
+        }
+
+        .google-logo {
+            width: 24px;
+            height: 24px;
+        }
+
+        .logo-container {
+            width: 90px;
+            height: 90px;
+            background: linear-gradient(135deg, #1f6feb 0%, #0969da 50%, #1f6feb 100%);
+            border-radius: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 
+                0 20px 50px rgba(31, 111, 235, 0.4),
+                0 0 0 1px rgba(255, 255, 255, 0.1) inset;
+            animation: pulse-glow 3s infinite;
+        }
+
+        @keyframes pulse-glow {
+            0%, 100% { 
+                box-shadow: 0 20px 50px rgba(31, 111, 235, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.1) inset;
+            }
+            50% { 
+                box-shadow: 0 25px 60px rgba(31, 111, 235, 0.6), 0 0 0 1px rgba(255, 255, 255, 0.15) inset;
+            }
+        }
+
+        .feature-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            background: rgba(31, 111, 235, 0.12);
+            border: 1px solid rgba(31, 111, 235, 0.25);
+            border-radius: 30px;
+            font-size: 13px;
+            color: #58a6ff;
+            font-weight: 500;
+        }
+
+        .divider {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            width: 100%;
+        }
+
+        .divider::before,
+        .divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(48, 54, 61, 0.8), transparent);
+        }
+
+        .divider span {
+            color: #8b949e;
+            font-size: 13px;
+            font-weight: 500;
+        }
+
+        .feature-list {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+
+        .feature-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 16px;
+            background: rgba(22, 27, 34, 0.5);
+            border-radius: 12px;
+            border: 1px solid rgba(48, 54, 61, 0.4);
+            font-size: 14px;
+            color: #c9d1d9;
+            transition: all 0.3s ease;
+        }
+
+        .feature-item:hover {
+            border-color: rgba(31, 111, 235, 0.4);
+            background: rgba(31, 111, 235, 0.08);
+        }
+
+        .feature-item i {
+            color: #3fb950;
+            font-size: 14px;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .animate-in {
+            animation: fadeInUp 0.6s ease forwards;
+        }
+
+        .animate-delay-1 { animation-delay: 0.1s; }
+        .animate-delay-2 { animation-delay: 0.2s; }
+        .animate-delay-3 { animation-delay: 0.3s; }
+        .animate-delay-4 { animation-delay: 0.4s; }
+
+        .back-link {
+            position: absolute;
+            top: 24px;
+            left: 24px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #8b949e;
+            font-size: 14px;
+            font-weight: 500;
+            text-decoration: none;
+            padding: 10px 18px;
+            background: rgba(22, 27, 34, 0.7);
+            border: 1px solid rgba(48, 54, 61, 0.5);
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            z-index: 10;
+        }
+
+        .back-link:hover {
+            color: #58a6ff;
+            border-color: rgba(31, 111, 235, 0.5);
+            background: rgba(31, 111, 235, 0.1);
+        }
+
+        @media (max-width: 640px) {
+            .feature-list {
+                grid-template-columns: 1fr;
+            }
+            
+            .back-link {
+                top: 16px;
+                left: 16px;
+                padding: 8px 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="animated-bg"></div>
+    
+    <a href="/" class="back-link">
+        <i class="fas fa-arrow-left"></i>
+        <span>Back to Home</span>
+    </a>
+
+    <div class="relative z-10 w-full max-w-lg mx-4">
+        <div class="glass-card rounded-3xl p-8 sm:p-12">
+            <!-- Logo -->
+            <div class="flex justify-center mb-8 opacity-0 animate-in">
+                <div class="logo-container">
+                    <i class="fas fa-bolt text-white text-4xl"></i>
+                </div>
+            </div>
+
+            <!-- Title -->
+            <div class="text-center mb-8 opacity-0 animate-in animate-delay-1">
+                <h1 class="text-3xl sm:text-4xl font-bold mb-3">
+                    Welcome to <span class="gradient-text">ANDY RCH</span>
+                </h1>
+                <p class="text-gray-400 text-base">Sign in to access your dashboard and manage your channels</p>
+            </div>
+
+            <!-- Feature Badge -->
+            <div class="flex justify-center mb-8 opacity-0 animate-in animate-delay-2">
+                <div class="feature-badge">
+                    <i class="fas fa-shield-alt"></i>
+                    <span>Secure & Private Authentication</span>
+                </div>
+            </div>
+
+            <!-- Google Sign In Button -->
+            <div class="mb-8 opacity-0 animate-in animate-delay-2">
+                <button class="google-btn w-full" onclick="handleGoogleLogin()">
+                    <svg class="google-logo" viewBox="0 0 24 24">
+                        <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                        <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                        <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+                        <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+                    </svg>
+                    <span class="text-base">Continue with Google</span>
+                </button>
+            </div>
+
+            <!-- Divider -->
+            <div class="divider mb-8 opacity-0 animate-in animate-delay-3">
+                <span>What you'll get</span>
+            </div>
+
+            <!-- Features -->
+            <div class="feature-list opacity-0 animate-in animate-delay-3">
+                <div class="feature-item">
+                    <i class="fas fa-check-circle"></i>
+                    <span>Auto React Channels</span>
+                </div>
+                <div class="feature-item">
+                    <i class="fas fa-check-circle"></i>
+                    <span>Transaction History</span>
+                </div>
+                <div class="feature-item">
+                    <i class="fas fa-check-circle"></i>
+                    <span>Coin Balance</span>
+                </div>
+                <div class="feature-item">
+                    <i class="fas fa-check-circle"></i>
+                    <span>Priority Support</span>
+                </div>
+            </div>
+
+            <!-- Footer -->
+            <div class="text-center mt-8 opacity-0 animate-in animate-delay-4">
+                <p class="text-gray-500 text-sm">
+                    By signing in, you agree to our 
+                    <a href="/terms" class="text-blue-400 hover:text-blue-300 transition">Terms of Service</a>
+                </p>
+            </div>
+        </div>
+
+        <!-- Bottom Info -->
+        <div class="text-center mt-6 opacity-0 animate-in animate-delay-4">
+            <p class="text-gray-600 text-sm">
+                © 2025 ANDY RCH • Powered by <span class="text-blue-400">Asitha</span>
+            </p>
+        </div>
+    </div>
+
+    <script>
+        // Real Google OAuth Login Handler
+        function handleGoogleLogin() {
+            // Show loading state
+            const btn = document.querySelector('.google-btn');
+            btn.innerHTML = `
+                <div class="w-5 h-5 border-2 border-gray-300 border-t-blue-500 rounded-full animate-spin"></div>
+                <span>Redirecting to Google...</span>
+            `;
+            btn.disabled = true;
+
+            // Redirect to Google OAuth endpoint
+            window.location.href = '/api/auth/google';
+        }
+
+        // Check if already logged in using the server-side session
+        async function checkLoginStatus() {
+            try {
+                const response = await fetch('/api/auth/status');
+                const data = await response.json();
+                
+                if (data.authenticated) {
+                    // Store user data in localStorage for easy client-side access
+                    localStorage.setItem('user', JSON.stringify(data.user));
+                    localStorage.setItem('isLoggedIn', 'true');
+                    
+                    // Redirect to dashboard
+                    window.location.href = '/reactch';
+                }
+            } catch (error) {
+                console.error('Error checking login status:', error);
+            }
+        }
+
+        // Check for error query parameter
+        const urlParams = new URLSearchParams(window.location.search);
+        const error = urlParams.get('error');
+        if (error) {
+            let errorMessage = 'Authentication failed. Please try again.';
+            let isAccountSuspended = false;
+            
+            // Handle different error types
+            if (error === 'account_suspended') {
+                isAccountSuspended = true;
+                errorMessage = '';
+            }
+            
+            if (isAccountSuspended) {
+                // Show professional ban modal
+                showAccountSuspendedModal();
+            } else {
+                // Show regular error message
+                const errorDiv = document.createElement('div');
+                errorDiv.className = 'fixed top-4 right-4 bg-red-500/20 border border-red-500/40 text-red-400 px-4 py-3 rounded-xl z-50';
+                errorDiv.innerHTML = `
+                    <div class="flex items-center gap-2">
+                        <i class="fas fa-exclamation-circle"></i>
+                        <span>${errorMessage}</span>
+                    </div>
+                `;
+                document.body.appendChild(errorDiv);
+                setTimeout(() => errorDiv.remove(), 5000);
+            }
+        }
+        
+        // Professional account suspended modal
+        function showAccountSuspendedModal() {
+            const modal = document.createElement('div');
+            modal.className = 'fixed inset-0 z-50 flex items-center justify-center p-4';
+            modal.style.background = 'rgba(0, 0, 0, 0.9)';
+            modal.innerHTML = `
+                <div class="glass-card rounded-3xl p-8 max-w-lg w-full text-center animate-in" style="background: rgba(22, 27, 34, 0.98); border: 1px solid rgba(239, 68, 68, 0.3);">
+                    <div class="w-20 h-20 mx-auto mb-6 rounded-full bg-red-500/20 flex items-center justify-center border-2 border-red-500/40">
+                        <i class="fas fa-ban text-red-400 text-4xl"></i>
+                    </div>
+                    
+                    <h2 class="text-2xl font-bold text-white mb-4">Account Suspended</h2>
+                    
+                    <div class="bg-red-500/10 border border-red-500/30 rounded-xl p-4 mb-6">
+                        <p class="text-gray-300 text-sm leading-relaxed">
+                            We regret to inform you that your account has been permanently suspended due to a violation of our Terms of Service and community guidelines.
+                        </p>
+                    </div>
+                    
+                    <div class="space-y-3 text-left mb-6">
+                        <div class="flex items-start gap-3 p-3 bg-gray-800/50 rounded-lg">
+                            <i class="fas fa-shield-alt text-red-400 mt-1"></i>
+                            <div>
+                                <p class="text-white font-medium text-sm">Zero Tolerance Policy</p>
+                                <p class="text-gray-400 text-xs">We maintain strict standards to protect our community and service integrity.</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-3 p-3 bg-gray-800/50 rounded-lg">
+                            <i class="fas fa-gavel text-red-400 mt-1"></i>
+                            <div>
+                                <p class="text-white font-medium text-sm">Decision is Final</p>
+                                <p class="text-gray-400 text-xs">This decision has been made after careful review and is irreversible.</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-3 p-3 bg-gray-800/50 rounded-lg">
+                            <i class="fas fa-lock text-red-400 mt-1"></i>
+                            <div>
+                                <p class="text-white font-medium text-sm">Access Revoked</p>
+                                <p class="text-gray-400 text-xs">You will no longer be able to access our services with this account.</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <p class="text-gray-500 text-xs mb-6">
+                        We are unable to provide further details regarding this suspension. Thank you for your understanding.
+                    </p>
+                    
+                    <button onclick="window.location.href='/'" class="w-full py-3 bg-gray-700 hover:bg-gray-600 text-white font-semibold rounded-xl transition-all">
+                        <i class="fas fa-home mr-2"></i> Return to Homepage
+                    </button>
+                </div>
+            `;
+            document.body.appendChild(modal);
+        }
+
+        // Check login status on page load
+        checkLoginStatus();
+        
+        // ================== FINGERPRINT PRO INTEGRATION ==================
+        // Initialize Fingerprint Pro
+        let fpPromise = null;
+        
+        async function initFingerprint() {
+            try {
+                // Load Fingerprint Pro SDK
+                const FingerprintJS = await import('https://fpjscdn.net/v3/6iNAznB5zIoduJllERCE');
+                fpPromise = FingerprintJS.load();
+                console.log('✅ Fingerprint Pro initialized');
+            } catch (error) {
+                console.error('Failed to initialize Fingerprint Pro:', error);
+            }
+        }
+        
+        async function captureAndSendFingerprint(userId) {
+            if (!fpPromise) {
+                console.warn('Fingerprint Pro not initialized');
+                return;
+            }
+            
+            try {
+                const fp = await fpPromise;
+                const result = await fp.get();
+                
+                const fingerprintData = {
+                    userId: userId,
+                    visitorId: result.visitorId,
+                    ip: result.ip,
+                    browserName: result.browserName,
+                    browserVersion: result.browserVersion,
+                    os: result.os,
+                    device: result.device,
+                    userAgent: navigator.userAgent
+                };
+                
+                // Send fingerprint to server
+                const response = await fetch('/api/fingerprint/save', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(fingerprintData)
+                });
+                
+                const data = await response.json();
+                
+                if (data.banned) {
+                    // User was auto-banned by AI
+                    showAIBanModal(data.message, data.reason, data.firstAccountEmail);
+                    // Logout the user
+                    await fetch('/api/auth/logout', { method: 'POST' });
+                    localStorage.removeItem('user');
+                    localStorage.removeItem('isLoggedIn');
+                } else if (data.warning || data.severeWarning) {
+                    // User received a warning (first account with additional accounts detected)
+                    showWarningModal(data.message, data.additionalAccountsDetected, data.severeWarning);
+                    console.log('⚠️ User received warning:', data.message);
+                } else {
+                    console.log('✅ Fingerprint saved successfully');
+                }
+            } catch (error) {
+                console.error('Error capturing fingerprint:', error);
+            }
+        }
+        
+        // Show AI ban modal
+        function showAIBanModal(message, reason, firstAccountEmail) {
+            const modal = document.createElement('div');
+            modal.className = 'fixed inset-0 z-50 flex items-center justify-center p-4';
+            modal.style.background = 'rgba(0, 0, 0, 0.95)';
+            modal.innerHTML = `
+                <div class="glass-card rounded-3xl p-8 max-w-lg w-full text-center animate-in" style="background: rgba(22, 27, 34, 0.98); border: 1px solid rgba(239, 68, 68, 0.3);">
+                    <div class="w-20 h-20 mx-auto mb-6 rounded-full bg-red-500/20 flex items-center justify-center border-2 border-red-500/40">
+                        <i class="fas fa-robot text-red-400 text-4xl"></i>
+                    </div>
+                    
+                    <h2 class="text-2xl font-bold text-white mb-4">🤖 AI Security Alert</h2>
+                    
+                    <div class="bg-red-500/10 border border-red-500/30 rounded-xl p-4 mb-6">
+                        <p class="text-red-400 font-semibold mb-2">Account Suspended</p>
+                        <p class="text-gray-300 text-sm mb-3">${message}</p>
+                        <p class="text-gray-400 text-xs">
+                            <strong>Reason:</strong> ${reason}
+                        </p>
+                        ${firstAccountEmail ? `
+                            <p class="text-gray-400 text-xs mt-2">
+                                <strong>Your first account:</strong> ${firstAccountEmail}
+                            </p>
+                        ` : ''}
+                    </div>
+                    
+                    <p class="text-gray-400 text-sm mb-6">
+                        If you believe this is a mistake, please contact our support team with your account details.
+                    </p>
+                    
+                    <div class="flex gap-3">
+                        <button onclick="window.location.href='/'" class="flex-1 py-3 bg-gray-700 hover:bg-gray-600 text-white font-semibold rounded-xl transition-all">
+                            <i class="fas fa-home mr-2"></i> Homepage
+                        </button>
+                        <a href="https://wa.me/13056978303" target="_blank" class="flex-1 py-3 bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white font-semibold rounded-xl transition-all text-center">
+                            <i class="fab fa-whatsapp mr-2"></i> Support
+                        </a>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(modal);
+        }
+        
+        // Show warning modal (for first account with additional accounts detected)
+        function showWarningModal(message, additionalAccounts, isSevere) {
+            const modal = document.createElement('div');
+            modal.className = 'fixed inset-0 z-50 flex items-center justify-center p-4';
+            modal.style.background = 'rgba(0, 0, 0, 0.8)';
+            modal.innerHTML = `
+                <div class="glass-card rounded-3xl p-8 max-w-lg w-full text-center animate-in" style="background: rgba(22, 27, 34, 0.98); border: 1px solid rgba(${isSevere ? '239, 68, 68' : '251, 191, 36'}, 0.4);">
+                    <div class="w-20 h-20 mx-auto mb-6 rounded-full bg-${isSevere ? 'red' : 'yellow'}-500/20 flex items-center justify-center border-2 border-${isSevere ? 'red' : 'yellow'}-500/40">
+                        <i class="fas fa-exclamation-triangle text-${isSevere ? 'red' : 'yellow'}-400 text-4xl"></i>
+                    </div>
+                    
+                    <h2 class="text-2xl font-bold text-white mb-4">${isSevere ? '🚨' : '⚠️'} Security Warning</h2>
+                    
+                    <div class="bg-${isSevere ? 'red' : 'yellow'}-500/10 border border-${isSevere ? 'red' : 'yellow'}-500/30 rounded-xl p-4 mb-6">
+                        <p class="text-${isSevere ? 'red' : 'yellow'}-400 font-semibold mb-2">
+                            ${isSevere ? 'Severe ' : ''}Multi-Account Detection
+                        </p>
+                        <p class="text-gray-300 text-sm mb-3">${message}</p>
+                        <p class="text-gray-400 text-xs">
+                            <strong>Additional accounts detected:</strong> ${additionalAccounts}
+                        </p>
+                    </div>
+                    
+                    <div class="bg-blue-500/10 border border-blue-500/30 rounded-xl p-4 mb-6 text-left">
+                        <p class="text-blue-400 font-semibold mb-2 flex items-center gap-2">
+                            <i class="fas fa-info-circle"></i>
+                            Policy Reminder
+                        </p>
+                        <ul class="text-gray-300 text-sm space-y-2">
+                            <li class="flex items-start gap-2">
+                                <i class="fas fa-check text-green-400 mt-1 text-xs"></i>
+                                <span>One account per person is allowed</span>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <i class="fas fa-check text-green-400 mt-1 text-xs"></i>
+                                <span>Your original account remains active</span>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <i class="fas fa-times text-red-400 mt-1 text-xs"></i>
+                                <span>Additional accounts have been banned</span>
+                            </li>
+                            ${isSevere ? `
+                                <li class="flex items-start gap-2">
+                                    <i class="fas fa-exclamation text-orange-400 mt-1 text-xs"></i>
+                                    <span class="text-orange-400 font-medium">Repeated violations may result in permanent ban</span>
+                                </li>
+                            ` : ''}
+                        </ul>
+                    </div>
+                    
+                    <button onclick="this.parentElement.remove()" class="w-full py-3 bg-gradient-to-r from-blue-500 to-cyan-600 hover:from-blue-600 hover:to-cyan-700 text-white font-semibold rounded-xl transition-all">
+                        <i class="fas fa-check mr-2"></i> I Understand
+                    </button>
+                </div>
+            `;
+            document.body.appendChild(modal);
+            
+            // Auto-dismiss after 15 seconds for non-severe warnings
+            if (!isSevere) {
+                setTimeout(() => {
+                    if (modal.parentElement) {
+                        modal.remove();
+                    }
+                }, 15000);
+            }
+        }
+        
+        // Initialize Fingerprint on page load
+        initFingerprint();
+        
+        // Override checkLoginStatus to include fingerprint capture
+        const originalCheckLoginStatus = checkLoginStatus;
+        checkLoginStatus = async function() {
+            try {
+                const response = await fetch('/api/auth/status');
+                const data = await response.json();
+                
+                if (data.authenticated) {
+                    // Capture fingerprint for logged in user
+                    if (data.user && data.user.id) {
+                        await captureAndSendFingerprint(data.user.id);
+                    }
+                    
+                    // Store user data in localStorage for easy client-side access
+                    localStorage.setItem('user', JSON.stringify(data.user));
+                    localStorage.setItem('isLoggedIn', 'true');
+                    
+                    // Redirect to dashboard
+                    window.location.href = '/reactch';
+                }
+            } catch (error) {
+                console.error('Error checking login status:', error);
+            }
+        };
+        
+        // Call the overridden version
+        checkLoginStatus();
+    </script>
+</body>
+</html>

@@ -1,0 +1,939 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Buy Coins - ANDY RCH</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+        
+        * {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', sans-serif;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        body {
+            background: #0d1117;
+            color: #c9d1d9;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .animated-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            opacity: 0.08;
+            background: 
+                radial-gradient(circle at 20% 50%, rgba(255, 215, 0, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(255, 165, 0, 0.2) 0%, transparent 50%),
+                radial-gradient(circle at 40% 20%, rgba(31, 111, 235, 0.15) 0%, transparent 50%);
+            animation: float 20s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) scale(1); }
+            50% { transform: translateY(-20px) scale(1.02); }
+        }
+
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: -280px;
+            width: 280px;
+            height: 100vh;
+            background: rgba(22, 27, 34, 0.98);
+            backdrop-filter: blur(20px);
+            border-right: 1px solid rgba(48, 54, 61, 0.5);
+            z-index: 1000;
+            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            overflow-y: auto;
+        }
+
+        .sidebar.open {
+            transform: translateX(280px);
+        }
+
+        .sidebar-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(4px);
+            z-index: 999;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .sidebar-overlay.open {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .sidebar-link {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 14px 20px;
+            color: #8b949e;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 15px;
+            transition: all 0.2s ease;
+            border-radius: 12px;
+            margin: 4px 12px;
+        }
+
+        .sidebar-link:hover {
+            background: rgba(31, 111, 235, 0.1);
+            color: #58a6ff;
+        }
+
+        .sidebar-link.active {
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.2) 0%, rgba(255, 165, 0, 0.1) 100%);
+            color: #FFD700;
+            border: 1px solid rgba(255, 215, 0, 0.3);
+        }
+
+        .sidebar-link i {
+            width: 22px;
+            font-size: 18px;
+        }
+
+        .top-nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 70px;
+            background: rgba(13, 17, 23, 0.85);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(48, 54, 61, 0.5);
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px;
+        }
+
+        .burger-btn {
+            width: 44px;
+            height: 44px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 5px;
+            background: rgba(22, 27, 34, 0.8);
+            border: 1px solid rgba(48, 54, 61, 0.5);
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .burger-btn:hover {
+            background: rgba(31, 111, 235, 0.2);
+            border-color: rgba(31, 111, 235, 0.5);
+        }
+
+        .burger-btn span {
+            width: 20px;
+            height: 2px;
+            background: #c9d1d9;
+            border-radius: 2px;
+            transition: all 0.3s ease;
+        }
+
+        .main-content {
+            padding-top: 90px;
+            padding-bottom: 40px;
+            min-height: 100vh;
+        }
+
+        .glass-card {
+            background: rgba(22, 27, 34, 0.8);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(48, 54, 61, 0.5);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .gradient-text {
+            background: linear-gradient(135deg, #1f6feb 0%, #58a6ff 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .gold-gradient-text {
+            background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .input-field {
+            width: 100%;
+            padding: 16px 20px;
+            background: rgba(22, 27, 34, 0.6);
+            border: 2px solid rgba(48, 54, 61, 0.5);
+            border-radius: 14px;
+            color: white;
+            font-size: 18px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .input-field:focus {
+            outline: none;
+            border-color: rgba(255, 215, 0, 0.6);
+            background: rgba(22, 27, 34, 0.8);
+        }
+
+        .btn-primary {
+            width: 100%;
+            padding: 18px 24px;
+            background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+            border: none;
+            border-radius: 14px;
+            color: #0d1117;
+            font-size: 18px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(255, 215, 0, 0.5);
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .status-pending {
+            background: rgba(251, 191, 36, 0.2);
+            color: #fbbf24;
+            border: 1px solid rgba(251, 191, 36, 0.4);
+        }
+
+        .status-paid {
+            background: rgba(34, 197, 94, 0.2);
+            color: #22c55e;
+            border: 1px solid rgba(34, 197, 94, 0.4);
+        }
+
+        .spinner {
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-top-color: white;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .toast {
+            position: fixed;
+            top: 90px;
+            right: 20px;
+            background: rgba(22, 27, 34, 0.95);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(48, 54, 61, 0.5);
+            border-radius: 14px;
+            padding: 16px 20px;
+            color: white;
+            font-size: 14px;
+            font-weight: 500;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+            z-index: 9999;
+            animation: slideIn 0.3s ease;
+            max-width: 400px;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(100px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #161b22;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(180deg, #FFD700 0%, #FFA500 100%);
+            border-radius: 10px;
+        }
+
+        /* Ultra Premium Section Styles */
+        .ultra-premium-card {
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.15) 0%, rgba(236, 72, 153, 0.1) 50%, rgba(245, 158, 11, 0.15) 100%);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 2px solid;
+            border-image: linear-gradient(135deg, #fbbf24, #f472b6, #a855f7, #fbbf24) 1;
+            box-shadow: 
+                0 0 30px rgba(251, 191, 36, 0.3),
+                0 0 60px rgba(139, 92, 246, 0.2),
+                inset 0 0 30px rgba(251, 191, 36, 0.05);
+            animation: ultra-glow 3s ease-in-out infinite alternate;
+        }
+
+        @keyframes ultra-glow {
+            0% { box-shadow: 0 0 30px rgba(251, 191, 36, 0.3), 0 0 60px rgba(139, 92, 246, 0.2), inset 0 0 30px rgba(251, 191, 36, 0.05); }
+            100% { box-shadow: 0 0 40px rgba(251, 191, 36, 0.5), 0 0 80px rgba(139, 92, 246, 0.3), inset 0 0 40px rgba(251, 191, 36, 0.1); }
+        }
+
+        .countdown-box {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 12px;
+            padding: 12px 16px;
+            min-width: 60px;
+            border: 1px solid rgba(251, 191, 36, 0.2);
+        }
+
+        .countdown-separator {
+            display: flex;
+            align-items: center;
+            font-size: 2rem;
+            font-weight: bold;
+            color: #fbbf24;
+            animation: blink 1s infinite;
+        }
+
+        @keyframes blink {
+            0%, 50% { opacity: 1; }
+            51%, 100% { opacity: 0.3; }
+        }
+
+        .ultra-buy-btn {
+            background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 50%, #d97706 100%);
+            color: #0d1117;
+            box-shadow: 0 8px 30px rgba(251, 191, 36, 0.5);
+            border: none;
+        }
+
+        .ultra-buy-btn:hover {
+            background: linear-gradient(135deg, #fcd34d 0%, #fbbf24 50%, #f59e0b 100%);
+            box-shadow: 0 12px 40px rgba(251, 191, 36, 0.7);
+        }
+
+        .ultra-buy-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+
+        /* User already has Ultra badge */
+        .ultra-active-badge {
+            background: linear-gradient(135deg, rgba(34, 197, 94, 0.2) 0%, rgba(22, 163, 74, 0.2) 100%);
+            border: 1px solid rgba(34, 197, 94, 0.5);
+            color: #4ade80;
+        }
+    </style>
+</head>
+<body>
+    <div class="animated-bg"></div>
+
+    <div class="sidebar-overlay" id="sidebar-overlay"></div>
+
+    <aside class="sidebar" id="sidebar">
+        <div class="p-6 border-b border-gray-700/50">
+            <a href="/" class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center">
+                    <i class="fas fa-bolt text-white text-lg"></i>
+                </div>
+                <span class="text-xl font-bold text-white">ANDY RCH</span>
+            </a>
+        </div>
+        
+        <nav class="py-4">
+            <div class="px-4 mb-2">
+                <span class="text-xs font-semibold text-gray-500 uppercase tracking-wider">Main Menu</span>
+            </div>
+            <a href="/reactch" class="sidebar-link">
+                <i class="fas fa-home"></i>
+                <span>Dashboard</span>
+            </a>
+            <a href="/autoreact" class="sidebar-link">
+                <i class="fas fa-robot"></i>
+                <span>Auto React Channels</span>
+            </a>
+            <a href="/history" class="sidebar-link">
+                <i class="fas fa-history"></i>
+                <span>Transaction History</span>
+            </a>
+            <a href="/profile" class="sidebar-link">
+                <i class="fas fa-user"></i>
+                <span>My Profile</span>
+            </a>
+            
+            <div class="px-4 mb-2 mt-6">
+                <span class="text-xs font-semibold text-gray-500 uppercase tracking-wider">Support</span>
+            </div>
+            <a href="/pricing" class="sidebar-link active">
+                <i class="fas fa-coins text-yellow-500"></i>
+                <span>Buy Coins</span>
+            </a>
+            <a href="/terms" class="sidebar-link">
+                <i class="fas fa-file-contract"></i>
+                <span>Terms of Service</span>
+            </a>
+            <a href="https://wa.me/13056978303" target="_blank" class="sidebar-link">
+                <i class="fab fa-whatsapp text-green-500"></i>
+                <span>Contact Support</span>
+            </a>
+        </nav>
+    </aside>
+
+    <header class="top-nav">
+        <div class="flex items-center gap-4">
+            <button class="burger-btn" id="burger-btn">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            <a href="/" class="hidden sm:flex items-center gap-2">
+                <span class="text-lg font-bold gradient-text">ANDY RCH</span>
+            </a>
+        </div>
+        
+        <div class="flex items-center gap-4">
+            <a href="/history" class="text-gray-400 hover:text-white transition">
+                <i class="fas fa-history"></i>
+            </a>
+            <a href="/profile" class="w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center">
+                <i class="fas fa-user text-white"></i>
+            </a>
+        </div>
+    </header>
+
+    <main class="main-content relative z-10">
+        <div class="container mx-auto px-4 sm:px-6 max-w-4xl">
+            
+            <!-- Ultra Premium Hero Section - Moved to dashboard -->
+            <div id="ultra-premium-section" class="mb-8 hidden" style="display: none !important;">
+                <div class="ultra-premium-card rounded-3xl p-6 sm:p-8 relative overflow-hidden">
+                    <!-- Animated background effects -->
+                    <div class="absolute inset-0 bg-gradient-to-br from-purple-900/30 via-pink-900/20 to-yellow-900/30"></div>
+                    <div class="absolute top-0 left-0 w-full h-full">
+                        <div class="absolute top-4 right-4 w-32 h-32 bg-yellow-500/20 rounded-full blur-3xl animate-pulse"></div>
+                        <div class="absolute bottom-4 left-4 w-40 h-40 bg-purple-500/20 rounded-full blur-3xl animate-pulse" style="animation-delay: 1s;"></div>
+                    </div>
+                    
+                    <div class="relative z-10">
+                        <!-- Limited Time Badge -->
+                        <div class="flex items-center justify-center mb-4">
+                            <div class="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-red-500/30 to-orange-500/30 border border-red-500/50 rounded-full animate-pulse">
+                                <i class="fas fa-fire text-orange-400"></i>
+                                <span class="text-orange-300 font-bold text-sm uppercase tracking-wider">Limited Time Offer</span>
+                                <i class="fas fa-fire text-orange-400"></i>
+                            </div>
+                        </div>
+                        
+                        <!-- Title with Diamond/Crown icon -->
+                        <div class="text-center mb-6">
+                            <div class="inline-flex items-center justify-center w-20 h-20 mb-4 rounded-full bg-gradient-to-br from-yellow-400 via-yellow-500 to-orange-500 shadow-2xl shadow-yellow-500/50">
+                                <i class="fas fa-crown text-4xl text-white"></i>
+                            </div>
+                            <h2 class="text-3xl sm:text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 via-yellow-400 to-orange-400 mb-2">
+                                ULTRA PREMIUM
+                            </h2>
+                            <p class="text-lg text-yellow-200/80 font-medium">14-Day Unlimited Access Pass</p>
+                        </div>
+                        
+                        <!-- Countdown Timer -->
+                        <div class="bg-black/40 backdrop-blur-sm rounded-2xl p-4 mb-6 border border-yellow-500/30">
+                            <p class="text-center text-gray-300 text-sm mb-3 font-medium">
+                                <i class="fas fa-clock text-yellow-400 mr-2"></i>Offer expires in:
+                            </p>
+                            <div class="flex justify-center gap-3 sm:gap-4" id="ultra-countdown">
+                                <div class="countdown-box">
+                                    <span id="days" class="text-2xl sm:text-3xl font-bold text-yellow-400">0</span>
+                                    <span class="text-xs text-gray-400 uppercase">Days</span>
+                                </div>
+                                <div class="countdown-separator">:</div>
+                                <div class="countdown-box">
+                                    <span id="hours" class="text-2xl sm:text-3xl font-bold text-yellow-400">0</span>
+                                    <span class="text-xs text-gray-400 uppercase">Hours</span>
+                                </div>
+                                <div class="countdown-separator">:</div>
+                                <div class="countdown-box">
+                                    <span id="minutes" class="text-2xl sm:text-3xl font-bold text-yellow-400">0</span>
+                                    <span class="text-xs text-gray-400 uppercase">Mins</span>
+                                </div>
+                                <div class="countdown-separator">:</div>
+                                <div class="countdown-box">
+                                    <span id="seconds" class="text-2xl sm:text-3xl font-bold text-yellow-400">0</span>
+                                    <span class="text-xs text-gray-400 uppercase">Secs</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Benefits List -->
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-6">
+                            <div class="flex items-center gap-3 bg-white/5 backdrop-blur-sm rounded-xl p-3 border border-white/10">
+                                <div class="w-10 h-10 rounded-full bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center flex-shrink-0">
+                                    <span class="text-xl">♾️</span>
+                                </div>
+                                <div>
+                                    <p class="text-white font-semibold text-sm">Unlimited Coins</p>
+                                    <p class="text-gray-400 text-xs">No balance limits</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-3 bg-white/5 backdrop-blur-sm rounded-xl p-3 border border-white/10">
+                                <div class="w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-cyan-500 flex items-center justify-center flex-shrink-0">
+                                    <i class="fas fa-bolt text-white"></i>
+                                </div>
+                                <div>
+                                    <p class="text-white font-semibold text-sm">Priority Support</p>
+                                    <p class="text-gray-400 text-xs">24/7 VIP assistance</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-3 bg-white/5 backdrop-blur-sm rounded-xl p-3 border border-white/10">
+                                <div class="w-10 h-10 rounded-full bg-gradient-to-br from-green-500 to-emerald-500 flex items-center justify-center flex-shrink-0">
+                                    <i class="fas fa-rocket text-white"></i>
+                                </div>
+                                <div>
+                                    <p class="text-white font-semibold text-sm">Unlimited API Calls</p>
+                                    <p class="text-gray-400 text-xs">No daily restrictions</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-3 bg-white/5 backdrop-blur-sm rounded-xl p-3 border border-white/10">
+                                <div class="w-10 h-10 rounded-full bg-gradient-to-br from-orange-500 to-red-500 flex items-center justify-center flex-shrink-0">
+                                    <i class="fas fa-star text-white"></i>
+                                </div>
+                                <div>
+                                    <p class="text-white font-semibold text-sm">No Daily Limits</p>
+                                    <p class="text-gray-400 text-xs">Use as much as you want</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Price & CTA -->
+                        <div class="text-center">
+                            <div class="mb-4">
+                                <span class="text-gray-400 text-lg line-through mr-2">$30</span>
+                                <span class="text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 to-orange-400">$15</span>
+                                <span class="text-gray-300 text-lg ml-1">USDT</span>
+                            </div>
+                            <button id="ultra-buy-btn" class="ultra-buy-btn w-full sm:w-auto px-12 py-4 text-lg font-bold rounded-2xl transition-all duration-300 transform hover:scale-105">
+                                <i class="fas fa-crown mr-2"></i>
+                                Get Ultra Access
+                            </button>
+                            <p class="text-gray-400 text-xs mt-3">
+                                <i class="fas fa-shield-alt text-green-400 mr-1"></i>
+                                Secure payment via OxaPay • 14 days access
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="text-center mb-12">
+                <div class="inline-flex items-center gap-2 px-4 py-2 bg-yellow-500/10 border border-yellow-500/30 rounded-full mb-6">
+                    <i class="fas fa-coins text-yellow-400"></i>
+                    <span class="text-yellow-400 font-semibold text-sm">USDT Payment via OxaPay</span>
+                </div>
+                <h1 class="text-4xl sm:text-5xl font-bold text-white mb-4">Add Balance with USDT</h1>
+                <p class="text-gray-400 text-lg max-w-2xl mx-auto">
+                    Add USD balance using USDT - Secure and fast cryptocurrency payments powered by OxaPay
+                </p>
+            </div>
+
+            <!-- Success Message (shown after return from OxaPay) -->
+            <div id="success-message" class="glass-card rounded-2xl p-6 sm:p-8 mb-6 hidden">
+                <div class="text-center">
+                    <div class="w-20 h-20 mx-auto mb-6 bg-green-500/20 rounded-full flex items-center justify-center">
+                        <i class="fas fa-check-circle text-green-400 text-4xl"></i>
+                    </div>
+                    <h2 class="text-2xl font-bold text-white mb-4">Payment Processing</h2>
+                    <p class="text-gray-400 mb-6">Your payment is being processed. Balance will be added to your account shortly.</p>
+                    <a href="/reactch" class="inline-flex items-center gap-2 px-6 py-3 bg-blue-500/20 border border-blue-500/40 rounded-xl text-blue-400 font-semibold hover:bg-blue-500/30 transition">
+                        <i class="fas fa-arrow-left"></i>
+                        Go to Dashboard
+                    </a>
+                </div>
+            </div>
+
+            <div id="payment-form" class="glass-card rounded-2xl p-6 sm:p-8 mb-6">
+                <h2 class="text-2xl font-bold text-white mb-6 flex items-center gap-3">
+                    <div class="w-10 h-10 bg-gradient-to-br from-yellow-500 to-orange-500 rounded-xl flex items-center justify-center">
+                        <i class="fas fa-dollar-sign text-white"></i>
+                    </div>
+                    Add Balance
+                </h2>
+                
+                <div class="mb-6">
+                    <label class="block text-gray-400 mb-3 text-sm font-medium">How much USD do you want to add?</label>
+                    <input 
+                        type="number" 
+                        id="coin-input" 
+                        class="input-field" 
+                        placeholder="Minimum $5.00 USD"
+                        min="5"
+                        step="0.01"
+                    >
+                    <p class="text-gray-500 text-sm mt-2">Minimum: $5.00 USD = 5 USDT</p>
+                </div>
+
+                <div class="bg-gradient-to-r from-yellow-500/10 to-orange-500/10 border border-yellow-500/30 rounded-xl p-6 mb-6">
+                    <div class="flex items-center justify-between flex-wrap gap-4">
+                        <div>
+                            <p class="text-gray-400 text-sm mb-1">You'll pay:</p>
+                            <p class="text-3xl font-bold gold-gradient-text" id="usdt-amount">0.00 USDT</p>
+                        </div>
+                        <div class="text-right">
+                            <p class="text-gray-400 text-sm mb-1">Balance added:</p>
+                            <p class="text-3xl font-bold text-white" id="coin-amount">$0.00</p>
+                            <p class="text-gray-400 text-sm">USD</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-blue-500/10 border border-blue-500/30 rounded-xl p-4 mb-6">
+                    <div class="flex items-start gap-3">
+                        <i class="fas fa-shield-alt text-blue-400 text-xl mt-1"></i>
+                        <div>
+                            <p class="text-blue-400 font-semibold mb-2">Secure Payment</p>
+                            <ul class="text-gray-300 text-sm space-y-1">
+                                <li>• Payments processed by OxaPay - trusted crypto gateway</li>
+                                <li>• Your balance will be added automatically after payment</li>
+                                <li>• Support available 24/7 via WhatsApp</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <button id="create-order-btn" class="btn-primary" disabled>
+                    <i class="fas fa-external-link-alt mr-2"></i>
+                    Pay with OxaPay
+                </button>
+            </div>
+
+            <div class="text-center">
+                <p class="text-gray-500 text-sm mb-3">Need help?</p>
+                <a href="https://wa.me/13056978303" target="_blank" class="inline-flex items-center gap-2 px-6 py-3 bg-green-500/20 border border-green-500/40 rounded-xl text-green-400 font-semibold hover:bg-green-500/30 transition">
+                    <i class="fab fa-whatsapp text-xl"></i>
+                    Contact Support
+                </a>
+            </div>
+        </div>
+    </main>
+
+    <footer class="relative z-10 py-8 px-6 border-t border-gray-800/50">
+        <div class="container mx-auto text-center">
+            <p class="text-gray-500 text-sm">© 2025 ANDY RCH. All rights reserved.</p>
+            <p class="text-gray-600 text-xs mt-1">Powered by <span class="text-blue-400">OxaPay</span></p>
+        </div>
+    </footer>
+
+    <script>
+        const sidebar = document.getElementById('sidebar');
+        const sidebarOverlay = document.getElementById('sidebar-overlay');
+        const burgerBtn = document.getElementById('burger-btn');
+
+        function toggleSidebar() {
+            sidebar.classList.toggle('open');
+            sidebarOverlay.classList.toggle('open');
+            burgerBtn.classList.toggle('active');
+        }
+
+        burgerBtn.addEventListener('click', toggleSidebar);
+        sidebarOverlay.addEventListener('click', toggleSidebar);
+
+        window.addEventListener('resize', () => {
+            if (window.innerWidth >= 768 && sidebar.classList.contains('open')) {
+                toggleSidebar();
+            }
+        });
+
+        function showToast(message, type = 'success') {
+            const toast = document.createElement('div');
+            toast.className = 'toast';
+            toast.innerHTML = `<div class="flex items-center gap-3"><i class="fas fa-${type === 'success' ? 'check-circle text-green-400' : 'exclamation-circle text-red-400'}"></i><span>${message}</span></div>`;
+            document.body.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.style.animation = 'slideOut 0.3s ease forwards';
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+
+        // Check for success status in URL
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.get('status') === 'success') {
+            document.getElementById('success-message').classList.remove('hidden');
+            document.getElementById('payment-form').classList.add('hidden');
+        }
+
+        const coinInput = document.getElementById('coin-input');
+        const usdtAmountEl = document.getElementById('usdt-amount');
+        const coinAmountEl = document.getElementById('coin-amount');
+        const createOrderBtn = document.getElementById('create-order-btn');
+
+        // Default values (will be overwritten by API config)
+        let MINIMUM_USD = 5;
+
+        // Fetch payment configuration from backend
+        async function loadPaymentConfig() {
+            try {
+                const response = await fetch('/api/payment/config');
+                const result = await response.json();
+                if (result.success) {
+                    MINIMUM_USD = result.data.minimumUSD;
+                    // Update UI with fetched config
+                    coinInput.placeholder = `Minimum $${MINIMUM_USD.toFixed(2)} USD`;
+                    document.querySelector('#payment-form .text-gray-500').textContent = 
+                        `Minimum: $${MINIMUM_USD.toFixed(2)} USD = ${MINIMUM_USD.toFixed(2)} USDT`;
+                }
+            } catch (error) {
+                console.error('Failed to load payment config:', error);
+            }
+        }
+        loadPaymentConfig();
+
+        coinInput.addEventListener('input', () => {
+            const amount = parseFloat(coinInput.value) || 0;
+            
+            if (amount >= MINIMUM_USD) {
+                const usdt = amount; // 1 USD = 1 USDT
+                usdtAmountEl.textContent = usdt.toFixed(2) + ' USDT';
+                coinAmountEl.textContent = '$' + amount.toFixed(2);
+                createOrderBtn.disabled = false;
+            } else {
+                usdtAmountEl.textContent = '0.00 USDT';
+                coinAmountEl.textContent = '$0.00';
+                createOrderBtn.disabled = true;
+            }
+        });
+
+        createOrderBtn.addEventListener('click', async () => {
+            const amount = parseFloat(coinInput.value);
+            
+            if (amount < MINIMUM_USD) {
+                showToast(`Minimum purchase is $${MINIMUM_USD.toFixed(2)} USD`, 'error');
+                return;
+            }
+
+            createOrderBtn.disabled = true;
+            createOrderBtn.innerHTML = '<div class="spinner mx-auto"></div>';
+
+            try {
+                const response = await fetch('/api/create-payment', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ amount })
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    showToast('Redirecting to payment page...', 'success');
+                    
+                    // Redirect to OxaPay payment page
+                    setTimeout(() => {
+                        window.location.href = result.data.paymentUrl;
+                    }, 1000);
+                } else {
+                    throw new Error(result.message || 'Failed to create payment');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                showToast(error.message || 'Failed to create payment. Please try again.', 'error');
+                createOrderBtn.disabled = false;
+                createOrderBtn.innerHTML = '<i class="fas fa-external-link-alt mr-2"></i> Pay with OxaPay';
+            }
+        });
+
+        // ================== ULTRA PREMIUM SECTION ==================
+        
+        const ultraSection = document.getElementById('ultra-premium-section');
+        const ultraBuyBtn = document.getElementById('ultra-buy-btn');
+        let countdownInterval = null;
+        let ultraOfferEndsAt = null;
+        let userHasUltra = false;
+
+        // Fetch Ultra offer status and user data
+        async function initUltraSection() {
+            try {
+                // Check offer status
+                const offerResponse = await fetch('/api/ultra/offer-status');
+                const offerData = await offerResponse.json();
+                
+                // Check user status
+                let userData = null;
+                try {
+                    const userResponse = await fetch('/api/user/me');
+                    if (userResponse.ok) {
+                        const userResult = await userResponse.json();
+                        userData = userResult.data;
+                    }
+                } catch (e) {
+                    // Not logged in or error
+                }
+                
+                if (offerData.success && offerData.data.active) {
+                    ultraOfferEndsAt = new Date(offerData.data.endsAt);
+                    // Ultra Premium section moved to dashboard - keep hidden on pricing page
+                    // ultraSection.classList.remove('hidden');
+                    // startCountdown();
+                    
+                    // Check if user already has Ultra
+                    if (userData && userData.planType === 'ultra' && userData.planExpiresAt && new Date(userData.planExpiresAt) > new Date()) {
+                        userHasUltra = true;
+                        // showUserHasUltra(userData.planExpiresAt);
+                    }
+                } else {
+                    // No active offer - section remains hidden
+                    // Admins can start an offer via /api/admin/ultra/start-offer
+                    console.log('No active Ultra offer - section hidden');
+                    
+                    // For MVP: Auto-start offer if not already active (can be removed once admin controls are used)
+                    // This starts the offer on the server side for consistency
+                    // Ultra Premium section moved to dashboard - keep hidden on pricing page
+                    try {
+                        const startResponse = await fetch('/api/ultra/auto-start-offer', { method: 'POST' });
+                        if (startResponse.ok) {
+                            const startData = await startResponse.json();
+                            if (startData.success && startData.data.active) {
+                                ultraOfferEndsAt = new Date(startData.data.endsAt);
+                                // Ultra Premium section moved to dashboard - keep hidden on pricing page
+                                // ultraSection.classList.remove('hidden');
+                                // startCountdown();
+                                
+                                // Check if user already has Ultra
+                                if (userData && userData.planType === 'ultra' && userData.planExpiresAt && new Date(userData.planExpiresAt) > new Date()) {
+                                    userHasUltra = true;
+                                    // showUserHasUltra(userData.planExpiresAt);
+                                }
+                            }
+                        }
+                    } catch (e) {
+                        console.log('Ultra offer not available');
+                    }
+                }
+            } catch (error) {
+                console.error('Error loading Ultra section:', error);
+                // On error, keep section hidden
+            }
+        }
+        
+        function showUserHasUltra(expiresAt) {
+            const expDate = new Date(expiresAt);
+            const daysLeft = Math.ceil((expDate - new Date()) / (1000 * 60 * 60 * 24));
+            
+            ultraBuyBtn.innerHTML = `<i class="fas fa-check-circle mr-2"></i> Ultra Active (${daysLeft} days left)`;
+            ultraBuyBtn.disabled = true;
+            ultraBuyBtn.classList.remove('ultra-buy-btn');
+            ultraBuyBtn.classList.add('ultra-active-badge', 'px-8', 'py-4', 'rounded-2xl', 'font-bold', 'text-lg');
+        }
+        
+        function startCountdown() {
+            if (countdownInterval) clearInterval(countdownInterval);
+            
+            function updateCountdown() {
+                const now = new Date();
+                const diff = ultraOfferEndsAt - now;
+                
+                if (diff <= 0) {
+                    clearInterval(countdownInterval);
+                    document.getElementById('days').textContent = '0';
+                    document.getElementById('hours').textContent = '0';
+                    document.getElementById('minutes').textContent = '0';
+                    document.getElementById('seconds').textContent = '0';
+                    return;
+                }
+                
+                const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+                
+                document.getElementById('days').textContent = days;
+                document.getElementById('hours').textContent = hours.toString().padStart(2, '0');
+                document.getElementById('minutes').textContent = minutes.toString().padStart(2, '0');
+                document.getElementById('seconds').textContent = seconds.toString().padStart(2, '0');
+            }
+            
+            updateCountdown();
+            countdownInterval = setInterval(updateCountdown, 1000);
+        }
+        
+        // Ultra Buy Button Click Handler
+        ultraBuyBtn.addEventListener('click', async () => {
+            if (userHasUltra) return;
+            
+            ultraBuyBtn.disabled = true;
+            ultraBuyBtn.innerHTML = '<div class="spinner mx-auto"></div>';
+            
+            try {
+                const response = await fetch('/api/create-ultra-payment', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({})
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    showToast('Redirecting to payment page...', 'success');
+                    setTimeout(() => {
+                        window.location.href = result.data.paymentUrl;
+                    }, 1000);
+                } else {
+                    throw new Error(result.message || 'Failed to create payment');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                showToast(error.message || 'Failed to create payment. Please log in first.', 'error');
+                ultraBuyBtn.disabled = false;
+                ultraBuyBtn.innerHTML = '<i class="fas fa-crown mr-2"></i> Get Ultra Access';
+            }
+        });
+        
+        // Initialize Ultra section
+        initUltraSection();
+    </script>
+</body>
+</html>

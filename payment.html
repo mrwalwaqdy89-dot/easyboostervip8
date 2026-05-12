@@ -1,0 +1,881 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Paiement NATCOM - ANDY RCH</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+        
+        * {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', sans-serif;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        body {
+            background: #0d1117;
+            color: #c9d1d9;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .animated-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            opacity: 0.08;
+            background: 
+                radial-gradient(circle at 20% 50%, rgba(255, 215, 0, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(31, 111, 235, 0.2) 0%, transparent 50%),
+                radial-gradient(circle at 40% 20%, rgba(139, 92, 246, 0.15) 0%, transparent 50%);
+            animation: float 20s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) scale(1); }
+            50% { transform: translateY(-20px) scale(1.02); }
+        }
+
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: -280px;
+            width: 280px;
+            height: 100vh;
+            background: rgba(22, 27, 34, 0.98);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-right: 1px solid rgba(48, 54, 61, 0.5);
+            z-index: 1000;
+            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            overflow-y: auto;
+        }
+
+        .sidebar.open {
+            transform: translateX(280px);
+        }
+
+        .sidebar-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+            z-index: 999;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .sidebar-overlay.open {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .sidebar-link {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 14px 20px;
+            color: #8b949e;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 15px;
+            transition: all 0.2s ease;
+            border-radius: 12px;
+            margin: 4px 12px;
+        }
+
+        .sidebar-link:hover {
+            background: rgba(31, 111, 235, 0.1);
+            color: #58a6ff;
+        }
+
+        .sidebar-link i {
+            width: 22px;
+            font-size: 18px;
+        }
+
+        .top-nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 70px;
+            background: rgba(13, 17, 23, 0.85);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(48, 54, 61, 0.5);
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px;
+        }
+
+        .burger-btn {
+            width: 44px;
+            height: 44px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 5px;
+            background: rgba(22, 27, 34, 0.8);
+            border: 1px solid rgba(48, 54, 61, 0.5);
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .burger-btn:hover {
+            background: rgba(31, 111, 235, 0.2);
+            border-color: rgba(31, 111, 235, 0.5);
+        }
+
+        .burger-btn span {
+            width: 20px;
+            height: 2px;
+            background: #c9d1d9;
+            border-radius: 2px;
+            transition: all 0.3s ease;
+        }
+
+        .burger-btn.active span:nth-child(1) {
+            transform: rotate(45deg) translate(5px, 5px);
+        }
+
+        .burger-btn.active span:nth-child(2) {
+            opacity: 0;
+        }
+
+        .burger-btn.active span:nth-child(3) {
+            transform: rotate(-45deg) translate(5px, -5px);
+        }
+
+        .main-content {
+            padding-top: 90px;
+            padding-bottom: 40px;
+            min-height: 100vh;
+        }
+
+        .glass-card {
+            background: rgba(22, 27, 34, 0.8);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(48, 54, 61, 0.5);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+        }
+
+        .gradient-text {
+            background: linear-gradient(135deg, #1f6feb 0%, #58a6ff 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .gold-gradient-text {
+            background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .natcom-card {
+            background: linear-gradient(135deg, rgba(255, 107, 0, 0.15) 0%, rgba(255, 165, 0, 0.1) 100%);
+            border: 2px solid rgba(255, 107, 0, 0.4);
+            border-radius: 24px;
+            padding: 32px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .natcom-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255, 165, 0, 0.05), transparent);
+            animation: shimmer 4s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+            100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+        }
+
+        .phone-number {
+            font-size: 32px;
+            font-weight: 800;
+            color: #FFD700;
+            letter-spacing: 2px;
+            text-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
+        }
+
+        .step-card {
+            background: rgba(22, 27, 34, 0.6);
+            border: 1px solid rgba(48, 54, 61, 0.5);
+            border-radius: 16px;
+            padding: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .step-card:hover {
+            border-color: rgba(31, 111, 235, 0.4);
+            background: rgba(31, 111, 235, 0.05);
+        }
+
+        .step-number {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #1f6feb 0%, #0969da 100%);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 18px;
+            color: white;
+        }
+
+        .upload-zone {
+            border: 2px dashed rgba(31, 111, 235, 0.4);
+            border-radius: 20px;
+            padding: 40px 20px;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .upload-zone:hover,
+        .upload-zone.dragover {
+            border-color: rgba(31, 111, 235, 0.8);
+            background: rgba(31, 111, 235, 0.05);
+        }
+
+        .upload-zone.has-file {
+            border-color: rgba(63, 185, 80, 0.6);
+            background: rgba(63, 185, 80, 0.05);
+        }
+
+        .upload-icon {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 20px;
+            background: linear-gradient(135deg, rgba(31, 111, 235, 0.2) 0%, rgba(88, 166, 255, 0.1) 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .upload-zone.has-file .upload-icon {
+            background: linear-gradient(135deg, rgba(63, 185, 80, 0.2) 0%, rgba(63, 185, 80, 0.1) 100%);
+        }
+
+        .preview-container {
+            display: none;
+            margin-top: 20px;
+        }
+
+        .preview-container.visible {
+            display: block;
+        }
+
+        .preview-image {
+            max-width: 200px;
+            max-height: 200px;
+            border-radius: 12px;
+            border: 2px solid rgba(63, 185, 80, 0.4);
+            margin: 0 auto;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 18px 32px;
+            background: linear-gradient(135deg, #1f6feb 0%, #0969da 100%);
+            border: none;
+            border-radius: 16px;
+            color: white;
+            font-size: 18px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .submit-btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(31, 111, 235, 0.4);
+        }
+
+        .submit-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .spinner {
+            width: 22px;
+            height: 22px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-top-color: white;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .package-summary {
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.15) 0%, rgba(255, 165, 0, 0.08) 100%);
+            border: 2px solid rgba(255, 215, 0, 0.3);
+            border-radius: 20px;
+            padding: 24px;
+        }
+
+        .coin-display {
+            font-size: 42px;
+            font-weight: 900;
+            background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .warning-card {
+            background: linear-gradient(135deg, rgba(210, 153, 34, 0.15) 0%, rgba(210, 153, 34, 0.08) 100%);
+            border: 1px solid rgba(210, 153, 34, 0.4);
+            border-radius: 16px;
+            padding: 20px;
+        }
+
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #161b22;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(180deg, #1f6feb 0%, #0969da 100%);
+            border-radius: 10px;
+        }
+
+        .toast-notification {
+            position: fixed;
+            top: 85px;
+            right: 20px;
+            background: rgba(22, 27, 34, 0.95);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(63, 185, 80, 0.5);
+            border-radius: 14px;
+            padding: 16px 20px;
+            color: #fff;
+            font-size: 14px;
+            font-weight: 500;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+            z-index: 9999;
+            animation: slideInRight 0.3s ease;
+            max-width: 400px;
+        }
+
+        .toast-notification.error {
+            border-color: rgba(248, 81, 73, 0.5);
+        }
+
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(100px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .toast-notification.slide-out {
+            animation: slideOutRight 0.3s ease forwards;
+        }
+
+        @keyframes slideOutRight {
+            from {
+                opacity: 1;
+                transform: translateX(0);
+            }
+            to {
+                opacity: 0;
+                transform: translateX(100px);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .animate-in {
+            animation: fadeInUp 0.6s ease forwards;
+        }
+    </style>
+</head>
+<body>
+    <div class="animated-bg"></div>
+
+    <!-- Sidebar Overlay -->
+    <div class="sidebar-overlay" id="sidebar-overlay"></div>
+
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar" id="sidebar">
+        <div class="p-6 border-b border-gray-700/50">
+            <a href="/" class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center">
+                    <i class="fas fa-bolt text-white text-lg"></i>
+                </div>
+                <span class="text-xl font-bold text-white">ANDY RCH</span>
+            </a>
+        </div>
+        
+        <nav class="py-4">
+            <div class="px-4 mb-2">
+                <span class="text-xs font-semibold text-gray-500 uppercase tracking-wider">Main Menu</span>
+            </div>
+            <a href="/reactch" class="sidebar-link">
+                <i class="fas fa-home"></i>
+                <span>Dashboard</span>
+            </a>
+            <a href="/autoreact" class="sidebar-link">
+                <i class="fas fa-robot"></i>
+                <span>Auto React Channels</span>
+            </a>
+            <a href="/history" class="sidebar-link">
+                <i class="fas fa-history"></i>
+                <span>Transaction History</span>
+            </a>
+            <a href="/profile" class="sidebar-link">
+                <i class="fas fa-user"></i>
+                <span>My Profile</span>
+            </a>
+            
+            <div class="px-4 mb-2 mt-6">
+                <span class="text-xs font-semibold text-gray-500 uppercase tracking-wider">Support</span>
+            </div>
+            <a href="/pricing" class="sidebar-link">
+                <i class="fas fa-coins text-yellow-500"></i>
+                <span>Buy Coins</span>
+            </a>
+            <a href="/terms" class="sidebar-link">
+                <i class="fas fa-file-contract"></i>
+                <span>Terms of Service</span>
+            </a>
+            <a href="https://wa.me/13056978303" target="_blank" class="sidebar-link">
+                <i class="fab fa-whatsapp text-green-500"></i>
+                <span>Contact Support</span>
+            </a>
+        </nav>
+    </aside>
+
+    <!-- Top Navigation -->
+    <header class="top-nav">
+        <div class="flex items-center gap-4">
+            <button class="burger-btn" id="burger-btn">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            <a href="/" class="hidden sm:flex items-center gap-2">
+                <span class="text-lg font-bold gradient-text">ANDY RCH</span>
+            </a>
+        </div>
+        
+        <div class="flex items-center gap-3">
+            <a href="/pricing" class="text-gray-400 hover:text-white transition flex items-center gap-2">
+                <i class="fas fa-arrow-left"></i>
+                <span class="hidden sm:inline">Retour</span>
+            </a>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content relative z-10">
+        <div class="container mx-auto px-4 sm:px-6 max-w-3xl">
+            
+            <!-- Page Header -->
+            <div class="text-center mb-8 animate-in">
+                <div class="inline-flex items-center gap-2 px-4 py-2 bg-orange-500/10 border border-orange-500/30 rounded-full mb-4">
+                    <i class="fas fa-mobile-alt text-orange-400"></i>
+                    <span class="text-orange-400 font-semibold text-sm">PAIEMENT MANUEL NATCOM</span>
+                </div>
+                <h1 class="text-3xl sm:text-4xl font-bold text-white mb-3">Effectuez Votre Paiement</h1>
+                <p class="text-gray-400">Suivez les étapes ci-dessous pour compléter votre achat</p>
+            </div>
+
+            <!-- Package Summary -->
+            <div class="package-summary mb-8 animate-in" style="animation-delay: 0.1s;">
+                <div class="flex items-center justify-between flex-wrap gap-4">
+                    <div class="flex items-center gap-4">
+                        <div class="w-14 h-14 bg-gradient-to-br from-yellow-500 to-orange-500 rounded-2xl flex items-center justify-center">
+                            <i class="fas fa-coins text-white text-xl"></i>
+                        </div>
+                        <div>
+                            <p class="text-gray-400 text-sm">Vous recevrez</p>
+                            <p class="coin-display" id="coins-display">90</p>
+                            <p class="text-gray-400 text-sm">USD</p>
+                        </div>
+                    </div>
+                    <div class="text-right">
+                        <p class="text-gray-400 text-sm">Montant à payer</p>
+                        <p class="text-3xl font-bold text-white"><span id="price-display">500</span> <span class="text-lg text-gray-400">Gdes</span></p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- NATCOM Payment Instructions -->
+            <div class="natcom-card mb-8 animate-in" style="animation-delay: 0.2s;">
+                <div class="flex items-center gap-4 mb-6">
+                    <div class="w-16 h-16 bg-gradient-to-br from-orange-500 to-red-500 rounded-2xl flex items-center justify-center">
+                        <i class="fas fa-mobile-alt text-white text-2xl"></i>
+                    </div>
+                    <div>
+                        <h2 class="text-xl font-bold text-white">Natcash NATCOM</h2>
+                        <p class="text-gray-400">Envoyez le montant au numéro ci-dessous</p>
+                    </div>
+                </div>
+
+                <div class="text-center py-6 bg-black/20 rounded-2xl mb-6">
+                    <p class="text-gray-400 text-sm mb-2">Numéro Natcash</p>
+                    <p class="phone-number">+509 40 80 7390</p>
+                    <button onclick="copyNumber()" class="mt-4 px-6 py-2 bg-yellow-500/20 border border-yellow-500/40 rounded-full text-yellow-400 font-medium text-sm hover:bg-yellow-500/30 transition">
+                        <i class="fas fa-copy mr-2"></i>
+                        Copier le numéro
+                    </button>
+                </div>
+
+                <div class="text-center">
+                    <p class="text-white font-semibold mb-2">
+                        <i class="fas fa-info-circle text-blue-400 mr-2"></i>
+                        Instructions Importantes
+                    </p>
+                    <p class="text-gray-400 text-sm leading-relaxed">
+                        Envoyez exactement <strong class="text-yellow-400" id="amount-instruction">500 Gourdes</strong> via Natcash au numéro 
+                        <strong class="text-yellow-400">+509 40 80 7390</strong>. Après le transfert, 
+                        prenez une capture d'écran de la confirmation et téléchargez-la ci-dessous comme preuve de paiement.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Steps -->
+            <div class="grid sm:grid-cols-3 gap-4 mb-8 animate-in" style="animation-delay: 0.3s;">
+                <div class="step-card">
+                    <div class="flex items-center gap-3 mb-3">
+                        <div class="step-number">1</div>
+                        <h3 class="font-bold text-white">Envoyez</h3>
+                    </div>
+                    <p class="text-gray-400 text-sm">Envoyez le montant via Natcash au numéro indiqué</p>
+                </div>
+                <div class="step-card">
+                    <div class="flex items-center gap-3 mb-3">
+                        <div class="step-number">2</div>
+                        <h3 class="font-bold text-white">Capturez</h3>
+                    </div>
+                    <p class="text-gray-400 text-sm">Prenez une capture d'écran de la confirmation</p>
+                </div>
+                <div class="step-card">
+                    <div class="flex items-center gap-3 mb-3">
+                        <div class="step-number">3</div>
+                        <h3 class="font-bold text-white">Téléchargez</h3>
+                    </div>
+                    <p class="text-gray-400 text-sm">Soumettez la preuve ci-dessous pour validation</p>
+                </div>
+            </div>
+
+            <!-- Upload Form -->
+            <form id="payment-form" class="glass-card rounded-2xl p-6 sm:p-8 mb-8 animate-in" style="animation-delay: 0.4s;">
+                <h3 class="text-xl font-bold text-white mb-6 flex items-center gap-3">
+                    <div class="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center">
+                        <i class="fas fa-upload text-white"></i>
+                    </div>
+                    Télécharger la Preuve de Paiement
+                </h3>
+
+                <div class="upload-zone" id="upload-zone">
+                    <input type="file" id="file-input" accept="image/png,image/jpeg,image/jpg,image/gif,image/webp" class="hidden">
+                    <div class="upload-icon" id="upload-icon">
+                        <i class="fas fa-cloud-upload-alt text-blue-400 text-3xl" id="upload-icon-i"></i>
+                    </div>
+                    <p class="text-white font-semibold mb-2" id="upload-text">Cliquez ou glissez votre fichier ici</p>
+                    <p class="text-gray-400 text-sm" id="upload-hint">PNG, JPG, GIF, WEBP (Max 10MB)</p>
+                    
+                    <div class="preview-container" id="preview-container">
+                        <img src="" alt="Preview" class="preview-image" id="preview-image">
+                        <p class="text-green-400 font-medium mt-3" id="file-name"></p>
+                        <button type="button" onclick="removeFile()" class="mt-2 text-red-400 text-sm hover:text-red-300">
+                            <i class="fas fa-times mr-1"></i>
+                            Supprimer
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Warning -->
+                <div class="warning-card mt-6">
+                    <div class="flex items-start gap-3">
+                        <div class="w-10 h-10 bg-yellow-500/20 rounded-xl flex items-center justify-center flex-shrink-0">
+                            <i class="fas fa-clock text-yellow-400"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-white mb-1">Délai d'activation</h4>
+                            <p class="text-gray-400 text-sm">
+                                Après soumission, votre compte sera vérifié et activé dans un délai de 
+                                <strong class="text-yellow-400">5 minutes à 6 heures</strong>. 
+                                Vous pouvez suivre le statut dans votre historique de transactions.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Submit Button -->
+                <button type="submit" id="submit-btn" class="submit-btn mt-6" disabled>
+                    <span id="btn-text">Soumettre la Preuve de Paiement</span>
+                    <div class="spinner hidden" id="btn-spinner"></div>
+                </button>
+            </form>
+
+            <!-- Help Section -->
+            <div class="text-center animate-in" style="animation-delay: 0.5s;">
+                <p class="text-gray-500 text-sm mb-3">Besoin d'aide avec votre paiement?</p>
+                <a href="https://wa.me/13056978303" target="_blank" class="inline-flex items-center gap-2 px-6 py-3 bg-green-500/20 border border-green-500/40 rounded-xl text-green-400 font-semibold hover:bg-green-500/30 transition">
+                    <i class="fab fa-whatsapp text-xl"></i>
+                    Contacter le Support
+                </a>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="relative z-10 py-8 px-6 border-t border-gray-800/50">
+        <div class="container mx-auto text-center">
+            <p class="text-gray-500 text-sm">© 2025 ANDY RCH. Tous droits réservés.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Get URL parameters
+        const urlParams = new URLSearchParams(window.location.search);
+        const packageName = urlParams.get('package') || 'starter';
+        const coins = urlParams.get('coins') || '90';
+        const price = urlParams.get('price') || '500';
+
+        // Update display
+        document.getElementById('coins-display').textContent = coins;
+        document.getElementById('price-display').textContent = parseInt(price).toLocaleString();
+        document.getElementById('amount-instruction').textContent = parseInt(price).toLocaleString() + ' Gourdes';
+
+        // Sidebar functionality
+        const sidebar = document.getElementById('sidebar');
+        const sidebarOverlay = document.getElementById('sidebar-overlay');
+        const burgerBtn = document.getElementById('burger-btn');
+
+        function toggleSidebar() {
+            sidebar.classList.toggle('open');
+            sidebarOverlay.classList.toggle('open');
+            burgerBtn.classList.toggle('active');
+        }
+
+        burgerBtn.addEventListener('click', toggleSidebar);
+        sidebarOverlay.addEventListener('click', toggleSidebar);
+
+        // Copy phone number
+        function copyNumber() {
+            navigator.clipboard.writeText('+50940807390').then(() => {
+                showToast('Numéro copié!', 'success');
+            });
+        }
+
+        // Toast notification
+        function showToast(message, type = 'success') {
+            const toast = document.createElement('div');
+            toast.className = `toast-notification ${type}`;
+            toast.innerHTML = `
+                <div class="flex items-center gap-3">
+                    <i class="fas fa-${type === 'success' ? 'check-circle text-green-400' : 'exclamation-circle text-red-400'}"></i>
+                    <span>${message}</span>
+                </div>
+            `;
+            document.body.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.classList.add('slide-out');
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+
+        // File upload handling
+        const uploadZone = document.getElementById('upload-zone');
+        const fileInput = document.getElementById('file-input');
+        const previewContainer = document.getElementById('preview-container');
+        const previewImage = document.getElementById('preview-image');
+        const fileNameEl = document.getElementById('file-name');
+        const uploadText = document.getElementById('upload-text');
+        const uploadHint = document.getElementById('upload-hint');
+        const uploadIcon = document.getElementById('upload-icon-i');
+        const submitBtn = document.getElementById('submit-btn');
+
+        let selectedFile = null;
+
+        uploadZone.addEventListener('click', () => fileInput.click());
+
+        uploadZone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadZone.classList.add('dragover');
+        });
+
+        uploadZone.addEventListener('dragleave', () => {
+            uploadZone.classList.remove('dragover');
+        });
+
+        uploadZone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadZone.classList.remove('dragover');
+            const files = e.dataTransfer.files;
+            if (files.length) handleFile(files[0]);
+        });
+
+        fileInput.addEventListener('change', (e) => {
+            if (e.target.files.length) handleFile(e.target.files[0]);
+        });
+
+        function handleFile(file) {
+            // Validate file type
+            const allowedTypes = ['image/png', 'image/jpeg', 'image/jpg', 'image/gif', 'image/webp'];
+            if (!allowedTypes.includes(file.type)) {
+                showToast('Format non supporté. Utilisez PNG, JPG, GIF ou WEBP.', 'error');
+                return;
+            }
+
+            // Validate file size (10MB max)
+            if (file.size > 10 * 1024 * 1024) {
+                showToast('Fichier trop volumineux. Maximum 10MB.', 'error');
+                return;
+            }
+
+            selectedFile = file;
+
+            // Show preview
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                previewImage.src = e.target.result;
+                previewContainer.classList.add('visible');
+                fileNameEl.textContent = file.name;
+                uploadZone.classList.add('has-file');
+                uploadText.textContent = 'Fichier sélectionné';
+                uploadHint.textContent = 'Cliquez pour changer';
+                uploadIcon.className = 'fas fa-check text-green-400 text-3xl';
+                submitBtn.disabled = false;
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function removeFile() {
+            selectedFile = null;
+            fileInput.value = '';
+            previewContainer.classList.remove('visible');
+            uploadZone.classList.remove('has-file');
+            uploadText.textContent = 'Cliquez ou glissez votre fichier ici';
+            uploadHint.textContent = 'PNG, JPG, GIF, WEBP (Max 10MB)';
+            uploadIcon.className = 'fas fa-cloud-upload-alt text-blue-400 text-3xl';
+            submitBtn.disabled = true;
+        }
+
+        // Form submission
+        const form = document.getElementById('payment-form');
+        const btnText = document.getElementById('btn-text');
+        const btnSpinner = document.getElementById('btn-spinner');
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            if (!selectedFile) {
+                showToast('Veuillez télécharger une preuve de paiement.', 'error');
+                return;
+            }
+
+            // Show loading state
+            submitBtn.disabled = true;
+            btnText.textContent = 'Envoi en cours...';
+            btnSpinner.classList.remove('hidden');
+
+            try {
+                // Create form data
+                const formData = new FormData();
+                formData.append('proof', selectedFile);
+                formData.append('package', packageName);
+                formData.append('coins', coins);
+                formData.append('price', price);
+
+                // Submit to API
+                const response = await fetch('/api/payment/submit', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    showToast('Preuve soumise avec succès!', 'success');
+                    // Redirect to history page
+                    setTimeout(() => {
+                        window.location.href = '/history?highlight=pending';
+                    }, 1500);
+                } else {
+                    throw new Error(result.message || 'Une erreur est survenue');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                showToast(error.message || 'Une erreur est survenue. Veuillez réessayer.', 'error');
+                submitBtn.disabled = false;
+                btnText.textContent = 'Soumettre la Preuve de Paiement';
+                btnSpinner.classList.add('hidden');
+            }
+        });
+
+        // Close sidebar on window resize
+        window.addEventListener('resize', () => {
+            if (window.innerWidth >= 768 && sidebar.classList.contains('open')) {
+                toggleSidebar();
+            }
+        });
+    </script>
+</body>
+</html>

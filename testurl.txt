@@ -1,0 +1,46 @@
+POST /api/user/coins HTTP/2
+host: manulofficial.store
+content-length: 29
+sec-ch-ua-platform: "Android"
+user-agent: Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Mobile Safari/537.36
+sec-ch-ua: "Not(A:Brand";v="8", "Chromium";v="144", "Google Chrome";v="144"
+content-type: application/json
+sec-ch-ua-mobile: ?1
+accept: */*
+origin: https://manulofficial.store
+sec-fetch-site: same-origin
+sec-fetch-mode: cors
+sec-fetch-dest: empty
+referer: https://manulofficial.store/dashboard
+accept-encoding: gzip, deflate, br, zstd
+accept-language: en-US,en;q=0.9,fr;q=0.8
+cookie: __Host-next-auth.csrf-token=020598987f80e8cd6d9f9b4bee0edb857163e1a03417b666119fbf591cb1e3b1%7C0b08ea28802e292a3d43f07bc4b5a3e4d0c5213193abb87bac43b79a61984079
+cookie: __Secure-next-auth.callback-url=https%3A%2F%2Fmanulofficial.store%2Fdashboard
+cookie: next-auth.session-token=eyJhbGciOiJkaXIiLCJlbmMiOiJBMjU2R0NNIn0..nXLxosozLa7_Yo9i.4S3nF7yi1Lfbk1MqD-eGEFP208y1ngZ2oMXqdZwI8hH8nTVfcoGtQxcHJuLO6nswVw3_Qe0OKqKYKfffN0JLfyVpY1xu1iLDZMV62AJLjRDC0KAGm4yAaVmJMF3Dzpby8RjhmP_cuk2huv7fU6Dt0i0RG5wOFsiKHuh4XXMMyB9KAo7JHmbD5zsoMTDo81Amhc3plRvcQW6gfIU02gPni-le_ZTdG4fWbHYTvzUve1qxbzx9jIeT6rxvgj8BbTH4xqaOt-QN0E_YsTSol_wPIL66mALbWANzbs35nSez56yW2bV4mFIhli2AdZMyN1E-Wlf8jNUiFKVhTxDcMbBoOwvwJ7oJYKe2V3r8e3S6kXc5vsWUp8CKnuHba_dda_xvqIZqnBFhVEzbhavmjHQrVXx7Rk8QF79-MNrOwvzUyssTADc1_9XwDvtColar.gx7gx4D7xY9dDgYajzxzOw
+priority: u=1, i
+{"action":"daily","streak":0}
+
+
+POST /api/react/request HTTP/2
+host: manulofficial.store
+content-length: 102
+sec-ch-ua-platform: "Android"
+user-agent: Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Mobile Safari/537.36
+sec-ch-ua: "Not(A:Brand";v="8", "Chromium";v="144", "Google Chrome";v="144"
+content-type: application/json
+sec-ch-ua-mobile: ?1
+accept: */*
+origin: https://manulofficial.store
+sec-fetch-site: same-origin
+sec-fetch-mode: cors
+sec-fetch-dest: empty
+referer: https://manulofficial.store/dashboard
+accept-encoding: gzip, deflate, br, zstd
+accept-language: en-US,en;q=0.9,fr;q=0.8
+cookie: __Host-next-auth.csrf-token=020598987f80e8cd6d9f9b4bee0edb857163e1a03417b666119fbf591cb1e3b1%7C0b08ea28802e292a3d43f07bc4b5a3e4d0c5213193abb87bac43b79a61984079
+cookie: __Secure-next-auth.callback-url=https%3A%2F%2Fmanulofficial.store%2Fdashboard
+cookie: next-auth.session-token=eyJhbGciOiJkaXIiLCJlbmMiOiJBMjU2R0NNIn0..Y3xMPzY-V0TLm2y_.C5CyMRyrbGAfF_XBt3hZhTTwWRgd94S2lzdhw28lJ4ghCT0PtpjUZiluHH_13TwiXt8KM2wbdGzMdIlwHQ8t1VV9QNvQxxGIToKeAJKxTSpPiCe3U_bTAULqJRXMs9Ugr7aZ88zg1ODdDi-zUedgJQBBwYMfKygtG77hkNMOxCXuYf3KrjHWn3014ItrfCkAt93TNkHD7DFtbEzeJTGQNAe2GB4X-QYuH25s5gFyBV8vC9-P-VPbyuOAdsdtsljhA7E4SAmPkDp6F0L0EaDtSZGn9pV9APZM9fH4T_4pdGquPbEB_SprXIVxxz88OFWhNvFN3AJFOxUq3ff3V2FpxwD9ZXEDh8geyvCUtHB2ouckJzzF98ALERXAo85lX1BDEiflO83QqKJY89671h6eE4qxHLc-rvtiUnMVR5uEF3SF_qtRBYt5bUYy-tkl.a_CZy_oVzN5jnypaSi7ZzA
+priority: u=1, i
+{"channelLink":"https://whatsapp.com/channel/0029Vb6XAv0GOj9lYT2p3l1X/931","emojis":["👍","❤️"]}
+
+

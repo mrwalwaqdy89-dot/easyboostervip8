@@ -1,0 +1,1095 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Easy Booster — Platform For Sale | Service Officially Closed</title>
+    <meta name="description" content="Easy Booster SMM is officially closed. The full platform (source code, database, admin panel, payment system) is available for purchase at $50 USD — become the new owner.">
+    <meta name="theme-color" content="#050505">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --bg: #050508;
+            --bg-surface: #0a0a12;
+            --bg-card: rgba(255,255,255,0.04);
+            --border: rgba(255,255,255,0.08);
+            --border-glow: rgba(139,92,246,0.4);
+            --text: #f5f5ff;
+            --text-muted: #8b8ba8;
+            --purple: #8b5cf6;
+            --purple-light: #a78bfa;
+            --pink: #ec4899;
+            --cyan: #06b6d4;
+            --green: #10b981;
+            --gold: #f59e0b;
+            --grad: linear-gradient(135deg, #8b5cf6 0%, #ec4899 50%, #f59e0b 100%);
+        }
+
+        html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* ===== ANIMATED BACKGROUND ===== */
+        .bg-grid {
+            position: fixed;
+            inset: 0;
+            background-image:
+                linear-gradient(rgba(139,92,246,0.04) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(139,92,246,0.04) 1px, transparent 1px);
+            background-size: 60px 60px;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .orb {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(80px);
+            pointer-events: none;
+            z-index: 0;
+            animation: float 8s ease-in-out infinite;
+        }
+        .orb-1 { width: 500px; height: 500px; background: rgba(139,92,246,0.12); top: -150px; left: -100px; animation-delay: 0s; }
+        .orb-2 { width: 400px; height: 400px; background: rgba(236,72,153,0.09); top: 50%; right: -100px; animation-delay: -3s; }
+        .orb-3 { width: 350px; height: 350px; background: rgba(6,182,212,0.07); bottom: 10%; left: 30%; animation-delay: -5s; }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) scale(1); }
+            50% { transform: translateY(-30px) scale(1.05); }
+        }
+
+        /* ===== LAYOUT ===== */
+        .wrapper { position: relative; z-index: 1; }
+
+        section { padding: 80px 24px; }
+
+        .container { max-width: 1100px; margin: 0 auto; }
+
+        /* ===== HEADER / HERO ===== */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 120px 24px 80px;
+            position: relative;
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(139,92,246,0.15);
+            border: 1px solid rgba(139,92,246,0.4);
+            border-radius: 100px;
+            padding: 6px 18px;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--purple-light);
+            margin-bottom: 32px;
+            animation: slideDown 0.6s ease both;
+        }
+
+        .badge .dot {
+            width: 7px; height: 7px;
+            background: var(--green);
+            border-radius: 50%;
+            animation: pulse-dot 1.5s ease-in-out infinite;
+        }
+
+        @keyframes pulse-dot {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(16,185,129,0.6); }
+            50% { box-shadow: 0 0 0 6px rgba(16,185,129,0); }
+        }
+
+        .hero-title {
+            font-size: clamp(3rem, 8vw, 6rem);
+            font-weight: 900;
+            line-height: 1.05;
+            letter-spacing: -0.03em;
+            margin-bottom: 16px;
+            animation: slideDown 0.6s ease 0.1s both;
+        }
+
+        .grad-text {
+            background: var(--grad);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-sub {
+            font-size: clamp(1rem, 2.5vw, 1.25rem);
+            color: var(--text-muted);
+            max-width: 560px;
+            margin: 0 auto 48px;
+            animation: slideDown 0.6s ease 0.2s both;
+        }
+
+        .price-hero {
+            display: inline-flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+            margin-bottom: 40px;
+            animation: slideDown 0.6s ease 0.3s both;
+        }
+
+        .price-tag {
+            font-size: clamp(3.5rem, 10vw, 7rem);
+            font-weight: 900;
+            letter-spacing: -0.04em;
+            background: var(--grad);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1;
+            filter: drop-shadow(0 0 30px rgba(139,92,246,0.4));
+        }
+
+        .price-label {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        .hero-cta {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+            justify-content: center;
+            animation: slideDown 0.6s ease 0.4s both;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 14px 32px;
+            border-radius: 14px;
+            font-size: 15px;
+            font-weight: 700;
+            text-decoration: none;
+            border: none;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: rgba(255,255,255,0.1);
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+
+        .btn:hover::before { opacity: 1; }
+
+        .btn-primary {
+            background: var(--grad);
+            color: #fff;
+            box-shadow: 0 8px 32px rgba(139,92,246,0.35);
+        }
+
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 12px 40px rgba(139,92,246,0.5); }
+
+        .btn-outline {
+            background: var(--bg-card);
+            color: var(--text);
+            border: 1px solid var(--border);
+            backdrop-filter: blur(10px);
+        }
+
+        .btn-outline:hover { transform: translateY(-2px); border-color: rgba(139,92,246,0.5); }
+
+        /* ===== SCROLL INDICATOR ===== */
+        .scroll-hint {
+            position: absolute;
+            bottom: 32px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            color: var(--text-muted);
+            font-size: 12px;
+            animation: bounce 2s ease-in-out infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateX(-50%) translateY(0); }
+            50% { transform: translateX(-50%) translateY(8px); }
+        }
+
+        /* ===== SECTION TITLES ===== */
+        .section-label {
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: var(--purple-light);
+            margin-bottom: 12px;
+        }
+
+        .section-title {
+            font-size: clamp(1.8rem, 4vw, 2.8rem);
+            font-weight: 800;
+            letter-spacing: -0.03em;
+            margin-bottom: 16px;
+        }
+
+        .section-desc {
+            color: var(--text-muted);
+            font-size: 1.05rem;
+            max-width: 580px;
+            margin: 0 auto 56px;
+        }
+
+        .text-center { text-align: center; }
+
+        /* ===== STATS BAR ===== */
+        .stats-bar {
+            background: rgba(255,255,255,0.03);
+            border-top: 1px solid var(--border);
+            border-bottom: 1px solid var(--border);
+            padding: 40px 24px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 0;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 16px 24px;
+            border-right: 1px solid var(--border);
+        }
+
+        .stat-item:last-child { border-right: none; }
+
+        .stat-num {
+            font-size: 2.2rem;
+            font-weight: 900;
+            letter-spacing: -0.04em;
+            background: var(--grad);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: var(--text-muted);
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-top: 4px;
+        }
+
+        /* ===== CARDS ===== */
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 28px;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(139,92,246,0.05), transparent 60%);
+            opacity: 0;
+            transition: opacity 0.3s;
+            pointer-events: none;
+        }
+
+        .card:hover { transform: translateY(-4px); border-color: rgba(139,92,246,0.3); box-shadow: 0 16px 40px rgba(0,0,0,0.3); }
+        .card:hover::before { opacity: 1; }
+
+        /* ===== FEATURES GRID ===== */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .feature-icon {
+            width: 52px; height: 52px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            margin-bottom: 18px;
+        }
+
+        .feature-title {
+            font-size: 1.05rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .feature-desc {
+            font-size: 14px;
+            color: var(--text-muted);
+            line-height: 1.6;
+        }
+
+        /* ===== TECH STACK ===== */
+        .tech-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            justify-content: center;
+        }
+
+        .tech-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 20px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 100px;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text);
+            transition: all 0.2s;
+        }
+
+        .tech-pill:hover { border-color: rgba(139,92,246,0.5); background: rgba(139,92,246,0.08); }
+
+        .tech-pill .icon { font-size: 16px; }
+
+        /* ===== WHAT'S INCLUDED ===== */
+        .include-list {
+            list-style: none;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 14px;
+        }
+
+        .include-list li {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 14px 18px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: 500;
+            transition: border-color 0.2s;
+        }
+
+        .include-list li:hover { border-color: rgba(16,185,129,0.4); }
+
+        .include-list li .check {
+            color: var(--green);
+            font-size: 16px;
+            margin-top: 1px;
+            flex-shrink: 0;
+        }
+
+        /* ===== PURCHASE SECTION ===== */
+        .purchase-section { background: rgba(139,92,246,0.04); border-top: 1px solid var(--border); }
+
+        .purchase-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-glow);
+            border-radius: 28px;
+            padding: 56px;
+            text-align: center;
+            max-width: 680px;
+            margin: 0 auto;
+            backdrop-filter: blur(20px);
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 0 80px rgba(139,92,246,0.1), 0 0 160px rgba(139,92,246,0.05);
+        }
+
+        .purchase-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 2px;
+            background: var(--grad);
+        }
+
+        .price-display {
+            margin: 24px 0 32px;
+        }
+
+        .price-main {
+            font-size: 5rem;
+            font-weight: 900;
+            letter-spacing: -0.05em;
+            background: var(--grad);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1;
+        }
+
+        .price-note {
+            font-size: 14px;
+            color: var(--text-muted);
+            margin-top: 8px;
+        }
+
+        .contact-options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 14px;
+            justify-content: center;
+            margin-top: 32px;
+        }
+
+        .contact-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 14px 28px;
+            border-radius: 14px;
+            font-size: 15px;
+            font-weight: 700;
+            text-decoration: none;
+            transition: all 0.25s ease;
+            border: none;
+            cursor: pointer;
+        }
+
+        .contact-btn.telegram {
+            background: linear-gradient(135deg, #229ed9, #0f8fcb);
+            color: #fff;
+            box-shadow: 0 6px 24px rgba(34,158,217,0.3);
+        }
+
+        .contact-btn.telegram:hover { transform: translateY(-2px); box-shadow: 0 10px 32px rgba(34,158,217,0.5); }
+
+        .contact-btn.whatsapp {
+            background: linear-gradient(135deg, #25d366, #1da851);
+            color: #fff;
+            box-shadow: 0 6px 24px rgba(37,211,102,0.3);
+        }
+
+        .contact-btn.whatsapp:hover { transform: translateY(-2px); box-shadow: 0 10px 32px rgba(37,211,102,0.5); }
+
+        .contact-btn.email {
+            background: var(--bg-card);
+            color: var(--text);
+            border: 1px solid var(--border);
+        }
+
+        .contact-btn.email:hover { border-color: rgba(139,92,246,0.5); transform: translateY(-2px); }
+
+        /* ===== FOOTER ===== */
+        footer {
+            padding: 40px 24px;
+            border-top: 1px solid var(--border);
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 13px;
+        }
+
+        footer a { color: var(--purple-light); text-decoration: none; }
+        footer a:hover { text-decoration: underline; }
+
+        /* ===== ANIMATIONS ===== */
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+
+        .reveal.visible { opacity: 1; transform: translateY(0); }
+
+        /* ===== CLOSURE BANNER ===== */
+        .closure-banner {
+            background: linear-gradient(135deg, rgba(239,68,68,0.12), rgba(245,158,11,0.08));
+            border: 1px solid rgba(239,68,68,0.35);
+            border-radius: 16px;
+            padding: 20px 28px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            max-width: 760px;
+            margin: 0 auto 40px;
+            text-align: left;
+        }
+
+        .closure-banner .cb-icon {
+            font-size: 28px;
+            flex-shrink: 0;
+        }
+
+        .closure-banner .cb-title {
+            font-weight: 800;
+            font-size: 15px;
+            color: #fca5a5;
+            margin-bottom: 4px;
+        }
+
+        .closure-banner .cb-text {
+            font-size: 13px;
+            color: var(--text-muted);
+            line-height: 1.5;
+        }
+
+        /* ===== WHY BUY ADVANTAGES ===== */
+        .advantages-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 16px;
+            margin-top: 40px;
+        }
+
+        .adv-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 18px;
+            padding: 24px 22px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .adv-card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(139,92,246,0.06), transparent 70%);
+            opacity: 0;
+            transition: opacity 0.3s;
+            pointer-events: none;
+        }
+
+        .adv-card:hover { transform: translateY(-4px); border-color: rgba(139,92,246,0.35); box-shadow: 0 16px 40px rgba(0,0,0,0.25); }
+        .adv-card:hover::before { opacity: 1; }
+
+        .adv-icon {
+            font-size: 28px;
+            margin-bottom: 14px;
+        }
+
+        .adv-title {
+            font-size: 1rem;
+            font-weight: 700;
+            margin-bottom: 6px;
+        }
+
+        .adv-desc {
+            font-size: 13px;
+            color: var(--text-muted);
+            line-height: 1.55;
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 768px) {
+            section { padding: 60px 20px; }
+            .purchase-card { padding: 36px 24px; }
+            .stat-item { border-right: none; border-bottom: 1px solid var(--border); padding: 16px 0; }
+            .stat-item:last-child { border-bottom: none; }
+            .stats-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+    </style>
+</head>
+<body>
+    <!-- Background decoration -->
+    <div class="bg-grid"></div>
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+
+    <div class="wrapper">
+
+        <!-- ===== HERO ===== -->
+        <section class="hero">
+            <div class="badge" style="background:rgba(239,68,68,0.15);border-color:rgba(239,68,68,0.4);color:#fca5a5;">
+                <span class="dot" style="background:#ef4444;"></span>
+                Service Officially Closed · Platform For Sale
+            </div>
+
+            <h1 class="hero-title">
+                <span class="grad-text">Easy Booster</span><br>
+                is Now For Sale
+            </h1>
+
+            <p class="hero-sub">
+                Easy Booster SMM is <strong style="color:#fca5a5;">officially shut down</strong> — no new orders accepted. The entire platform is now available for you to own, rebrand, and relaunch under your name.
+            </p>
+
+            <!-- Closure notice -->
+            <div class="closure-banner" style="animation: slideDown 0.6s ease 0.25s both;">
+                <span class="cb-icon">🔴</span>
+                <div>
+                    <div class="cb-title">Easy Booster SMM is officially closed</div>
+                    <div class="cb-text">Followers, likes, and all other SMM services are no longer available for purchase. However, the complete platform — including all source code, the live user database, admin panel, and payment integrations — is up for sale at a one-time fixed price.</div>
+                </div>
+            </div>
+
+            <div class="price-hero">
+                <div class="price-tag">$50</div>
+                <div class="price-label">One-time · Full ownership · No recurring fees</div>
+            </div>
+
+            <div class="hero-cta">
+                <a href="#purchase" class="btn btn-primary">
+                    <i class="fas fa-shopping-bag"></i> Buy the Platform — $50 USD
+                </a>
+                <a href="#why-buy" class="btn btn-outline">
+                    <i class="fas fa-star"></i> Why Buy?
+                </a>
+                <a href="#demo" class="btn btn-outline">
+                    <i class="fas fa-eye"></i> Try Live Demo
+                </a>
+            </div>
+
+            <div class="scroll-hint">
+                <span>Scroll to explore</span>
+                <i class="fas fa-chevron-down"></i>
+            </div>
+        </section>
+
+        <!-- ===== STATS ===== -->
+        <div class="stats-bar">
+            <div class="stats-grid">
+                <div class="stat-item reveal">
+                    <div class="stat-num">10+</div>
+                    <div class="stat-label">SMM Platforms</div>
+                </div>
+                <div class="stat-item reveal" style="transition-delay:0.1s">
+                    <div class="stat-num">200+</div>
+                    <div class="stat-label">SMM Services</div>
+                </div>
+                <div class="stat-item reveal" style="transition-delay:0.2s">
+                    <div class="stat-num">24/7</div>
+                    <div class="stat-label">Auto Delivery</div>
+                </div>
+                <div class="stat-item reveal" style="transition-delay:0.3s">
+                    <div class="stat-num">100%</div>
+                    <div class="stat-label">Source Code</div>
+                </div>
+                <div class="stat-item reveal" style="transition-delay:0.4s">
+                    <div class="stat-num">$50</div>
+                    <div class="stat-label">Fixed Price</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== WHY BUY ===== -->
+        <section id="why-buy">
+            <div class="container">
+                <div class="text-center">
+                    <p class="section-label">Ownership Advantages</p>
+                    <h2 class="section-title">Why buy Easy Booster?<br><span class="grad-text">Here's what you inherit</span></h2>
+                    <p class="section-desc">You're not just buying code — you're taking over a fully built, live-tested SMM business infrastructure.</p>
+                </div>
+                <div class="advantages-grid">
+                    <div class="adv-card reveal">
+                        <div class="adv-icon">♾️</div>
+                        <div class="adv-title">Lifetime Order Access</div>
+                        <div class="adv-desc">All existing order history and transaction records transfer to you. The full database comes with the sale — you pick up exactly where Easy Booster left off.</div>
+                    </div>
+                    <div class="adv-card reveal" style="transition-delay:0.05s">
+                        <div class="adv-icon">🗄️</div>
+                        <div class="adv-title">Complete Database &amp; All Users</div>
+                        <div class="adv-desc">You become the sole owner of the PostgreSQL database, including the full user base, balances, session data, and transaction logs. Zero loss on migration.</div>
+                    </div>
+                    <div class="adv-card reveal" style="transition-delay:0.1s">
+                        <div class="adv-icon">👑</div>
+                        <div class="adv-title">Full Platform Ownership</div>
+                        <div class="adv-desc">100% ownership of all source code, no licensing restrictions. Rebrand it, modify it, resell it — it's entirely yours. No royalties, no restrictions.</div>
+                    </div>
+                    <div class="adv-card reveal" style="transition-delay:0.15s">
+                        <div class="adv-icon">💳</div>
+                        <div class="adv-title">Plug-in Payment System</div>
+                        <div class="adv-desc">OxaPay crypto payments are fully wired in — USDT, BTC, LTC, ETH and 100+ coins. Start collecting payments the same day you deploy, with your own merchant key.</div>
+                    </div>
+                    <div class="adv-card reveal" style="transition-delay:0.2s">
+                        <div class="adv-icon">📖</div>
+                        <div class="adv-title">Full Setup Documentation</div>
+                        <div class="adv-desc">After purchase you receive a complete step-by-step installation guide covering local setup, deployment to Heroku/Railway/Render, environment configuration, and database migration.</div>
+                    </div>
+                    <div class="adv-card reveal" style="transition-delay:0.25s">
+                        <div class="adv-icon">🐙</div>
+                        <div class="adv-title">Private GitHub Repository</div>
+                        <div class="adv-desc">You'll be invited as owner to the private GitHub repository with the full commit history, so you can continue development, roll back changes, and collaborate with developers.</div>
+                    </div>
+                    <div class="adv-card reveal" style="transition-delay:0.3s">
+                        <div class="adv-icon">🔄</div>
+                        <div class="adv-title">Relauncher Advantage</div>
+                        <div class="adv-desc">Easy Booster already has a user base. You can re-open the SMM services with your own API key, instantly monetise the existing users and order history from day one.</div>
+                    </div>
+                    <div class="adv-card reveal" style="transition-delay:0.35s">
+                        <div class="adv-icon">🛡️</div>
+                        <div class="adv-title">Admin Dashboard &amp; Full Control</div>
+                        <div class="adv-desc">A polished admin panel lets you manage users, balances, coupons, notifications, maintenance mode, and platform settings — no direct database edits needed.</div>
+                    </div>
+                    <div class="adv-card reveal" style="transition-delay:0.4s">
+                        <div class="adv-icon">🚀</div>
+                        <div class="adv-title">Deploy in Minutes</div>
+                        <div class="adv-desc">Procfile + environment variable templates are included. One-click deploy to Heroku, Railway, or Render. Your new SMM business can be live in under an hour.</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===== FEATURES ===== -->
+        <section id="features">
+            <div class="container">
+                <div class="text-center">
+                    <p class="section-label">Features</p>
+                    <h2 class="section-title">Everything you need to run<br><span class="grad-text">a profitable SMM panel</span></h2>
+                    <p class="section-desc">This platform ships with all the essential features to onboard users, sell social media services, and collect payments automatically.</p>
+                </div>
+
+                <div class="features-grid">
+                    <div class="card reveal">
+                        <div class="feature-icon" style="background:rgba(139,92,246,0.15);">
+                            <i class="fas fa-bolt" style="color:#a78bfa;"></i>
+                        </div>
+                        <div class="feature-title">SMM Service Engine</div>
+                        <div class="feature-desc">200+ services across Instagram, TikTok, Twitter/X, WhatsApp, YouTube, and more — powered by a third-party SMM API with automatic order dispatch.</div>
+                    </div>
+
+                    <div class="card reveal" style="transition-delay:0.1s">
+                        <div class="feature-icon" style="background:rgba(6,182,212,0.15);">
+                            <i class="fas fa-shield-alt" style="color:#06b6d4;"></i>
+                        </div>
+                        <div class="feature-title">Google OAuth + Session Auth</div>
+                        <div class="feature-desc">Users sign in with Google or email. Secure session handling via PostgreSQL-backed sessions, with role-based admin access control.</div>
+                    </div>
+
+                    <div class="card reveal" style="transition-delay:0.2s">
+                        <div class="feature-icon" style="background:rgba(245,158,11,0.15);">
+                            <i class="fas fa-coins" style="color:#f59e0b;"></i>
+                        </div>
+                        <div class="feature-title">Crypto Payments (OxaPay)</div>
+                        <div class="feature-desc">Integrated OxaPay gateway accepts Bitcoin, USDT, LTC, and more. Users top up their balance and pay for services instantly — no manual work needed.</div>
+                    </div>
+
+                    <div class="card reveal" style="transition-delay:0.3s">
+                        <div class="feature-icon" style="background:rgba(16,185,129,0.15);">
+                            <i class="fas fa-tachometer-alt" style="color:#10b981;"></i>
+                        </div>
+                        <div class="feature-title">Full Admin Dashboard</div>
+                        <div class="feature-desc">Manage users, orders, balances, coupons, API keys, notifications, maintenance mode, and platform settings from a single sleek admin panel.</div>
+                    </div>
+
+                    <div class="card reveal" style="transition-delay:0.4s">
+                        <div class="feature-icon" style="background:rgba(236,72,153,0.15);">
+                            <i class="fab fa-whatsapp" style="color:#ec4899;"></i>
+                        </div>
+                        <div class="feature-title">WhatsApp Channel Growth Tools</div>
+                        <div class="feature-desc">Exclusive WhatsApp channel follower tools with metadata proxy, auto-react, and real-time pairing — rare features not found in generic SMM panels.</div>
+                    </div>
+
+                    <div class="card reveal" style="transition-delay:0.5s">
+                        <div class="feature-icon" style="background:rgba(139,92,246,0.15);">
+                            <i class="fas fa-robot" style="color:#8b5cf6;"></i>
+                        </div>
+                        <div class="feature-title">AI Ban Detection System</div>
+                        <div class="feature-desc">Intelligent bot / abuse detection with fingerprinting and IP-based banning. Protects your platform from fraudulent signups and chargebacks.</div>
+                    </div>
+
+                    <div class="card reveal" style="transition-delay:0.6s">
+                        <div class="feature-icon" style="background:rgba(245,158,11,0.15);">
+                            <i class="fas fa-bell" style="color:#f59e0b;"></i>
+                        </div>
+                        <div class="feature-title">Broadcast Notifications</div>
+                        <div class="feature-desc">Send targeted announcements and email notifications to all users or specific segments with a single click from the admin dashboard.</div>
+                    </div>
+
+                    <div class="card reveal" style="transition-delay:0.7s">
+                        <div class="feature-icon" style="background:rgba(6,182,212,0.15);">
+                            <i class="fas fa-database" style="color:#06b6d4;"></i>
+                        </div>
+                        <div class="feature-title">PostgreSQL + Backup System</div>
+                        <div class="feature-desc">Production-grade PostgreSQL database with full backup/restore capabilities built into the admin panel — no external tools required.</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===== TECH STACK ===== -->
+        <section style="padding-top: 0;">
+            <div class="container">
+                <div class="text-center">
+                    <p class="section-label">Tech Stack</p>
+                    <h2 class="section-title reveal">Built with modern,<br><span class="grad-text">production-ready tech</span></h2>
+                </div>
+                <div class="tech-grid reveal">
+                    <span class="tech-pill"><i class="fab fa-node-js icon" style="color:#6da55f;"></i> Node.js</span>
+                    <span class="tech-pill"><i class="fas fa-server icon" style="color:#a78bfa;"></i> Express.js</span>
+                    <span class="tech-pill"><i class="fas fa-database icon" style="color:#336791;"></i> PostgreSQL</span>
+                    <span class="tech-pill"><i class="fab fa-html5 icon" style="color:#e34f26;"></i> HTML5</span>
+                    <span class="tech-pill"><i class="fab fa-css3-alt icon" style="color:#1572b6;"></i> Tailwind CSS</span>
+                    <span class="tech-pill"><i class="fab fa-js icon" style="color:#f7df1e;"></i> JavaScript</span>
+                    <span class="tech-pill"><i class="fab fa-google icon" style="color:#4285f4;"></i> Google OAuth</span>
+                    <span class="tech-pill"><i class="fas fa-coins icon" style="color:#f59e0b;"></i> OxaPay</span>
+                    <span class="tech-pill"><i class="fas fa-envelope icon" style="color:#06b6d4;"></i> Nodemailer</span>
+                    <span class="tech-pill"><i class="fas fa-cloud icon" style="color:#8b5cf6;"></i> Heroku / Railway</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===== WHAT'S INCLUDED ===== -->
+        <section id="included" style="padding-top: 40px;">
+            <div class="container">
+                <div class="text-center">
+                    <p class="section-label">What you get</p>
+                    <h2 class="section-title reveal">Complete package,<br><span class="grad-text">zero surprises</span></h2>
+                </div>
+                <ul class="include-list reveal">
+                    <li><span class="check"><i class="fas fa-check-circle"></i></span> Full source code (Node.js + HTML)</li>
+                    <li><span class="check"><i class="fas fa-check-circle"></i></span> PostgreSQL database schema &amp; migrations</li>
+                    <li><span class="check"><i class="fas fa-check-circle"></i></span> Admin dashboard (full control panel)</li>
+                    <li><span class="check"><i class="fas fa-check-circle"></i></span> OxaPay crypto payment integration</li>
+                    <li><span class="check"><i class="fas fa-check-circle"></i></span> Google OAuth authentication</li>
+                    <li><span class="check"><i class="fas fa-check-circle"></i></span> SMM API integration (provider-agnostic)</li>
+                    <li><span class="check"><i class="fas fa-check-circle"></i></span> WhatsApp channel growth tools</li>
+                    <li><span class="check"><i class="fas fa-check-circle"></i></span> AI ban &amp; fingerprint detection</li>
+                    <li><span class="check"><i class="fas fa-check-circle"></i></span> Email notification system</li>
+                    <li><span class="check"><i class="fas fa-check-circle"></i></span> Coupon / discount system</li>
+                    <li><span class="check"><i class="fas fa-check-circle"></i></span> Backup &amp; restore tools</li>
+                    <li><span class="check"><i class="fas fa-check-circle"></i></span> Maintenance mode toggle</li>
+                    <li><span class="check"><i class="fas fa-check-circle"></i></span> 🐙 Private GitHub repository access</li>
+                    <li><span class="check"><i class="fas fa-check-circle"></i></span> 📖 Step-by-step installation &amp; setup guide (emailed on purchase)</li>
+                    <li><span class="check"><i class="fas fa-check-circle"></i></span> 🗄️ Live database — existing users &amp; order history</li>
+                    <li><span class="check"><i class="fas fa-check-circle"></i></span> ☁️ Deployment guide (Heroku / Railway / Render)</li>
+                    <li><span class="check"><i class="fas fa-check-circle"></i></span> ⚙️ Environment variable configuration template</li>
+                    <li><span class="check"><i class="fas fa-check-circle"></i></span> Clean, well-documented codebase</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- ===== DEMO ===== -->
+        <section id="demo" style="padding-top: 20px; padding-bottom: 20px;">
+            <div class="container">
+                <div class="text-center">
+                    <p class="section-label">Live Preview</p>
+                    <h2 class="section-title reveal">See it in action —<br><span class="grad-text">Try the live demo</span></h2>
+                    <p class="section-desc reveal">Explore the full platform with read-only demo credentials. Browse both the admin dashboard and the user dashboard — no sign-up required.</p>
+                </div>
+                <div style="display:flex; flex-wrap:wrap; gap:24px; justify-content:center; max-width:700px; margin:0 auto;" class="reveal">
+
+                    <!-- Admin Demo Card -->
+                    <div style="flex:1; min-width:280px; background:rgba(139,92,246,0.07); border:1px solid rgba(139,92,246,0.35); border-radius:20px; padding:32px; text-align:center; transition:all 0.3s;" onmouseover="this.style.transform='translateY(-4px)';this.style.boxShadow='0 16px 40px rgba(139,92,246,0.2)'" onmouseout="this.style.transform='';this.style.boxShadow=''">
+                        <div style="width:60px;height:60px;border-radius:16px;background:linear-gradient(135deg,#7c3aed,#4f46e5);display:flex;align-items:center;justify-content:center;margin:0 auto 18px;font-size:26px;">
+                            🛡️
+                        </div>
+                        <h3 style="font-size:1.15rem;font-weight:800;margin-bottom:8px;">Admin Dashboard</h3>
+                        <p style="color:var(--text-muted);font-size:14px;margin-bottom:20px;line-height:1.6;">Browse the full admin panel — users, payments, coupons, settings, and more. <strong style="color:var(--purple-light);">Read-only</strong>.</p>
+                        <div style="background:rgba(0,0,0,0.3);border-radius:10px;padding:12px 16px;margin-bottom:20px;text-align:left;font-size:13px;">
+                            <div style="color:var(--text-muted);margin-bottom:6px;">Demo credentials:</div>
+                            <div><span style="color:var(--text-muted);">User:</span> <code style="color:var(--purple-light);">demo</code></div>
+                            <div><span style="color:var(--text-muted);">Pass:</span> <code style="color:var(--purple-light);">demo</code></div>
+                        </div>
+                        <a href="/demo/admin" style="display:inline-flex;align-items:center;gap:8px;padding:12px 28px;background:linear-gradient(135deg,#7c3aed,#4f46e5);color:#fff;border-radius:12px;font-size:14px;font-weight:700;text-decoration:none;transition:all 0.2s;" onmouseover="this.style.opacity='0.9'" onmouseout="this.style.opacity='1'">
+                            <i class="fas fa-shield-halved"></i> Try Admin Demo
+                        </a>
+                    </div>
+
+                    <!-- User Demo Card -->
+                    <div style="flex:1; min-width:280px; background:rgba(6,182,212,0.07); border:1px solid rgba(6,182,212,0.35); border-radius:20px; padding:32px; text-align:center; transition:all 0.3s;" onmouseover="this.style.transform='translateY(-4px)';this.style.boxShadow='0 16px 40px rgba(6,182,212,0.2)'" onmouseout="this.style.transform='';this.style.boxShadow=''">
+                        <div style="width:60px;height:60px;border-radius:16px;background:linear-gradient(135deg,#0891b2,#0e7490);display:flex;align-items:center;justify-content:center;margin:0 auto 18px;font-size:26px;">
+                            👤
+                        </div>
+                        <h3 style="font-size:1.15rem;font-weight:800;margin-bottom:8px;">User Dashboard</h3>
+                        <p style="color:var(--text-muted);font-size:14px;margin-bottom:20px;line-height:1.6;">See the full user experience — services, order history, balance, and profile. <strong style="color:#67e8f9;">Read-only</strong>.</p>
+                        <div style="background:rgba(0,0,0,0.3);border-radius:10px;padding:12px 16px;margin-bottom:20px;text-align:left;font-size:13px;">
+                            <div style="color:var(--text-muted);margin-bottom:6px;">Instant access:</div>
+                            <div style="color:var(--text-muted);">No sign-up needed.</div>
+                            <div style="color:var(--text-muted);">Logged in as <code style="color:#67e8f9;">Demo User</code>.</div>
+                        </div>
+                        <a href="/demo/user" style="display:inline-flex;align-items:center;gap:8px;padding:12px 28px;background:linear-gradient(135deg,#0891b2,#0e7490);color:#fff;border-radius:12px;font-size:14px;font-weight:700;text-decoration:none;transition:all 0.2s;" onmouseover="this.style.opacity='0.9'" onmouseout="this.style.opacity='1'">
+                            <i class="fas fa-user"></i> Try User Demo
+                        </a>
+                    </div>
+
+                </div>
+                <p style="text-align:center;color:var(--text-muted);font-size:12px;margin-top:24px;" class="reveal">
+                    <i class="fas fa-lock" style="margin-right:6px;color:var(--green);"></i>
+                    Demo sessions are read-only — no data can be modified or deleted.
+                </p>
+            </div>
+        </section>
+
+        <!-- ===== PURCHASE ===== -->
+        <section id="purchase" class="purchase-section">
+            <div class="container">
+                <div class="purchase-card reveal">
+                    <div class="badge" style="margin: 0 auto 20px;">
+                        <span class="dot"></span>
+                        Ready to deploy
+                    </div>
+                    <h2 class="section-title" style="margin-bottom:8px;">Own this platform today</h2>
+                    <p style="color:var(--text-muted);font-size:15px;">One-time payment. Full ownership. No recurring fees.</p>
+
+                    <div class="price-display">
+                        <div class="price-main">$50 USD</div>
+                        <div class="price-note">One-time · Full source code · Immediate delivery to your inbox</div>
+                    </div>
+
+                    <p style="color:var(--text-muted);font-size:14px;margin-bottom:24px;">
+                        Pay securely with crypto via OxaPay. Immediately after payment confirmation you will receive an email with the <strong style="color:var(--text);">complete installation guide</strong>, platform documentation, and access to the private GitHub repository.
+                    </p>
+
+                    <!-- Payment form -->
+                    <div id="payment-form-wrapper">
+                        <div style="display:flex;flex-direction:column;gap:12px;max-width:420px;margin:0 auto;">
+                            <input
+                                id="buyer-name"
+                                type="text"
+                                placeholder="Your name (optional)"
+                                style="background:rgba(255,255,255,0.05);border:1px solid var(--border);border-radius:12px;padding:12px 16px;color:var(--text);font-size:15px;outline:none;font-family:inherit;"
+                            />
+                            <input
+                                id="buyer-email"
+                                type="email"
+                                placeholder="Your email address *"
+                                required
+                                style="background:rgba(255,255,255,0.05);border:1px solid var(--border);border-radius:12px;padding:12px 16px;color:var(--text);font-size:15px;outline:none;font-family:inherit;"
+                            />
+                            <p id="payment-error" style="color:#f87171;font-size:13px;display:none;margin:0;"></p>
+                            <button
+                                id="buy-now-btn"
+                                onclick="startPayment()"
+                                class="btn btn-primary"
+                                style="width:100%;justify-content:center;font-size:16px;padding:16px 32px;"
+                            >
+                                <i class="fas fa-lock"></i>
+                                <span id="buy-btn-text">Buy Now — Pay with Crypto</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <p style="color:var(--text-muted);font-size:12px;margin-top:24px;line-height:1.7;">
+                        💳 Accepts USDT, BTC, LTC, ETH, and 100+ cryptocurrencies via OxaPay.<br>
+                        📧 Installation guide &amp; GitHub repo access sent automatically to your email after payment.<br>
+                        🔒 Secure transaction — everything delivered within minutes of payment confirmation.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===== FOOTER ===== -->
+        <footer>
+            <p>© 2025 Easy Booster SMM Platform &nbsp;·&nbsp; <a href="/terms">Terms of Service</a></p>
+            <p style="margin-top:8px;">This page is managed by the site owner. To remove this page, disable "Sales Page Mode" from the admin dashboard.</p>
+        </footer>
+
+    </div><!-- /.wrapper -->
+
+    <script>
+        // Intersection Observer for reveal animations
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+
+        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+        // Smooth scroll for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            });
+        });
+
+        // OxaPay direct payment
+        async function startPayment() {
+            const emailEl = document.getElementById('buyer-email');
+            const nameEl = document.getElementById('buyer-name');
+            const errorEl = document.getElementById('payment-error');
+            const btn = document.getElementById('buy-now-btn');
+            const btnText = document.getElementById('buy-btn-text');
+
+            const email = emailEl.value.trim();
+            const name = nameEl.value.trim();
+
+            // Validate email
+            if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+                errorEl.textContent = 'Please enter a valid email address.';
+                errorEl.style.display = 'block';
+                emailEl.focus();
+                return;
+            }
+            errorEl.style.display = 'none';
+
+            // Loading state
+            btn.disabled = true;
+            btnText.textContent = 'Creating payment…';
+
+            try {
+                const response = await fetch('/api/create-website-sale-payment', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, name })
+                });
+                const data = await response.json();
+
+                if (data.success && data.data && data.data.paymentUrl) {
+                    btnText.textContent = 'Redirecting to payment…';
+                    window.location.href = data.data.paymentUrl;
+                } else {
+                    errorEl.textContent = data.message || 'Failed to create payment. Please try again.';
+                    errorEl.style.display = 'block';
+                    btn.disabled = false;
+                    btnText.textContent = 'Buy Now — Pay with Crypto';
+                }
+            } catch (err) {
+                errorEl.textContent = 'Network error. Please check your connection and try again.';
+                errorEl.style.display = 'block';
+                btn.disabled = false;
+                btnText.textContent = 'Buy Now — Pay with Crypto';
+            }
+        }
+
+        // Allow pressing Enter in email field to trigger payment
+        document.getElementById('buyer-email').addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') startPayment();
+        });
+    </script>
+</body>
+</html>

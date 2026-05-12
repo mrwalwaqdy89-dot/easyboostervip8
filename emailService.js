@@ -1,0 +1,1903 @@
+const nodemailer = require('nodemailer');
+const emailConfig = require('./emailConfig');
+
+// ============================================================================
+// EMAIL SERVICE - Professional Email Templates for ANDY RCH
+// Supports Gmail, Hostinger, and other SMTP providers
+// ============================================================================
+
+// Create reusable transporter object using SMTP transport
+let transporter = null;
+
+// Batch configuration for avoiding Gmail rate limits
+// Gmail allows ~100-150 emails per hour with proper pooling
+const BATCH_CONFIG = {
+    batchSize: 50,           // Send 50 emails per batch
+    delayBetweenEmails: 500, // 500ms delay between emails within a batch (to prevent bursts)
+    delayBetweenBatches: 60000, // 60 seconds delay between batches (to stay under rate limit)
+    maxRetries: 3,           // Max retries per email on failure
+    retryDelay: 5000         // Initial retry delay (will use exponential backoff)
+};
+
+/**
+ * Initialize the email transporter with connection pooling
+ */
+function initTransporter() {
+    if (!emailConfig?.enabled) {
+        console.log('📧 Email service is disabled in config');
+        return null;
+    }
+
+    try {
+        transporter = nodemailer.createTransport({
+            host: emailConfig.smtp.host,
+            port: emailConfig.smtp.port,
+            secure: emailConfig.smtp.secure,
+            auth: {
+                user: emailConfig.smtp.auth.user,
+                pass: emailConfig.smtp.auth.pass
+            },
+            // Enable connection pooling to reuse SMTP connections
+            // This drastically reduces login attempts
+            pool: true,
+            maxConnections: 5, // Max parallel connections (Gmail recommends 1-5)
+            maxMessages: 100, // Max messages per connection before reconnecting
+            rateDelta: 1000, // Define time window for rate limiting (1 second)
+            rateLimit: 10, // Max messages per rateDelta (10 per second max)
+            // Enable debug logging for SMTP communication
+            debug: process.env.NODE_ENV !== 'production',
+            logger: process.env.NODE_ENV !== 'production',
+            // Connection settings for better reliability
+            connectionTimeout: 30000, // 30 seconds (increased for pool)
+            greetingTimeout: 30000,
+            socketTimeout: 60000, // 60 seconds for sending
+            // TLS options for Hostinger and other providers
+            tls: {
+                rejectUnauthorized: true, // Set to true for production security
+                minVersion: 'TLSv1.2'
+            }
+        });
+
+        console.log('✅ Email transporter initialized with connection pooling');
+        console.log(`   📧 SMTP: ${emailConfig.smtp.host}:${emailConfig.smtp.port}`);
+        console.log(`   📧 From: ${emailConfig.from.email}`);
+        console.log(`   🔄 Pool: maxConnections=${5}, maxMessages=${100}`);
+        return transporter;
+    } catch (error) {
+        console.error('❌ Failed to initialize email transporter:', error);
+        return null;
+    }
+}
+
+/**
+ * Close the transporter pool (useful for cleanup)
+ */
+function closeTransporter() {
+    if (transporter && transporter.close) {
+        transporter.close();
+        console.log('📧 Email transporter pool closed');
+    }
+    transporter = null;
+}
+
+/**
+ * Reset the transporter (force new connection)
+ * Useful when hitting authentication errors
+ */
+function resetTransporter() {
+    closeTransporter();
+    return initTransporter();
+}
+
+/**
+ * Verify email connection
+ */
+async function verifyConnection() {
+    if (!transporter) {
+        initTransporter();
+    }
+    
+    if (!transporter) {
+        return { success: false, message: 'Transporter not initialized' };
+    }
+
+    try {
+        await transporter.verify();
+        console.log('✅ Email server connection verified');
+        console.log(`   📧 From: ${emailConfig.from.email}`);
+        console.log(`   🌐 SMTP Host: ${emailConfig.smtp.host}:${emailConfig.smtp.port}`);
+        return { 
+            success: true, 
+            message: 'Connection verified',
+            config: {
+                host: emailConfig.smtp.host,
+                port: emailConfig.smtp.port,
+                from: emailConfig.from.email
+            }
+        };
+    } catch (error) {
+        console.error('❌ Email verification failed:', error);
+        console.error(`   Error code: ${error.code || 'N/A'}`);
+        console.error(`   Response: ${error.response || 'N/A'}`);
+        return { success: false, message: error.message };
+    }
+}
+
+// ============================================================================
+// EMAIL TEMPLATES - Ultra Stylish Professional Gmail-Style Design
+// ============================================================================
+
+/**
+ * Base email template wrapper with professional styling
+ */
+function getBaseTemplate(content, preheader = '') {
+    return `
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>ANDY RCH - Easy Booster</title>
+    <!--[if mso]>
+    <style type="text/css">
+        table {border-collapse: collapse; border-spacing: 0; margin: 0;}
+        div, td {padding: 0;}
+        div {margin: 0 !important;}
+    </style>
+    <noscript>
+        <xml>
+            <o:OfficeDocumentSettings>
+                <o:PixelsPerInch>96</o:PixelsPerInch>
+            </o:OfficeDocumentSettings>
+        </xml>
+    </noscript>
+    <![endif]-->
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: #0d1117;
+            color: #c9d1d9;
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+        
+        .email-wrapper {
+            max-width: 600px;
+            margin: 0 auto;
+            background: linear-gradient(180deg, #0d1117 0%, #161b22 100%);
+        }
+        
+        .email-header {
+            background: linear-gradient(135deg, #1f6feb 0%, #58a6ff 100%);
+            padding: 40px 30px;
+            text-align: center;
+            border-radius: 0 0 30px 30px;
+        }
+        
+        .logo {
+            font-size: 32px;
+            font-weight: 800;
+            color: #ffffff;
+            text-decoration: none;
+            letter-spacing: -1px;
+        }
+        
+        .logo-icon {
+            display: inline-block;
+            width: 50px;
+            height: 50px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            line-height: 50px;
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+        
+        .email-body {
+            padding: 40px 30px;
+        }
+        
+        .content-card {
+            background: rgba(22, 27, 34, 0.95);
+            border: 1px solid rgba(48, 54, 61, 0.8);
+            border-radius: 16px;
+            padding: 30px;
+            margin-bottom: 20px;
+        }
+        
+        .greeting {
+            font-size: 24px;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 20px;
+        }
+        
+        .text-content {
+            color: #8b949e;
+            font-size: 15px;
+            line-height: 1.8;
+            margin-bottom: 20px;
+        }
+        
+        .highlight-box {
+            background: linear-gradient(135deg, rgba(31, 111, 235, 0.15) 0%, rgba(88, 166, 255, 0.1) 100%);
+            border: 1px solid rgba(31, 111, 235, 0.3);
+            border-radius: 12px;
+            padding: 20px;
+            margin: 25px 0;
+        }
+        
+        .feature-list {
+            list-style: none;
+            padding: 0;
+            margin: 20px 0;
+        }
+        
+        .feature-item {
+            display: flex;
+            align-items: flex-start;
+            padding: 12px 0;
+            border-bottom: 1px solid rgba(48, 54, 61, 0.5);
+        }
+        
+        .feature-item:last-child {
+            border-bottom: none;
+        }
+        
+        .feature-icon {
+            width: 28px;
+            height: 28px;
+            background: rgba(63, 185, 80, 0.15);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            flex-shrink: 0;
+            color: #3fb950;
+            font-size: 14px;
+        }
+        
+        .feature-text {
+            color: #c9d1d9;
+            font-size: 14px;
+        }
+        
+        .cta-button {
+            display: inline-block;
+            background: linear-gradient(135deg, #1f6feb 0%, #58a6ff 100%);
+            color: #ffffff !important;
+            text-decoration: none;
+            padding: 16px 40px;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 16px;
+            margin: 20px 0;
+            text-align: center;
+            box-shadow: 0 8px 30px rgba(31, 111, 235, 0.4);
+            transition: all 0.3s ease;
+        }
+        
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 40px rgba(31, 111, 235, 0.5);
+        }
+        
+        .cta-button.gold {
+            background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+            color: #0d1117 !important;
+            box-shadow: 0 8px 30px rgba(255, 215, 0, 0.4);
+        }
+        
+        .cta-button.green {
+            background: linear-gradient(135deg, #3fb950 0%, #2ea043 100%);
+            box-shadow: 0 8px 30px rgba(63, 185, 80, 0.4);
+        }
+        
+        .stats-row {
+            display: flex;
+            justify-content: space-around;
+            margin: 25px 0;
+            text-align: center;
+        }
+        
+        .stat-item {
+            padding: 15px;
+        }
+        
+        .stat-value {
+            font-size: 32px;
+            font-weight: 800;
+            color: #58a6ff;
+            display: block;
+        }
+        
+        .stat-label {
+            font-size: 12px;
+            color: #8b949e;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .coin-badge {
+            display: inline-flex;
+            align-items: center;
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.2) 0%, rgba(255, 165, 0, 0.1) 100%);
+            border: 1px solid rgba(255, 215, 0, 0.4);
+            border-radius: 20px;
+            padding: 8px 16px;
+            color: #FFD700;
+            font-weight: 600;
+            font-size: 14px;
+        }
+        
+        .divider {
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(48, 54, 61, 0.8), transparent);
+            margin: 30px 0;
+        }
+        
+        .email-footer {
+            background: rgba(13, 17, 23, 0.95);
+            padding: 30px;
+            text-align: center;
+            border-top: 1px solid rgba(48, 54, 61, 0.5);
+        }
+        
+        .footer-text {
+            color: #6e7681;
+            font-size: 12px;
+            line-height: 1.8;
+        }
+        
+        .social-links {
+            margin: 20px 0;
+        }
+        
+        .social-link {
+            display: inline-block;
+            width: 40px;
+            height: 40px;
+            background: rgba(22, 27, 34, 0.8);
+            border-radius: 10px;
+            line-height: 40px;
+            margin: 0 5px;
+            color: #8b949e;
+            text-decoration: none;
+        }
+        
+        .premium-badge {
+            display: inline-flex;
+            align-items: center;
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.2) 0%, rgba(139, 92, 246, 0.1) 100%);
+            border: 1px solid rgba(139, 92, 246, 0.4);
+            border-radius: 20px;
+            padding: 6px 14px;
+            color: #a78bfa;
+            font-weight: 600;
+            font-size: 12px;
+        }
+        
+        .warning-box {
+            background: rgba(210, 153, 34, 0.1);
+            border: 1px solid rgba(210, 153, 34, 0.3);
+            border-radius: 12px;
+            padding: 15px;
+            color: #d29922;
+            font-size: 13px;
+        }
+        
+        .success-box {
+            background: rgba(63, 185, 80, 0.1);
+            border: 1px solid rgba(63, 185, 80, 0.3);
+            border-radius: 12px;
+            padding: 15px;
+            color: #3fb950;
+            font-size: 13px;
+        }
+        
+        @media only screen and (max-width: 600px) {
+            .email-body {
+                padding: 20px 15px;
+            }
+            .content-card {
+                padding: 20px;
+            }
+            .greeting {
+                font-size: 20px;
+            }
+            .stats-row {
+                flex-direction: column;
+            }
+            .stat-value {
+                font-size: 28px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div style="display:none;font-size:1px;color:#0d1117;line-height:1px;max-height:0px;max-width:0px;opacity:0;overflow:hidden;">
+        ${preheader}
+    </div>
+    
+    <div class="email-wrapper">
+        <div class="email-header">
+            <div class="logo-icon">⚡</div>
+            <div class="logo">ANDY RCH</div>
+            <div style="color: rgba(255,255,255,0.8); font-size: 14px; margin-top: 5px;">Easy Booster</div>
+        </div>
+        
+        <div class="email-body">
+            ${content}
+        </div>
+        
+        <div class="email-footer">
+            <div class="social-links">
+                <a href="https://wa.me/13056978303" class="social-link" style="color: #25D366;">💬</a>
+                <a href="https://easybooster.shop" class="social-link" style="color: #58a6ff;">🌐</a>
+            </div>
+            <div class="footer-text">
+                <p>© 2025 ANDY RCH - Easy Booster. Tous droits réservés.</p>
+                <p style="margin-top: 10px;">
+                    <a href="https://easybooster.shop/terms" style="color: #58a6ff; text-decoration: none;">Conditions d'utilisation</a>
+                    &nbsp;|&nbsp;
+                    <a href="https://wa.me/13056978303" style="color: #58a6ff; text-decoration: none;">Contactez-nous</a>
+                </p>
+                <p style="margin-top: 15px; font-size: 11px; color: #484f58;">
+                    Vous recevez cet email car vous êtes inscrit sur Easy Booster.
+                </p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>`;
+}
+
+// ============================================================================
+// WELCOME MESSAGES - Multiple Professional French Templates
+// ============================================================================
+
+const welcomeMessages = {
+    professional: {
+        subject: '🎉 Bienvenue sur Easy Booster - Votre compte est prêt!',
+        getContent: (userName) => getBaseTemplate(`
+            <div class="content-card">
+                <h1 class="greeting">Bienvenue, ${userName}! 👋</h1>
+                
+                <p class="text-content">
+                    Nous sommes ravis de vous accueillir sur <strong style="color: #58a6ff;">Easy Booster</strong>, 
+                    la plateforme de confiance pour booster vos canaux WhatsApp avec des réactions instantanées.
+                </p>
+                
+                <div class="highlight-box">
+                    <p style="color: #c9d1d9; font-size: 14px; margin: 0;">
+                        🎁 <strong style="color: #FFD700;">Cadeau de bienvenue:</strong> 
+                        Vous recevez <span class="coin-badge">5 Coins Gratuits</span> pour commencer!
+                    </p>
+                </div>
+                
+                <h3 style="color: #ffffff; font-size: 18px; margin: 25px 0 15px;">🚀 Nos Services</h3>
+                
+                <ul class="feature-list">
+                    <li class="feature-item">
+                        <span class="feature-icon">🔄</span>
+                        <span class="feature-text"><strong>Auto React:</strong> Réactions automatiques sur chaque publication de votre canal. Activez une fois, profitez à vie!</span>
+                    </li>
+                    <li class="feature-item">
+                        <span class="feature-icon">👆</span>
+                        <span class="feature-text"><strong>Single React:</strong> Envoyez des réactions manuellement sur une publication spécifique de votre choix.</span>
+                    </li>
+                    <li class="feature-item">
+                        <span class="feature-icon">🔒</span>
+                        <span class="feature-text"><strong>100% Sécurisé:</strong> Votre canal ne sera jamais banni. Nous utilisons des méthodes sûres et approuvées.</span>
+                    </li>
+                    <li class="feature-item">
+                        <span class="feature-icon">🎯</span>
+                        <span class="feature-text"><strong>+5 Coins/Jour:</strong> Recevez 5 coins bonus gratuits chaque jour qui se réinitialisent automatiquement!</span>
+                    </li>
+                </ul>
+                
+                <div class="divider"></div>
+                
+                <h3 style="color: #ffffff; font-size: 18px; margin-bottom: 15px;">💰 Nos Offres</h3>
+                
+                <table style="width: 100%; border-collapse: collapse; margin: 15px 0;">
+                    <tr style="background: rgba(31, 111, 235, 0.1);">
+                        <td style="padding: 12px; border-radius: 8px 0 0 8px; color: #c9d1d9;">Starter</td>
+                        <td style="padding: 12px; color: #FFD700; font-weight: 600;">90 Coins</td>
+                        <td style="padding: 12px; border-radius: 0 8px 8px 0; color: #ffffff; font-weight: 700;">500 Gdes</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 12px; color: #c9d1d9;">Popular ⭐</td>
+                        <td style="padding: 12px; color: #FFD700; font-weight: 600;">190 Coins</td>
+                        <td style="padding: 12px; color: #ffffff; font-weight: 700;">1,000 Gdes</td>
+                    </tr>
+                    <tr style="background: rgba(31, 111, 235, 0.1);">
+                        <td style="padding: 12px; color: #c9d1d9;">Pro</td>
+                        <td style="padding: 12px; color: #FFD700; font-weight: 600;">500 Coins</td>
+                        <td style="padding: 12px; color: #ffffff; font-weight: 700;">2,500 Gdes</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 12px; color: #c9d1d9;">Ultimate 💎</td>
+                        <td style="padding: 12px; color: #FFD700; font-weight: 600;">1,100 Coins</td>
+                        <td style="padding: 12px; color: #ffffff; font-weight: 700;">5,000 Gdes</td>
+                    </tr>
+                </table>
+                
+                <div style="text-align: center; margin-top: 30px;">
+                    <a href="https://easybooster.shop/reactch" class="cta-button">
+                        Commencer Maintenant →
+                    </a>
+                </div>
+            </div>
+            
+            <div class="success-box" style="text-align: center;">
+                ✅ Votre compte est prêt! Connectez-vous et commencez à booster vos canaux dès maintenant.
+            </div>
+        `, `Bienvenue sur Easy Booster! Votre compte est prêt avec 5 coins gratuits. Commencez à booster vos canaux WhatsApp!`)
+    },
+    
+    friendly: {
+        subject: '🎊 Salut! Bienvenue dans la famille Easy Booster!',
+        getContent: (userName) => getBaseTemplate(`
+            <div class="content-card">
+                <h1 class="greeting">Hey ${userName}! 🎉</h1>
+                
+                <p class="text-content">
+                    Super content de te voir parmi nous! 🙌 Tu viens de rejoindre la meilleure communauté 
+                    pour booster tes canaux WhatsApp. On va bien s'amuser!
+                </p>
+                
+                <div class="highlight-box" style="text-align: center;">
+                    <p style="color: #FFD700; font-size: 18px; font-weight: 700; margin: 0;">
+                        🎁 SURPRISE! Tu as reçu 5 Coins Gratuits!
+                    </p>
+                    <p style="color: #8b949e; font-size: 13px; margin-top: 8px;">
+                        C'est notre cadeau de bienvenue pour toi 💝
+                    </p>
+                </div>
+                
+                <h3 style="color: #ffffff; font-size: 18px; margin: 25px 0 15px;">Voici ce que tu peux faire:</h3>
+                
+                <ul class="feature-list">
+                    <li class="feature-item">
+                        <span class="feature-icon">🤖</span>
+                        <span class="feature-text"><strong>Auto React:</strong> Active les réactions auto et laisse la magie opérer! Chaque post = réactions instantanées 🔥</span>
+                    </li>
+                    <li class="feature-item">
+                        <span class="feature-icon">✨</span>
+                        <span class="feature-text"><strong>Single React:</strong> Choisis un post spécifique et envoie les réactions que tu veux! C'est toi le boss!</span>
+                    </li>
+                    <li class="feature-item">
+                        <span class="feature-icon">🛡️</span>
+                        <span class="feature-text"><strong>Safe Mode:</strong> T'inquiète pas pour ton canal, on utilise des méthodes 100% sécurisées. Zero risque!</span>
+                    </li>
+                    <li class="feature-item">
+                        <span class="feature-icon">💫</span>
+                        <span class="feature-text"><strong>Daily Bonus:</strong> Reviens chaque jour et récupère tes +5 coins gratuits! C'est automatique!</span>
+                    </li>
+                </ul>
+                
+                <div class="divider"></div>
+                
+                <div style="background: linear-gradient(135deg, rgba(139, 92, 246, 0.15) 0%, rgba(139, 92, 246, 0.05) 100%); border-radius: 12px; padding: 20px; text-align: center;">
+                    <p style="color: #a78bfa; margin: 0; font-weight: 600;">
+                        💡 Pro Tip: Passe en Premium pour des réactions illimitées!
+                    </p>
+                </div>
+                
+                <div style="text-align: center; margin-top: 30px;">
+                    <a href="https://easybooster.shop/reactch" class="cta-button green">
+                        🚀 Go! C'est parti!
+                    </a>
+                </div>
+            </div>
+        `, `Salut! Bienvenue dans la famille Easy Booster! Tu as reçu 5 coins gratuits pour commencer.`)
+    },
+    
+    enthusiastic: {
+        subject: '🚀 WOW! Tu es maintenant membre Easy Booster!',
+        getContent: (userName) => getBaseTemplate(`
+            <div class="content-card" style="text-align: center;">
+                <div style="font-size: 60px; margin-bottom: 20px;">🎆</div>
+                
+                <h1 class="greeting">FÉLICITATIONS ${(userName || 'Utilisateur').toUpperCase()}!</h1>
+                
+                <p class="text-content" style="font-size: 18px; color: #c9d1d9;">
+                    Tu viens de faire le meilleur choix! 🏆<br>
+                    Prêt(e) à exploser tes stats de canal?
+                </p>
+                
+                <div class="stats-row">
+                    <div class="stat-item">
+                        <span class="stat-value" style="color: #FFD700;">5</span>
+                        <span class="stat-label">Coins Gratuits</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-value" style="color: #3fb950;">∞</span>
+                        <span class="stat-label">Possibilités</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-value" style="color: #58a6ff;">0</span>
+                        <span class="stat-label">Risque de Ban</span>
+                    </div>
+                </div>
+                
+                <div class="highlight-box">
+                    <h3 style="color: #ffffff; margin: 0 0 15px 0; font-size: 16px;">⚡ Ce qui t'attend:</h3>
+                    <p style="color: #8b949e; margin: 0; font-size: 14px; line-height: 1.8;">
+                        🔄 <strong>Auto React</strong> - Réactions automatiques non-stop<br>
+                        👆 <strong>Single React</strong> - Tu choisis, on booste<br>
+                        🎁 <strong>+5 Coins/Jour</strong> - Bonus quotidien garanti<br>
+                        🔐 <strong>100% Safe</strong> - Ton canal reste protégé
+                    </p>
+                </div>
+                
+                <div style="margin-top: 30px;">
+                    <a href="https://easybooster.shop/reactch" class="cta-button gold">
+                        🔥 COMMENCER L'AVENTURE
+                    </a>
+                </div>
+                
+                <p style="color: #6e7681; font-size: 13px; margin-top: 20px;">
+                    Besoin d'aide? On est là 24/7! 💪
+                </p>
+            </div>
+        `, `WOW! Tu es maintenant membre Easy Booster! 5 coins gratuits t'attendent. Prêt(e) à booster?`)
+    },
+    
+    informative: {
+        subject: '📘 Guide de démarrage Easy Booster - Tout ce qu\'il faut savoir',
+        getContent: (userName) => getBaseTemplate(`
+            <div class="content-card">
+                <h1 class="greeting">Bonjour ${userName},</h1>
+                
+                <p class="text-content">
+                    Merci d'avoir choisi Easy Booster pour vos besoins de réactions WhatsApp. 
+                    Ce guide vous aidera à démarrer rapidement et efficacement.
+                </p>
+                
+                <div class="divider"></div>
+                
+                <h3 style="color: #ffffff; font-size: 16px; margin-bottom: 15px;">📋 VOTRE COMPTE</h3>
+                
+                <div class="highlight-box">
+                    <table style="width: 100%; color: #c9d1d9; font-size: 14px;">
+                        <tr>
+                            <td style="padding: 8px 0; color: #8b949e;">Statut:</td>
+                            <td style="padding: 8px 0; text-align: right;"><span class="premium-badge">Actif</span></td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 8px 0; color: #8b949e;">Balance:</td>
+                            <td style="padding: 8px 0; text-align: right; color: #FFD700; font-weight: 600;">5 Coins (Bonus)</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 8px 0; color: #8b949e;">Plan:</td>
+                            <td style="padding: 8px 0; text-align: right;">Free (5 réactions/jour)</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 8px 0; color: #8b949e;">Reset quotidien:</td>
+                            <td style="padding: 8px 0; text-align: right; color: #3fb950;">+5 coins chaque jour</td>
+                        </tr>
+                    </table>
+                </div>
+                
+                <h3 style="color: #ffffff; font-size: 16px; margin: 25px 0 15px;">🎯 FONCTIONNALITÉS</h3>
+                
+                <div style="background: rgba(22, 27, 34, 0.5); border-radius: 12px; padding: 20px; margin-bottom: 15px;">
+                    <h4 style="color: #58a6ff; margin: 0 0 10px 0; font-size: 14px;">🔄 AUTO REACT</h4>
+                    <p style="color: #8b949e; margin: 0; font-size: 13px; line-height: 1.6;">
+                        Activez Auto React sur votre canal et chaque nouvelle publication recevra 
+                        automatiquement des réactions. Configuration unique, bénéfices continus.
+                        <br><strong style="color: #c9d1d9;">Coût: 10 coins/jour</strong>
+                    </p>
+                </div>
+                
+                <div style="background: rgba(22, 27, 34, 0.5); border-radius: 12px; padding: 20px;">
+                    <h4 style="color: #58a6ff; margin: 0 0 10px 0; font-size: 14px;">👆 SINGLE REACT</h4>
+                    <p style="color: #8b949e; margin: 0; font-size: 13px; line-height: 1.6;">
+                        Choisissez manuellement une publication spécifique et envoyez les réactions 
+                        de votre choix. Parfait pour les posts importants.
+                        <br><strong style="color: #c9d1d9;">Coût: 1 coin/réaction</strong>
+                    </p>
+                </div>
+                
+                <h3 style="color: #ffffff; font-size: 16px; margin: 25px 0 15px;">🛡️ SÉCURITÉ</h3>
+                
+                <div class="success-box">
+                    <strong>Garantie Zéro Ban:</strong> Notre système utilise des méthodes approuvées 
+                    qui ne mettent jamais votre canal en danger. Des milliers d'utilisateurs nous font confiance.
+                </div>
+                
+                <div style="text-align: center; margin-top: 30px;">
+                    <a href="https://easybooster.shop/reactch" class="cta-button">
+                        Accéder au Dashboard
+                    </a>
+                    <br>
+                    <a href="https://easybooster.shop/pricing" style="color: #FFD700; font-size: 14px; text-decoration: none; display: inline-block; margin-top: 15px;">
+                        Voir les offres Premium →
+                    </a>
+                </div>
+            </div>
+        `, `Guide de démarrage Easy Booster - Votre compte est configuré avec 5 coins gratuits.`)
+    }
+};
+
+/**
+ * Get a random welcome message template
+ */
+function getRandomWelcomeTemplate() {
+    const templates = Object.keys(welcomeMessages);
+    const randomIndex = Math.floor(Math.random() * templates.length);
+    return templates[randomIndex];
+}
+
+// ============================================================================
+// BROADCAST MESSAGE PRESETS
+// ============================================================================
+
+const broadcastPresets = {
+    // Premium Upgrade Encouragement
+    premiumUpgrade: [
+        {
+            subject: '⭐ Passez Premium et débloquez le potentiel illimité!',
+            getContent: () => getBaseTemplate(`
+                <div class="content-card">
+                    <div style="text-align: center; margin-bottom: 25px;">
+                        <div style="font-size: 50px;">👑</div>
+                        <h1 style="color: #FFD700; font-size: 26px; margin: 15px 0;">Passez au Niveau Supérieur!</h1>
+                    </div>
+                    
+                    <p class="text-content">
+                        Vous utilisez Easy Booster avec le plan gratuit? C'est super! Mais imaginez ce que vous 
+                        pourriez accomplir avec un accès <strong style="color: #FFD700;">Premium illimité</strong>...
+                    </p>
+                    
+                    <div class="stats-row">
+                        <div class="stat-item">
+                            <span class="stat-value" style="color: #FFD700;">∞</span>
+                            <span class="stat-label">Réactions</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-value" style="color: #3fb950;">24/7</span>
+                            <span class="stat-label">Support</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-value" style="color: #58a6ff;">0</span>
+                            <span class="stat-label">Limite</span>
+                        </div>
+                    </div>
+                    
+                    <h3 style="color: #ffffff; font-size: 16px; margin: 20px 0 15px;">Avantages Premium:</h3>
+                    
+                    <ul class="feature-list">
+                        <li class="feature-item">
+                            <span class="feature-icon">🚀</span>
+                            <span class="feature-text">Réactions illimitées sur tous vos canaux</span>
+                        </li>
+                        <li class="feature-item">
+                            <span class="feature-icon">⚡</span>
+                            <span class="feature-text">Priorité absolue dans la file d'attente</span>
+                        </li>
+                        <li class="feature-item">
+                            <span class="feature-icon">🎯</span>
+                            <span class="feature-text">Auto React sur plusieurs canaux simultanément</span>
+                        </li>
+                        <li class="feature-item">
+                            <span class="feature-icon">💎</span>
+                            <span class="feature-text">Vos coins n'expirent jamais</span>
+                        </li>
+                    </ul>
+                    
+                    <div class="highlight-box" style="text-align: center;">
+                        <p style="color: #FFD700; font-size: 18px; font-weight: 700; margin: 0;">
+                            À partir de seulement 500 Gdes!
+                        </p>
+                    </div>
+                    
+                    <div style="text-align: center; margin-top: 25px;">
+                        <a href="https://easybooster.shop/pricing" class="cta-button gold">
+                            Devenir Premium Maintenant
+                        </a>
+                    </div>
+                </div>
+            `, `Passez Premium et débloquez des réactions illimitées sur Easy Booster!`)
+        },
+        {
+            subject: '🔓 Débloquez 1100 Coins pour seulement 5000 Gdes!',
+            getContent: () => getBaseTemplate(`
+                <div class="content-card" style="text-align: center;">
+                    <div style="font-size: 50px; margin-bottom: 15px;">💰</div>
+                    <h1 class="greeting">OFFRE SPÉCIALE!</h1>
+                    
+                    <p class="text-content" style="font-size: 18px;">
+                        Notre meilleure offre: <strong style="color: #3fb950;">1100 Coins</strong> 
+                        avec <strong style="color: #FFD700;">+200 coins bonus</strong>!
+                    </p>
+                    
+                    <div class="highlight-box" style="background: linear-gradient(135deg, rgba(63, 185, 80, 0.2) 0%, rgba(46, 160, 67, 0.1) 100%); border-color: rgba(63, 185, 80, 0.4);">
+                        <div style="font-size: 40px; color: #3fb950; font-weight: 900;">5,000 Gdes</div>
+                        <div style="color: #8b949e; font-size: 14px; margin-top: 5px;">Meilleure valeur • Économisez 22%</div>
+                    </div>
+                    
+                    <p class="text-content">
+                        Avec 1100 coins, vous pouvez:<br>
+                        ✅ 1100 réactions single<br>
+                        ✅ 110 jours d'Auto React<br>
+                        ✅ Ou un mix des deux!
+                    </p>
+                    
+                    <div style="margin-top: 25px;">
+                        <a href="https://easybooster.shop/pricing" class="cta-button green">
+                            Profiter de l'Offre →
+                        </a>
+                    </div>
+                </div>
+            `, `Offre spéciale: 1100 coins pour 5000 Gdes avec 200 coins bonus!`)
+        }
+    ],
+    
+    // Share with Friends
+    shareWithFriends: [
+        {
+            subject: '🤝 Partagez Easy Booster avec vos amis!',
+            getContent: () => getBaseTemplate(`
+                <div class="content-card">
+                    <div style="text-align: center; margin-bottom: 20px;">
+                        <div style="font-size: 50px;">🎁</div>
+                        <h1 class="greeting">Partagez la Magie!</h1>
+                    </div>
+                    
+                    <p class="text-content">
+                        Vous aimez Easy Booster? Vos amis l'aimeront aussi! 
+                        Partagez notre plateforme et aidez-les à booster leurs canaux WhatsApp.
+                    </p>
+                    
+                    <div class="highlight-box" style="text-align: center;">
+                        <p style="color: #c9d1d9; margin: 0; font-size: 15px;">
+                            🔗 Partagez ce lien avec vos amis:
+                        </p>
+                        <div style="background: rgba(22, 27, 34, 0.8); border-radius: 8px; padding: 15px; margin-top: 10px;">
+                            <code style="color: #58a6ff; font-size: 14px;">https://easybooster.shop</code>
+                        </div>
+                    </div>
+                    
+                    <h3 style="color: #ffffff; font-size: 16px; margin: 25px 0 15px;">Pourquoi recommander Easy Booster?</h3>
+                    
+                    <ul class="feature-list">
+                        <li class="feature-item">
+                            <span class="feature-icon">🆓</span>
+                            <span class="feature-text">5 coins gratuits pour chaque nouvel utilisateur</span>
+                        </li>
+                        <li class="feature-item">
+                            <span class="feature-icon">📈</span>
+                            <span class="feature-text">Boostez l'engagement de vos canaux instantanément</span>
+                        </li>
+                        <li class="feature-item">
+                            <span class="feature-icon">🔒</span>
+                            <span class="feature-text">100% sécurisé - aucun risque de ban</span>
+                        </li>
+                        <li class="feature-item">
+                            <span class="feature-icon">💰</span>
+                            <span class="feature-text">Prix accessibles à tous</span>
+                        </li>
+                    </ul>
+                    
+                    <div style="text-align: center; margin-top: 25px;">
+                        <a href="https://wa.me/?text=Hey!%20Check%20out%20Easy%20Booster%20for%20WhatsApp%20channel%20reactions!%20https://easybooster.shop" class="cta-button green">
+                            Partager sur WhatsApp
+                        </a>
+                    </div>
+                </div>
+            `, `Partagez Easy Booster avec vos amis et aidez-les à booster leurs canaux!`)
+        },
+        {
+            subject: '🚀 Aidez vos amis à booster leurs canaux WhatsApp!',
+            getContent: () => getBaseTemplate(`
+                <div class="content-card" style="text-align: center;">
+                    <div style="font-size: 60px; margin-bottom: 15px;">🌟</div>
+                    <h1 class="greeting">Spread the Word!</h1>
+                    
+                    <p class="text-content" style="font-size: 17px;">
+                        Vous connaissez quelqu'un qui gère un canal WhatsApp? 
+                        <strong style="color: #FFD700;">Partagez Easy Booster</strong> et aidez-les à réussir!
+                    </p>
+                    
+                    <div class="stats-row">
+                        <div class="stat-item">
+                            <span class="stat-value" style="color: #3fb950;">5</span>
+                            <span class="stat-label">Coins Offerts</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-value" style="color: #58a6ff;">∞</span>
+                            <span class="stat-label">Potentiel</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-value" style="color: #FFD700;">0</span>
+                            <span class="stat-label">Risque</span>
+                        </div>
+                    </div>
+                    
+                    <div class="highlight-box">
+                        <p style="color: #c9d1d9; margin: 0; font-size: 14px;">
+                            💡 <strong>Chaque ami</strong> que vous invitez reçoit <strong style="color: #FFD700;">5 coins gratuits</strong> 
+                            pour commencer. Plus vous partagez, plus vous aidez!
+                        </p>
+                    </div>
+                    
+                    <div style="margin-top: 25px;">
+                        <a href="https://wa.me/?text=🔥%20Je%20te%20recommande%20Easy%20Booster%20pour%20booster%20ton%20canal%20WhatsApp!%20Tu%20reçois%205%20coins%20gratuits%20→%20https://easybooster.shop" class="cta-button">
+                            📤 Partager Maintenant
+                        </a>
+                    </div>
+                    
+                    <p style="color: #6e7681; font-size: 13px; margin-top: 20px;">
+                        Le bouche-à-oreille est notre meilleure publicité! 🙏
+                    </p>
+                </div>
+            `, `Aidez vos amis à réussir - partagez Easy Booster!`)
+        }
+    ],
+    
+    // Daily Credit Claim Reminder
+    dailyCreditReminder: [
+        {
+            subject: '🎯 Avez-vous réclamé vos +5 coins gratuits aujourd\'hui?',
+            getContent: () => getBaseTemplate(`
+                <div class="content-card" style="text-align: center;">
+                    <div style="font-size: 60px; margin-bottom: 15px;">🎁</div>
+                    <h1 class="greeting">N'oubliez pas vos coins!</h1>
+                    
+                    <p class="text-content" style="font-size: 17px;">
+                        Chaque jour, vous recevez <strong style="color: #FFD700;">+5 coins gratuits</strong> 
+                        qui se réinitialisent automatiquement. Les avez-vous utilisés aujourd'hui?
+                    </p>
+                    
+                    <div class="stats-row">
+                        <div class="stat-item">
+                            <span class="stat-value" style="color: #FFD700;">+5</span>
+                            <span class="stat-label">Coins/Jour</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-value" style="color: #3fb950;">35</span>
+                            <span class="stat-label">Coins/Semaine</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-value" style="color: #58a6ff;">150</span>
+                            <span class="stat-label">Coins/Mois</span>
+                        </div>
+                    </div>
+                    
+                    <div class="warning-box">
+                        ⏰ <strong>Rappel:</strong> Vos coins quotidiens se réinitialisent à minuit. 
+                        Ne les laissez pas expirer!
+                    </div>
+                    
+                    <div style="margin-top: 25px;">
+                        <a href="https://easybooster.shop/reactch" class="cta-button">
+                            Utiliser mes Coins →
+                        </a>
+                    </div>
+                    
+                    <p style="color: #6e7681; font-size: 13px; margin-top: 20px;">
+                        💡 Tip: Passez Premium pour des coins qui n'expirent jamais!
+                    </p>
+                </div>
+            `, `Rappel: Réclamez vos 5 coins gratuits quotidiens sur Easy Booster!`)
+        }
+    ],
+    
+    // Custom/General announcements
+    general: [
+        {
+            subject: '📢 Nouvelles de Easy Booster',
+            getContent: () => getBaseTemplate(`
+                <div class="content-card">
+                    <h1 class="greeting">Bonjour!</h1>
+                    
+                    <p class="text-content">
+                        Nous espérons que vous profitez bien de Easy Booster! Voici les dernières nouvelles 
+                        et mises à jour de notre plateforme.
+                    </p>
+                    
+                    <div class="highlight-box">
+                        <p style="color: #c9d1d9; margin: 0;">
+                            📌 Ce message a été envoyé par l'équipe Easy Booster pour vous tenir informé 
+                            des dernières fonctionnalités et offres.
+                        </p>
+                    </div>
+                    
+                    <div style="text-align: center; margin-top: 25px;">
+                        <a href="https://easybooster.shop" class="cta-button">
+                            Visiter Easy Booster
+                        </a>
+                    </div>
+                </div>
+            `, `Nouvelles et mises à jour de Easy Booster`)
+        },
+        {
+            subject: '🌟 Merci d\'être un membre fidèle de Easy Booster!',
+            getContent: () => getBaseTemplate(`
+                <div class="content-card" style="text-align: center;">
+                    <div style="font-size: 60px; margin-bottom: 15px;">🙏</div>
+                    <h1 class="greeting">MERCI!</h1>
+                    
+                    <p class="text-content" style="font-size: 17px;">
+                        Votre confiance en <strong style="color: #58a6ff;">Easy Booster</strong> nous motive 
+                        chaque jour à améliorer nos services. Vous faites partie de notre succès!
+                    </p>
+                    
+                    <div class="highlight-box" style="background: linear-gradient(135deg, rgba(139, 92, 246, 0.2) 0%, rgba(139, 92, 246, 0.1) 100%); border-color: rgba(139, 92, 246, 0.4);">
+                        <p style="color: #a78bfa; font-size: 16px; font-weight: 600; margin: 0;">
+                            🎉 Vous êtes un membre précieux de notre communauté!
+                        </p>
+                    </div>
+                    
+                    <ul class="feature-list">
+                        <li class="feature-item">
+                            <span class="feature-icon">💬</span>
+                            <span class="feature-text">Votre feedback compte - n'hésitez pas à nous contacter</span>
+                        </li>
+                        <li class="feature-item">
+                            <span class="feature-icon">🚀</span>
+                            <span class="feature-text">De nouvelles fonctionnalités arrivent bientôt</span>
+                        </li>
+                        <li class="feature-item">
+                            <span class="feature-icon">🎁</span>
+                            <span class="feature-text">Profitez de vos 5 coins gratuits chaque jour</span>
+                        </li>
+                    </ul>
+                    
+                    <div style="margin-top: 25px;">
+                        <a href="https://easybooster.shop/reactch" class="cta-button">
+                            Continuer à Booster →
+                        </a>
+                    </div>
+                    
+                    <p style="color: #6e7681; font-size: 13px; margin-top: 20px;">
+                        L'équipe Easy Booster 💙
+                    </p>
+                </div>
+            `, `Merci d'être un membre fidèle de Easy Booster!`)
+        },
+        {
+            subject: '🔔 Mise à jour importante de Easy Booster',
+            getContent: () => getBaseTemplate(`
+                <div class="content-card">
+                    <div style="text-align: center; margin-bottom: 20px;">
+                        <div style="font-size: 50px;">🔔</div>
+                        <h1 class="greeting">Mise à Jour Importante</h1>
+                    </div>
+                    
+                    <p class="text-content">
+                        Nous avons apporté des améliorations significatives à Easy Booster pour vous offrir 
+                        une expérience encore meilleure. Découvrez ce qui a changé!
+                    </p>
+                    
+                    <div class="success-box" style="margin: 20px 0;">
+                        <p style="margin: 0;"><strong>✅ Améliorations:</strong></p>
+                        <ul style="margin: 10px 0 0 20px; padding: 0; color: #c9d1d9; font-size: 14px;">
+                            <li>Performance améliorée</li>
+                            <li>Interface plus intuitive</li>
+                            <li>Nouvelles fonctionnalités</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="highlight-box">
+                        <p style="color: #c9d1d9; margin: 0; font-size: 14px;">
+                            💡 <strong>Conseil:</strong> Reconnectez-vous pour profiter de toutes les nouveautés!
+                        </p>
+                    </div>
+                    
+                    <div style="text-align: center; margin-top: 25px;">
+                        <a href="https://easybooster.shop" class="cta-button">
+                            Découvrir les Nouveautés
+                        </a>
+                    </div>
+                </div>
+            `, `Mise à jour importante de Easy Booster - Découvrez les nouveautés!`)
+        }
+    ],
+    
+    // Payment Methods Information
+    paymentMethods: [
+        {
+            subject: '💳 Méthodes de Paiement - Nous Sommes Là Pour Vous!',
+            getContent: () => getBaseTemplate(`
+                <div class="content-card">
+                    <div style="text-align: center; margin-bottom: 25px;">
+                        <div style="font-size: 50px;">💳</div>
+                        <h1 style="color: #58a6ff; font-size: 24px; margin: 15px 0;">Options de Paiement</h1>
+                    </div>
+                    
+                    <p class="text-content">
+                        Vous ne trouvez pas votre méthode de paiement préférée sur Easy Booster? 
+                        <strong style="color: #3fb950;">Pas de problème!</strong> Notre équipe est là pour vous aider.
+                    </p>
+                    
+                    <div class="highlight-box" style="background: linear-gradient(135deg, rgba(63, 185, 80, 0.15) 0%, rgba(63, 185, 80, 0.05) 100%); border-color: rgba(63, 185, 80, 0.4);">
+                        <p style="color: #3fb950; font-size: 16px; font-weight: 600; margin: 0 0 10px 0;">
+                            🤝 Nous Trouvons Une Solution!
+                        </p>
+                        <p style="color: #c9d1d9; margin: 0; font-size: 14px;">
+                            Contactez notre support et nous trouverons ensemble une méthode de paiement 
+                            qui vous convient. Nous pouvons ajouter les coins directement sur votre compte!
+                        </p>
+                    </div>
+                    
+                    <h3 style="color: #ffffff; font-size: 16px; margin: 25px 0 15px;">Nos Méthodes Actuelles:</h3>
+                    
+                    <ul class="feature-list">
+                        <li class="feature-item">
+                            <span class="feature-icon">🏦</span>
+                            <span class="feature-text"><strong>MonCash:</strong> Transfert mobile rapide et sécurisé</span>
+                        </li>
+                        <li class="feature-item">
+                            <span class="feature-icon">💰</span>
+                            <span class="feature-text"><strong>Natcash:</strong> Paiement instantané</span>
+                        </li>
+                        <li class="feature-item">
+                            <span class="feature-icon">🏧</span>
+                            <span class="feature-text"><strong>Transfert Bancaire:</strong> Pour les gros montants</span>
+                        </li>
+                        <li class="feature-item">
+                            <span class="feature-icon">📱</span>
+                            <span class="feature-text"><strong>Autres:</strong> Contactez-nous pour plus d'options!</span>
+                        </li>
+                    </ul>
+                    
+                    <div class="warning-box" style="margin-top: 20px;">
+                        <p style="margin: 0;">
+                            🔒 <strong>Sécurité Garantie:</strong> Tous les paiements sont vérifiés manuellement 
+                            par notre équipe pour assurer votre protection.
+                        </p>
+                    </div>
+                    
+                    <div style="text-align: center; margin-top: 30px;">
+                        <a href="https://wa.me/13056978303" class="cta-button green">
+                            💬 Contacter le Support
+                        </a>
+                        <p style="color: #8b949e; font-size: 13px; margin-top: 15px;">
+                            Réponse rapide garantie • Support 24/7
+                        </p>
+                    </div>
+                </div>
+            `, `Besoin d'aide pour le paiement? Contactez notre support - nous trouvons une solution!`)
+        },
+        {
+            subject: '🆘 Votre Méthode de Paiement Non Disponible? Nous Avons la Solution!',
+            getContent: () => getBaseTemplate(`
+                <div class="content-card" style="text-align: center;">
+                    <div style="font-size: 60px; margin-bottom: 15px;">🤔</div>
+                    <h1 class="greeting">Problème de Paiement?</h1>
+                    
+                    <p class="text-content" style="font-size: 17px;">
+                        Vous ne trouvez pas comment payer pour acheter des coins sur Easy Booster? 
+                        <strong style="color: #FFD700;">Nous avons une solution pour vous!</strong>
+                    </p>
+                    
+                    <div class="stats-row">
+                        <div class="stat-item">
+                            <span class="stat-value" style="color: #3fb950;">24/7</span>
+                            <span class="stat-label">Support</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-value" style="color: #58a6ff;">100%</span>
+                            <span class="stat-label">Satisfaction</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-value" style="color: #FFD700;">0</span>
+                            <span class="stat-label">Refus</span>
+                        </div>
+                    </div>
+                    
+                    <div class="highlight-box">
+                        <p style="color: #c9d1d9; font-size: 15px; margin: 0 0 15px 0;">
+                            <strong style="color: #58a6ff;">Comment ça marche?</strong>
+                        </p>
+                        <ol style="text-align: left; color: #8b949e; font-size: 14px; margin: 0; padding-left: 20px; line-height: 1.8;">
+                            <li>Contactez notre support sur WhatsApp</li>
+                            <li>Expliquez votre méthode de paiement préférée</li>
+                            <li>Nous trouverons une solution adaptée</li>
+                            <li>Recevez vos coins directement sur votre compte!</li>
+                        </ol>
+                    </div>
+                    
+                    <div class="success-box" style="margin: 20px 0;">
+                        <p style="margin: 0;">
+                            ✅ <strong>Peu importe où vous êtes</strong>, nous acceptons diverses méthodes: 
+                            Crypto, PayPal, Western Union, et plus encore!
+                        </p>
+                    </div>
+                    
+                    <div style="margin-top: 25px;">
+                        <a href="https://wa.me/13056978303?text=Bonjour!%20Je%20cherche%20une%20méthode%20de%20paiement%20alternative%20pour%20Easy%20Booster" class="cta-button">
+                            📱 Discuter avec le Support
+                        </a>
+                    </div>
+                    
+                    <p style="color: #6e7681; font-size: 13px; margin-top: 20px;">
+                        💡 Ne laissez pas le paiement vous arrêter - on trouve toujours une solution!
+                    </p>
+                </div>
+            `, `Pas de méthode de paiement? Contactez-nous - nous avons des solutions alternatives!`)
+        }
+    ]
+};
+
+// ============================================================================
+// EMAIL SENDING FUNCTIONS
+// ============================================================================
+
+/**
+ * Send welcome email to new user
+ */
+async function sendWelcomeEmail(userEmail, userName) {
+    if (!emailConfig?.enabled) {
+        console.log('📧 Email disabled, skipping welcome email');
+        return { success: false, message: 'Email disabled' };
+    }
+
+    if (!transporter) {
+        initTransporter();
+    }
+
+    if (!transporter) {
+        return { success: false, message: 'Email transporter not available' };
+    }
+
+    try {
+        // Pick random welcome template
+        const templateKey = getRandomWelcomeTemplate();
+        const template = welcomeMessages[templateKey];
+        const htmlContent = template.getContent(userName || 'Utilisateur');
+        
+        const mailOptions = {
+            from: `"${emailConfig.from.name}" <${emailConfig.from.email}>`,
+            replyTo: emailConfig.from.email, // Add Reply-To header
+            to: userEmail,
+            subject: template.subject,
+            html: htmlContent,
+            text: htmlToPlainText(htmlContent), // Plain text alternative improves deliverability
+            headers: {
+                'X-Priority': '3', // Normal priority
+                'X-Mailer': 'ANDY RCH Easy Booster',
+                'List-Unsubscribe': '<https://easybooster.shop/unsubscribe>' // Improves deliverability
+            }
+        };
+
+        console.log(`📧 Sending welcome email to ${userEmail}...`);
+        const info = await transporter.sendMail(mailOptions);
+        
+        // Log detailed SMTP response for debugging
+        console.log(`✅ Welcome email sent to ${userEmail} using template: ${templateKey}`);
+        console.log(`   📬 Message ID: ${info.messageId}`);
+        console.log(`   📤 Accepted: ${JSON.stringify(info.accepted || [])}`);
+        console.log(`   ❌ Rejected: ${JSON.stringify(info.rejected || [])}`);
+        if (info.response) {
+            console.log(`   📝 SMTP Response: ${info.response}`);
+        }
+        
+        // Check if the email was actually accepted by the SMTP server
+        if (info.rejected && info.rejected.length > 0) {
+            console.warn(`⚠️ Welcome email to ${userEmail} was rejected by server`);
+            return { success: false, message: 'Email rejected by server', rejected: info.rejected };
+        }
+        
+        return { 
+            success: true, 
+            messageId: info.messageId, 
+            template: templateKey,
+            response: info.response
+        };
+    } catch (error) {
+        console.error('❌ Failed to send welcome email:', error);
+        console.error(`   Error code: ${error.code || 'N/A'}`);
+        console.error(`   Response: ${error.response || 'N/A'}`);
+        return { success: false, message: error.message };
+    }
+}
+
+/**
+ * Send broadcast email to single user
+ */
+/**
+ * Convert HTML content to plain text for email fallback
+ * This improves deliverability as many spam filters prefer multipart emails
+ */
+function htmlToPlainText(html) {
+    return html
+        // Remove style and script tags with their content
+        .replace(/<style[^>]*>[\s\S]*?<\/style>/gi, '')
+        .replace(/<script[^>]*>[\s\S]*?<\/script>/gi, '')
+        // Replace common block elements with newlines
+        .replace(/<\/?(div|p|br|h[1-6]|li|tr)[^>]*>/gi, '\n')
+        // Replace links with text + URL
+        .replace(/<a[^>]*href="([^"]*)"[^>]*>([^<]*)<\/a>/gi, '$2 ($1)')
+        // Remove all remaining HTML tags
+        .replace(/<[^>]+>/g, '')
+        // Decode common HTML entities
+        .replace(/&nbsp;/g, ' ')
+        .replace(/&amp;/g, '&')
+        .replace(/&lt;/g, '<')
+        .replace(/&gt;/g, '>')
+        .replace(/&quot;/g, '"')
+        .replace(/&#39;/g, "'")
+        // Clean up whitespace
+        .replace(/\n\s*\n\s*\n/g, '\n\n')
+        .replace(/^\s+|\s+$/g, '')
+        .trim();
+}
+
+async function sendBroadcastEmail(userEmail, subject, htmlContent) {
+    if (!emailConfig?.enabled) {
+        return { success: false, message: 'Email disabled' };
+    }
+
+    if (!transporter) {
+        initTransporter();
+    }
+
+    if (!transporter) {
+        return { success: false, message: 'Email transporter not available' };
+    }
+
+    try {
+        // Generate plain text version for better deliverability
+        const plainTextContent = htmlToPlainText(htmlContent);
+        
+        const mailOptions = {
+            from: `"${emailConfig.from.name}" <${emailConfig.from.email}>`,
+            replyTo: emailConfig.from.email, // Add Reply-To header
+            to: userEmail,
+            subject: subject,
+            html: htmlContent,
+            text: plainTextContent, // Plain text alternative improves deliverability
+            headers: {
+                'X-Priority': '3', // Normal priority
+                'X-Mailer': 'ANDY RCH Easy Booster',
+                'List-Unsubscribe': '<https://easybooster.shop/unsubscribe>', // Improves deliverability
+                'Precedence': 'bulk' // Identifies as bulk mail (honest labeling)
+            }
+        };
+
+        console.log(`📧 Sending email to ${userEmail}...`);
+        const info = await transporter.sendMail(mailOptions);
+        
+        // Log detailed SMTP response for debugging
+        console.log(`✅ Email sent successfully to ${userEmail}`);
+        console.log(`   📬 Message ID: ${info.messageId}`);
+        console.log(`   📤 Accepted: ${JSON.stringify(info.accepted || [])}`);
+        console.log(`   ❌ Rejected: ${JSON.stringify(info.rejected || [])}`);
+        if (info.response) {
+            console.log(`   📝 SMTP Response: ${info.response}`);
+        }
+        
+        // Check if the email was actually accepted by the SMTP server
+        if (info.rejected && info.rejected.length > 0) {
+            console.warn(`⚠️ Email to ${userEmail} was rejected by server: ${JSON.stringify(info.rejected)}`);
+            return { success: false, message: `Email rejected by server`, rejected: info.rejected };
+        }
+        
+        return { success: true, messageId: info.messageId, response: info.response };
+    } catch (error) {
+        console.error(`❌ Failed to send email to ${userEmail}:`, error.message);
+        console.error(`   Error code: ${error.code || 'N/A'}`);
+        console.error(`   Response: ${error.response || 'N/A'}`);
+        console.error(`   Full error:`, error);
+        return { success: false, message: error.message };
+    }
+}
+
+/**
+ * Helper function to sleep for a given number of milliseconds
+ */
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+/**
+ * Split an array into batches of a specified size
+ */
+function splitIntoBatches(array, batchSize) {
+    const batches = [];
+    for (let i = 0; i < array.length; i += batchSize) {
+        batches.push(array.slice(i, i + batchSize));
+    }
+    return batches;
+}
+
+/**
+ * Send a single email with retry logic and exponential backoff
+ */
+async function sendEmailWithRetry(userEmail, subject, htmlContent, maxRetries = BATCH_CONFIG.maxRetries) {
+    let lastError = null;
+    
+    for (let attempt = 1; attempt <= maxRetries; attempt++) {
+        try {
+            const result = await sendBroadcastEmail(userEmail, subject, htmlContent);
+            
+            if (result.success) {
+                return result;
+            }
+            
+            // Check if this is a rate limit error (EAUTH with 454)
+            if (result.message && (result.message.includes('454') || result.message.includes('Too many login'))) {
+                console.log(`⏳ Rate limit hit for ${userEmail}, waiting before retry (attempt ${attempt}/${maxRetries})...`);
+                // Exponential backoff: 5s, 10s, 20s...
+                const backoffDelay = BATCH_CONFIG.retryDelay * Math.pow(2, attempt - 1);
+                await sleep(backoffDelay);
+                
+                // Reset transporter to force new connection
+                if (attempt === 2) {
+                    console.log('🔄 Resetting transporter due to persistent rate limiting...');
+                    resetTransporter();
+                }
+                
+                lastError = result;
+                continue;
+            }
+            
+            // For other errors, don't retry
+            return result;
+            
+        } catch (error) {
+            lastError = { success: false, message: error.message };
+            
+            // Check for rate limit error
+            if (error.code === 'EAUTH' || (error.response && error.response.includes('454'))) {
+                console.log(`⏳ Rate limit exception for ${userEmail}, waiting before retry (attempt ${attempt}/${maxRetries})...`);
+                const backoffDelay = BATCH_CONFIG.retryDelay * Math.pow(2, attempt - 1);
+                await sleep(backoffDelay);
+                
+                if (attempt === 2) {
+                    console.log('🔄 Resetting transporter due to persistent rate limiting...');
+                    resetTransporter();
+                }
+                continue;
+            }
+            
+            // For other errors, don't retry
+            return { success: false, message: error.message };
+        }
+    }
+    
+    return lastError || { success: false, message: 'Max retries exceeded' };
+}
+
+/**
+ * Send broadcast to multiple users using batch processing
+ * Sends emails in batches to avoid Gmail rate limiting (454 error)
+ * @param {Array} users - Array of user objects with email and name
+ * @param {string} category - Broadcast category preset to use
+ * @param {Object} customMessage - Custom message object (optional)
+ * @param {Function} onProgress - Progress callback (optional): (progress) => void
+ */
+async function sendBroadcastToUsers(users, category, customMessage = null, onProgress = null) {
+    if (!emailConfig?.enabled) {
+        return { success: false, message: 'Email disabled', sent: 0, failed: 0 };
+    }
+
+    if (!transporter) {
+        initTransporter();
+    }
+
+    if (!transporter) {
+        return { success: false, message: 'Email transporter not available', sent: 0, failed: 0 };
+    }
+
+    let sent = 0;
+    let failed = 0;
+    const errors = [];
+
+    // Get preset template
+    let template;
+    if (customMessage) {
+        template = {
+            subject: customMessage.subject || '📢 Message de Easy Booster',
+            getContent: () => getBaseTemplate(`
+                <div class="content-card">
+                    ${customMessage.content || '<p class="text-content">Message de l\'équipe Easy Booster.</p>'}
+                </div>
+            `, customMessage.preheader || 'Message important de Easy Booster')
+        };
+    } else {
+        const presets = broadcastPresets[category];
+        if (!presets || presets.length === 0) {
+            return { success: false, message: 'Invalid category', sent: 0, failed: 0 };
+        }
+        // Pick random preset from category
+        template = presets[Math.floor(Math.random() * presets.length)];
+    }
+
+    // Filter users with valid emails
+    const validUsers = users.filter(user => user.email);
+    
+    if (validUsers.length === 0) {
+        return { success: false, message: 'No users with email addresses', sent: 0, failed: 0 };
+    }
+
+    // Split users into batches
+    const batches = splitIntoBatches(validUsers, BATCH_CONFIG.batchSize);
+    const totalBatches = batches.length;
+    
+    console.log(`📧 Starting batch email broadcast:`);
+    console.log(`   👥 Total users: ${validUsers.length}`);
+    console.log(`   📦 Batch size: ${BATCH_CONFIG.batchSize}`);
+    console.log(`   🔢 Total batches: ${totalBatches}`);
+    console.log(`   ⏱️  Delay between batches: ${BATCH_CONFIG.delayBetweenBatches / 1000}s`);
+
+    for (let batchIndex = 0; batchIndex < batches.length; batchIndex++) {
+        const batch = batches[batchIndex];
+        console.log(`\n📦 Processing batch ${batchIndex + 1}/${totalBatches} (${batch.length} users)...`);
+        
+        // Report progress at start of each batch
+        if (onProgress) {
+            try {
+                onProgress({
+                    currentBatch: batchIndex + 1,
+                    totalBatches: totalBatches,
+                    sent: sent,
+                    failed: failed,
+                    totalUsers: validUsers.length
+                });
+            } catch (progressError) {
+                console.error('Error in progress callback:', progressError);
+            }
+        }
+        
+        for (const user of batch) {
+            try {
+                const result = await sendEmailWithRetry(
+                    user.email,
+                    template.subject,
+                    template.getContent(user.name || 'Utilisateur')
+                );
+
+                if (result.success) {
+                    sent++;
+                } else {
+                    failed++;
+                    errors.push({ email: user.email, error: result.message });
+                }
+
+                // Add delay between emails within a batch to prevent bursts
+                await sleep(BATCH_CONFIG.delayBetweenEmails);
+                
+            } catch (error) {
+                failed++;
+                errors.push({ email: user.email, error: error.message });
+            }
+        }
+        
+        console.log(`   ✅ Batch ${batchIndex + 1} complete: ${sent} sent, ${failed} failed so far`);
+
+        // Add longer delay between batches (except after the last batch)
+        if (batchIndex < batches.length - 1) {
+            console.log(`   ⏳ Waiting ${BATCH_CONFIG.delayBetweenBatches / 1000}s before next batch to avoid rate limiting...`);
+            await sleep(BATCH_CONFIG.delayBetweenBatches);
+        }
+    }
+
+    // Final progress report
+    if (onProgress) {
+        try {
+            onProgress({
+                currentBatch: totalBatches,
+                totalBatches: totalBatches,
+                sent: sent,
+                failed: failed,
+                totalUsers: validUsers.length,
+                complete: true
+            });
+        } catch (progressError) {
+            console.error('Error in progress callback:', progressError);
+        }
+    }
+
+    // Return success: false if no emails were sent successfully
+    // This provides accurate feedback to the admin
+    const wasSuccessful = sent > 0;
+    
+    // Build a descriptive message based on the result
+    let message;
+    if (wasSuccessful) {
+        message = `Successfully sent ${sent} email(s) in ${totalBatches} batch(es)`;
+    } else if (failed > 0) {
+        message = `Failed to send emails. ${failed} error(s) occurred.`;
+    } else {
+        message = 'No emails to send (no users with email addresses)';
+    }
+    
+    return {
+        success: wasSuccessful,
+        message: message,
+        sent,
+        failed,
+        total: users.length,
+        errors: errors.length > 0 ? errors : undefined
+    };
+}
+
+/**
+ * Get available broadcast categories
+ */
+function getBroadcastCategories() {
+    return [
+        { id: 'premiumUpgrade', name: 'Premium Upgrade', description: 'Encourage users to upgrade to premium plan', icon: '👑' },
+        { id: 'shareWithFriends', name: 'Share with Friends', description: 'Ask users to share the platform', icon: '🤝' },
+        { id: 'dailyCreditReminder', name: 'Daily Credit Reminder', description: 'Remind users about daily coin reset', icon: '🎁' },
+        { id: 'paymentMethods', name: 'Payment Methods', description: 'Inform users about payment options and support', icon: '💳' },
+        { id: 'general', name: 'General Announcement', description: 'General news and updates', icon: '📢' }
+    ];
+}
+
+/**
+ * Get preview of broadcast templates
+ */
+function getPresetPreview(category) {
+    const presets = broadcastPresets[category];
+    if (!presets || presets.length === 0) {
+        return null;
+    }
+    
+    return presets.map((preset, index) => ({
+        id: index,
+        subject: preset.subject,
+        preview: preset.getContent('Utilisateur')
+    }));
+}
+
+/**
+ * Send API Key Approval Email
+ */
+async function sendApiKeyApprovalEmail(userEmail, userName, apiKey, requestLimit, adminNote = null) {
+    if (!emailConfig?.enabled) {
+        console.log('📧 Email disabled, skipping API key approval email');
+        return { success: false, message: 'Email disabled' };
+    }
+
+    if (!transporter) {
+        initTransporter();
+    }
+
+    if (!transporter) {
+        return { success: false, message: 'Email transporter not available' };
+    }
+
+    try {
+        const htmlContent = `
+            <div style="font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #0a0e14; color: #E6EDF3;">
+                <div style="text-align: center; padding: 30px 20px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 12px 12px 0 0;">
+                    <h1 style="color: white; margin: 0; font-size: 28px;">🎉 API Key Approved!</h1>
+                </div>
+                
+                <div style="background-color: rgba(18, 23, 31, 0.9); padding: 30px; border-radius: 0 0 12px 12px; border: 1px solid rgba(102, 126, 234, 0.2);">
+                    <p style="font-size: 16px; line-height: 1.6; color: #E6EDF3;">Hi ${userName},</p>
+                    
+                    <p style="font-size: 16px; line-height: 1.6; color: #E6EDF3;">Great news! Your API key request has been approved. You can now start integrating with the ANDY RCH Auto React API.</p>
+                    
+                    <div style="background-color: rgba(102, 126, 234, 0.1); border: 1px solid rgba(102, 126, 234, 0.3); border-radius: 8px; padding: 20px; margin: 20px 0;">
+                        <h3 style="margin-top: 0; color: #667eea;">Your API Key Details</h3>
+                        <p style="margin: 10px 0; color: #9ca3af;"><strong style="color: #E6EDF3;">API Key:</strong></p>
+                        <code style="display: block; background-color: rgba(0, 0, 0, 0.4); padding: 12px; border-radius: 6px; color: #667eea; font-size: 13px; word-break: break-all; font-family: 'Courier New', monospace;">${apiKey}</code>
+                        <p style="margin: 10px 0; color: #9ca3af;"><strong style="color: #E6EDF3;">Request Limit:</strong> ${requestLimit.toLocaleString()} requests</p>
+                        <div style="margin-top: 15px; padding: 12px; background-color: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.3); border-radius: 6px;">
+                            <p style="margin: 0; color: #fca5a5; font-size: 13px;"><strong style="color: #ef4444;">⚠️ Security:</strong> Keep this API key confidential. Never share it publicly or commit it to version control. You can also view it securely on the documentation page.</p>
+                        </div>
+                    </div>
+                    
+                    ${adminNote ? `
+                        <div style="background-color: rgba(59, 130, 246, 0.1); border-left: 4px solid #3b82f6; padding: 15px; margin: 20px 0; border-radius: 4px;">
+                            <p style="margin: 0; color: #93c5fd;"><strong>Admin Note:</strong> ${adminNote}</p>
+                        </div>
+                    ` : ''}
+                    
+                    <div style="margin: 30px 0; padding: 20px; background-color: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.3); border-radius: 8px;">
+                        <h3 style="margin-top: 0; color: #10b981;">Next Steps</h3>
+                        <ol style="color: #9ca3af; line-height: 1.8; padding-left: 20px;">
+                            <li>Visit the <strong style="color: #E6EDF3;">API Documentation</strong> page to view complete integration guides</li>
+                            <li>Keep your API key secure and never share it publicly</li>
+                            <li>Monitor your usage to stay within your request limit</li>
+                            <li>Contact support if you need assistance</li>
+                        </ol>
+                    </div>
+                    
+                    <div style="text-align: center; margin-top: 30px;">
+                        <a href="https://easybooster.shop/documentation" style="display: inline-block; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; text-decoration: none; padding: 14px 32px; border-radius: 8px; font-weight: 600; font-size: 16px;">View Documentation</a>
+                    </div>
+                    
+                    <p style="margin-top: 30px; color: #6b7280; font-size: 14px;">
+                        If you didn't request an API key, please contact us immediately.
+                    </p>
+                </div>
+                
+                <div style="text-align: center; padding: 20px; color: #6b7280; font-size: 12px;">
+                    <p>© ${new Date().getFullYear()} ANDY RCH Auto React. All rights reserved.</p>
+                    <p>
+                        <a href="https://easybooster.shop" style="color: #667eea; text-decoration: none;">Website</a> | 
+                        <a href="https://easybooster.shop/terms" style="color: #667eea; text-decoration: none;">Terms</a>
+                    </p>
+                </div>
+            </div>
+        `;
+        
+        const mailOptions = {
+            from: `"${emailConfig.from.name}" <${emailConfig.from.email}>`,
+            replyTo: emailConfig.from.email,
+            to: userEmail,
+            subject: '🎉 Your API Key Request Has Been Approved - ANDY RCH',
+            html: htmlContent,
+            text: htmlToPlainText(htmlContent),
+            headers: {
+                'X-Priority': '1', // High priority
+                'X-Mailer': 'ANDY RCH Easy Booster'
+            }
+        };
+
+        console.log(`📧 Sending API key approval email to ${userEmail}...`);
+        const info = await transporter.sendMail(mailOptions);
+        
+        console.log(`✅ API key approval email sent to ${userEmail}`);
+        console.log(`   📬 Message ID: ${info.messageId}`);
+        
+        if (info.rejected && info.rejected.length > 0) {
+            console.warn(`⚠️ API key approval email to ${userEmail} was rejected by server`);
+            return { success: false, message: 'Email rejected by server', rejected: info.rejected };
+        }
+        
+        return { success: true, messageId: info.messageId };
+    } catch (error) {
+        console.error('❌ Failed to send API key approval email:', error);
+        return { success: false, message: error.message };
+    }
+}
+
+/**
+ * Send API Key Rejection Email
+ */
+async function sendApiKeyRejectionEmail(userEmail, userName, rejectionReason) {
+    if (!emailConfig?.enabled) {
+        console.log('📧 Email disabled, skipping API key rejection email');
+        return { success: false, message: 'Email disabled' };
+    }
+
+    if (!transporter) {
+        initTransporter();
+    }
+
+    if (!transporter) {
+        return { success: false, message: 'Email transporter not available' };
+    }
+
+    try {
+        const htmlContent = `
+            <div style="font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #0a0e14; color: #E6EDF3;">
+                <div style="text-align: center; padding: 30px 20px; background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%); border-radius: 12px 12px 0 0;">
+                    <h1 style="color: white; margin: 0; font-size: 28px;">API Key Request Update</h1>
+                </div>
+                
+                <div style="background-color: rgba(18, 23, 31, 0.9); padding: 30px; border-radius: 0 0 12px 12px; border: 1px solid rgba(239, 68, 68, 0.2);">
+                    <p style="font-size: 16px; line-height: 1.6; color: #E6EDF3;">Hi ${userName},</p>
+                    
+                    <p style="font-size: 16px; line-height: 1.6; color: #E6EDF3;">Thank you for your interest in the ANDY RCH API. Unfortunately, your API key request has been reviewed and could not be approved at this time.</p>
+                    
+                    <div style="background-color: rgba(239, 68, 68, 0.1); border-left: 4px solid #ef4444; padding: 20px; margin: 20px 0; border-radius: 4px;">
+                        <h3 style="margin-top: 0; color: #ef4444;">Reason for Rejection</h3>
+                        <p style="margin: 0; color: #fca5a5; line-height: 1.6;">${rejectionReason}</p>
+                    </div>
+                    
+                    <div style="margin: 30px 0; padding: 20px; background-color: rgba(245, 158, 11, 0.1); border: 1px solid rgba(245, 158, 11, 0.3); border-radius: 8px;">
+                        <h3 style="margin-top: 0; color: #f59e0b;">What's Next?</h3>
+                        <ul style="color: #9ca3af; line-height: 1.8; padding-left: 20px;">
+                            <li>You can submit a new API key request after <strong style="color: #E6EDF3;">3 days</strong></li>
+                            <li>Make sure your account meets the requirements (100+ coins, preferably premium)</li>
+                            <li>Provide a detailed description of your intended use case</li>
+                            <li>Contact support if you have questions about the requirements</li>
+                        </ul>
+                    </div>
+                    
+                    <div style="text-align: center; margin-top: 30px;">
+                        <a href="https://easybooster.shop/api-request" style="display: inline-block; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; text-decoration: none; padding: 14px 32px; border-radius: 8px; font-weight: 600; font-size: 16px;">Request Again (After 3 Days)</a>
+                    </div>
+                    
+                    <p style="margin-top: 30px; color: #6b7280; font-size: 14px;">
+                        We appreciate your understanding and look forward to your next request.
+                    </p>
+                </div>
+                
+                <div style="text-align: center; padding: 20px; color: #6b7280; font-size: 12px;">
+                    <p>© ${new Date().getFullYear()} ANDY RCH Auto React. All rights reserved.</p>
+                    <p>
+                        <a href="https://easybooster.shop" style="color: #667eea; text-decoration: none;">Website</a> | 
+                        <a href="https://easybooster.shop/terms" style="color: #667eea; text-decoration: none;">Terms</a>
+                    </p>
+                </div>
+            </div>
+        `;
+        
+        const mailOptions = {
+            from: `"${emailConfig.from.name}" <${emailConfig.from.email}>`,
+            replyTo: emailConfig.from.email,
+            to: userEmail,
+            subject: 'API Key Request Update - ANDY RCH',
+            html: htmlContent,
+            text: htmlToPlainText(htmlContent),
+            headers: {
+                'X-Priority': '3', // Normal priority
+                'X-Mailer': 'ANDY RCH Easy Booster'
+            }
+        };
+
+        console.log(`📧 Sending API key rejection email to ${userEmail}...`);
+        const info = await transporter.sendMail(mailOptions);
+        
+        console.log(`✅ API key rejection email sent to ${userEmail}`);
+        console.log(`   📬 Message ID: ${info.messageId}`);
+        
+        if (info.rejected && info.rejected.length > 0) {
+            console.warn(`⚠️ API key rejection email to ${userEmail} was rejected by server`);
+            return { success: false, message: 'Email rejected by server', rejected: info.rejected };
+        }
+        
+        return { success: true, messageId: info.messageId };
+    } catch (error) {
+        console.error('❌ Failed to send API key rejection email:', error);
+        return { success: false, message: error.message };
+    }
+}
+
+/**
+ * Get email configuration status - for debugging
+ */
+function getEmailStatus() {
+    return {
+        enabled: emailConfig?.enabled || false,
+        transporterInitialized: transporter !== null,
+        config: {
+            host: emailConfig?.smtp?.host || 'not configured',
+            port: emailConfig?.smtp?.port || 'not configured',
+            secure: emailConfig?.smtp?.secure || false,
+            from: emailConfig?.from?.email || 'not configured'
+        },
+        batchConfig: {
+            batchSize: BATCH_CONFIG.batchSize,
+            delayBetweenEmails: BATCH_CONFIG.delayBetweenEmails,
+            delayBetweenBatches: BATCH_CONFIG.delayBetweenBatches,
+            maxRetries: BATCH_CONFIG.maxRetries
+        }
+    };
+}
+
+// Initialize transporter on module load
+initTransporter();
+
+module.exports = {
+    initTransporter,
+    closeTransporter,
+    resetTransporter,
+    verifyConnection,
+    sendWelcomeEmail,
+    sendBroadcastEmail,
+    sendBroadcastToUsers,
+    sendApiKeyApprovalEmail,
+    sendApiKeyRejectionEmail,
+    getBroadcastCategories,
+    getPresetPreview,
+    getBaseTemplate,
+    getEmailStatus,
+    htmlToPlainText,
+    welcomeMessages,
+    broadcastPresets,
+    BATCH_CONFIG
+};

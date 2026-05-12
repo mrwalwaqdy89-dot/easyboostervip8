@@ -1,0 +1,114 @@
+┌─────────────────────────────────────────────────────────────────┐
+│                 🚀 AUTO-MIGRATION ON DEPLOYMENT                 │
+└─────────────────────────────────────────────────────────────────┘
+
+┌─────────────┐
+│  You Deploy │
+│   Website   │
+└──────┬──────┘
+       │
+       ▼
+┌──────────────────┐
+│  Server Starts   │
+│ database.js runs │
+└─────────┬────────┘
+          │
+          ▼
+    ┌─────────────────────┐
+    │  Migration Check    │
+    │ Is balance INTEGER? │
+    └─────────┬───────────┘
+              │
+        ┌─────┴─────┐
+        │           │
+    YES │           │ NO
+        │           │
+        ▼           ▼
+┌────────────┐  ┌────────────────┐
+│  MIGRATE   │  │  SKIP          │
+│  Run Now!  │  │  Already USD   │
+└──────┬─────┘  └────────────────┘
+       │
+       ▼
+┌────────────────────────────────┐
+│  CONVERSION FORMULA:           │
+│                                │
+│  OLD: User has 50 coins        │
+│  NEW: 50 × 0.10 = $5.00 USD   │
+│                                │
+│  OLD: User has 100 coins       │
+│  NEW: 100 × 0.10 = $10.00 USD │
+└──────────────┬─────────────────┘
+               │
+               ▼
+     ┌──────────────────┐
+     │  ALL USERS       │
+     │  CONVERTED! ✅   │
+     └──────────────────┘
+               │
+               ▼
+     ┌──────────────────┐
+     │  Website Ready   │
+     │  Using USD Now   │
+     └──────────────────┘
+
+
+═══════════════════════════════════════════════════════════════
+
+EXAMPLE: What happens to existing users?
+
+┌─────────────┬──────────────┬─────────────────┐
+│    User     │  Before (🪙) │   After ($)     │
+├─────────────┼──────────────┼─────────────────┤
+│  Alice      │   5 coins    │   $0.50 USD     │
+│  Bob        │   50 coins   │   $5.00 USD     │
+│  Charlie    │   100 coins  │   $10.00 USD    │
+│  Diana      │   250 coins  │   $25.00 USD    │
+│  Eve        │   1000 coins │   $100.00 USD   │
+└─────────────┴──────────────┴─────────────────┘
+
+═══════════════════════════════════════════════════════════════
+
+SAFETY FEATURES:
+
+✅ Automatic      - Runs on server start
+✅ Safe           - Only runs once
+✅ Atomic         - All users convert or none
+✅ No Data Loss   - Preserves all balances
+✅ Logged         - See exactly what happens
+✅ Tested         - Migration code verified
+
+═══════════════════════════════════════════════════════════════
+
+WHAT YOU'LL SEE IN SERVER LOGS:
+
+First Deployment:
+------------------
+🔄 Checking if balance migration is needed...
+🚀 MIGRATION STARTING: Converting coin balances to USD dollars...
+   Formula: 1 coin = $0.10 USD
+   Found 150 users to migrate
+✅ MIGRATION COMPLETE: All user balances converted to USD!
+   Example: 50 coins → $5.00 USD
+
+Later Restarts:
+------------------
+🔄 Checking if balance migration is needed...
+✅ Balance column already in USD format (NUMERIC) - skipping migration
+
+═══════════════════════════════════════════════════════════════
+
+ANSWER TO YOUR QUESTION:
+
+Q: If I deploy the web now, all balances users will auto convert?
+
+A: ✅ YES! Absolutely!
+
+   → When you deploy
+   → Server starts
+   → Migration runs automatically
+   → All user balances convert (coins × 0.10 = USD)
+   → Done in seconds
+   → No manual action needed
+
+═══════════════════════════════════════════════════════════════

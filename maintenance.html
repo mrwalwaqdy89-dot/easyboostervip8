@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Under Maintenance - ANDY RCH</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+        
+        * {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', sans-serif;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        body {
+            background: #0d1117;
+            color: #c9d1d9;
+            min-height: 100vh;
+            overflow-x: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .animated-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            opacity: 0.12;
+            background: 
+                radial-gradient(circle at 20% 30%, rgba(249, 115, 22, 0.4) 0%, transparent 40%),
+                radial-gradient(circle at 80% 70%, rgba(234, 88, 12, 0.3) 0%, transparent 40%),
+                radial-gradient(circle at 50% 50%, rgba(251, 146, 60, 0.2) 0%, transparent 60%);
+            animation: float 25s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) scale(1) rotate(0deg); }
+            33% { transform: translateY(-15px) scale(1.02) rotate(1deg); }
+            66% { transform: translateY(10px) scale(0.98) rotate(-1deg); }
+        }
+
+        .glass-card {
+            background: rgba(22, 27, 34, 0.85);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border: 1px solid rgba(48, 54, 61, 0.6);
+            box-shadow: 
+                0 25px 50px -12px rgba(0, 0, 0, 0.5),
+                0 0 0 1px rgba(255, 255, 255, 0.05) inset,
+                0 1px 0 0 rgba(255, 255, 255, 0.1) inset;
+        }
+
+        .gradient-text {
+            background: linear-gradient(135deg, #f97316 0%, #fb923c 50%, #fdba74 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .whatsapp-btn {
+            background: linear-gradient(135deg, #25D366 0%, #128C7E 100%);
+            color: #fff;
+            font-weight: 600;
+            padding: 16px 36px;
+            border-radius: 14px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 14px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 2px solid transparent;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 8px 30px rgba(37, 211, 102, 0.35);
+            text-decoration: none;
+            font-size: 17px;
+        }
+
+        .whatsapp-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transition: left 0.5s;
+        }
+
+        .whatsapp-btn:hover::before {
+            left: 100%;
+        }
+
+        .whatsapp-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 40px rgba(37, 211, 102, 0.45);
+        }
+
+        .whatsapp-btn:active {
+            transform: translateY(-1px);
+        }
+
+        .gear-icon {
+            animation: spin 8s linear infinite;
+        }
+
+        @keyframes spin {
+            100% { transform: rotate(360deg); }
+        }
+
+        .pulse-ring {
+            animation: pulse-ring 2s cubic-bezier(0.455, 0.03, 0.515, 0.955) infinite;
+        }
+
+        @keyframes pulse-ring {
+            0% { transform: scale(0.9); opacity: 0.8; }
+            50% { transform: scale(1.1); opacity: 0.4; }
+            100% { transform: scale(0.9); opacity: 0.8; }
+        }
+
+        .feature-badge {
+            background: rgba(249, 115, 22, 0.1);
+            border: 1px solid rgba(249, 115, 22, 0.3);
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 13px;
+            color: #fb923c;
+        }
+
+        .countdown-box {
+            background: rgba(22, 27, 34, 0.6);
+            border: 1px solid rgba(48, 54, 61, 0.5);
+            padding: 12px 20px;
+            border-radius: 12px;
+            text-align: center;
+        }
+
+        .countdown-number {
+            font-size: 28px;
+            font-weight: 700;
+            color: #f97316;
+        }
+
+        .countdown-label {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #8b949e;
+        }
+    </style>
+</head>
+<body>
+    <div class="animated-bg"></div>
+
+    <div class="relative z-10 w-full max-w-xl mx-auto px-6 py-8">
+        <div class="glass-card rounded-3xl p-8 sm:p-12 text-center">
+            <!-- Logo & Title -->
+            <div class="mb-8">
+                <div class="relative inline-flex items-center justify-center mb-6">
+                    <div class="w-24 h-24 rounded-2xl bg-gradient-to-br from-orange-500 to-orange-600 flex items-center justify-center shadow-lg shadow-orange-500/30">
+                        <i class="fas fa-tools text-white text-4xl gear-icon"></i>
+                    </div>
+                    <div class="absolute -inset-3 rounded-3xl border-2 border-orange-500/30 pulse-ring"></div>
+                </div>
+                
+                <h1 class="text-3xl sm:text-4xl font-bold text-white mb-3">
+                    We're <span class="gradient-text">Upgrading</span>
+                </h1>
+                <p class="text-lg text-gray-400 max-w-md mx-auto leading-relaxed">
+                    We're currently performing scheduled maintenance to bring you a better experience.
+                </p>
+            </div>
+
+            <!-- Status Message -->
+            <div class="mb-8 p-4 rounded-xl bg-orange-500/10 border border-orange-500/30">
+                <div class="flex items-center justify-center gap-3 text-orange-400">
+                    <i class="fas fa-clock text-lg"></i>
+                    <span class="font-semibold">We'll be back shortly!</span>
+                </div>
+            </div>
+
+            <!-- Features Being Updated -->
+            <div class="mb-8">
+                <p class="text-sm text-gray-500 mb-4">What we're working on:</p>
+                <div class="flex flex-wrap justify-center gap-2">
+                    <span class="feature-badge">
+                        <i class="fas fa-bolt mr-1"></i> Performance Boost
+                    </span>
+                    <span class="feature-badge">
+                        <i class="fas fa-shield-alt mr-1"></i> Security Updates
+                    </span>
+                    <span class="feature-badge">
+                        <i class="fas fa-sparkles mr-1"></i> New Features
+                    </span>
+                </div>
+            </div>
+
+            <!-- Divider -->
+            <div class="flex items-center gap-4 my-8">
+                <div class="flex-1 h-px bg-gradient-to-r from-transparent via-gray-700 to-transparent"></div>
+                <span class="text-gray-500 text-sm">Stay Connected</span>
+                <div class="flex-1 h-px bg-gradient-to-r from-transparent via-gray-700 to-transparent"></div>
+            </div>
+
+            <!-- WhatsApp Group CTA -->
+            <div class="mb-8">
+                <p class="text-gray-300 mb-4 text-base">
+                    Join our <span class="text-green-400 font-semibold">WhatsApp Community</span> for instant updates and exclusive announcements!
+                </p>
+                
+                <a href="https://chat.whatsapp.com/JuYRsQiWLOM4Uzo5ryAa0H?mode=hqrc" 
+                   target="_blank" 
+                   rel="noopener noreferrer"
+                   class="whatsapp-btn w-full sm:w-auto">
+                    <i class="fab fa-whatsapp text-2xl"></i>
+                    <span>Join WhatsApp Group</span>
+                    <i class="fas fa-arrow-right text-sm"></i>
+                </a>
+                
+                <p class="text-gray-500 text-xs mt-4">
+                    <i class="fas fa-users mr-1"></i>
+                    Be the first to know when we're back online
+                </p>
+            </div>
+
+            <!-- Benefits of Joining -->
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
+                <div class="p-4 rounded-xl bg-gray-800/50 border border-gray-700/50">
+                    <div class="w-10 h-10 rounded-lg bg-green-500/20 flex items-center justify-center mx-auto mb-2">
+                        <i class="fas fa-bell text-green-400"></i>
+                    </div>
+                    <p class="text-white text-sm font-medium">Instant Alerts</p>
+                    <p class="text-gray-500 text-xs">Get notified immediately</p>
+                </div>
+                <div class="p-4 rounded-xl bg-gray-800/50 border border-gray-700/50">
+                    <div class="w-10 h-10 rounded-lg bg-blue-500/20 flex items-center justify-center mx-auto mb-2">
+                        <i class="fas fa-gift text-blue-400"></i>
+                    </div>
+                    <p class="text-white text-sm font-medium">Exclusive Offers</p>
+                    <p class="text-gray-500 text-xs">Special deals for members</p>
+                </div>
+                <div class="p-4 rounded-xl bg-gray-800/50 border border-gray-700/50">
+                    <div class="w-10 h-10 rounded-lg bg-purple-500/20 flex items-center justify-center mx-auto mb-2">
+                        <i class="fas fa-headset text-purple-400"></i>
+                    </div>
+                    <p class="text-white text-sm font-medium">Priority Support</p>
+                    <p class="text-gray-500 text-xs">Direct access to help</p>
+                </div>
+            </div>
+
+            <!-- Footer -->
+            <div class="pt-6 border-t border-gray-800">
+                <div class="flex items-center justify-center gap-2 mb-2">
+                    <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center">
+                        <i class="fas fa-bolt text-white text-sm"></i>
+                    </div>
+                    <span class="font-bold text-white">ANDY RCH</span>
+                </div>
+                <p class="text-gray-500 text-xs">
+                    Thank you for your patience 💙
+                </p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
