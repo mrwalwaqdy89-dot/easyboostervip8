@@ -294,31 +294,4 @@ COMMIT; -- or ROLLBACK on error
 4. **Before changes**: Always backup before major system changes
 5. **Document backups**: Keep a log of when backups were created
 6. **Secure storage**: Protect backup files (they contain sensitive user data)
-7. **Verify after restore**: Always verify data integrity after restore
-
-## Future Enhancements
-
-Potential improvements for future versions:
-- Automated scheduled backups
-- Backup encryption
-- Incremental backups (only changed data)
-- Backup compression
-- Remote backup storage (S3, Google Drive, etc.)
-- Selective table restore
-- Backup comparison tool
-- Email notifications for backup completion
-
-## Support
-
-For issues or questions about the Backup & Restore feature:
-- Check server logs for detailed error messages
-- Verify database connection is stable
-- Ensure admin credentials are correct
-- Review this documentation
-- Contact system administrator
-
----
-
-**Version:** 1.0  
-**Last Updated:** December 2025  
-**Compatible with:** PostgreSQL, Express, Node.js
+7. **Verify after restore**: Always verify data integrity after restor
