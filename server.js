@@ -1228,7 +1228,7 @@ app.post('/api/create-website-sale-payment', async (req, res) => {
             expiresAt
         });
 
-        const baseUrl = config.urls?.baseUrl || 'https://easybooster.shop';
+        const baseUrl = config.urls?.baseUrl || 'https://easyboostervip8.vercel.app';
         const paymentResult = await oxapayService.createPayment({
             amount: SALE_PRICE_USDT,
             orderId: oxapayOrderId,
@@ -3353,7 +3353,7 @@ ${pendingPayments.map(p => {
                 headers: {
                     'Authorization': `Bearer ${apiKey}`,
                     'Content-Type': 'application/json',
-                    'HTTP-Referer': 'https://easybooster.shop',
+                    'HTTP-Referer': 'https://easyboostervip8.vercel.app',
                     'X-Title': 'ANDY RCH AI Assistant'
                 },
                 body: JSON.stringify({
@@ -3538,7 +3538,7 @@ Remember: Return ONLY the enhanced HTML content, nothing else.`;
             headers: {
                 'Authorization': `Bearer ${apiKey}`,
                 'Content-Type': 'application/json',
-                'HTTP-Referer': 'https://easybooster.shop',
+                'HTTP-Referer': 'https://easyboostervip8.vercel.app',
                 'X-Title': 'ANDY RCH Email Enhancer'
             },
             body: JSON.stringify({

@@ -61,7 +61,7 @@ The API Keys table shows:
 ### Getting Started
 
 1. **Obtain an API Key**: Contact the administrator to request an API key
-2. **Access Documentation**: Visit https://easybooster.shop/documentation (requires active API key)
+2. **Access Documentation**: Visit https://easyboostervip8.vercel.app/documentation (requires active API key)
 3. **Read the API Guide**: Complete documentation with code examples in cURL, JavaScript, and Python
 
 ### Making API Requests
@@ -72,7 +72,7 @@ The API Keys table shows:
 
 **Example (cURL):**
 ```bash
-curl -X POST https://easybooster.shop/api/v1/react \
+curl -X POST https://easyboostervip8.vercel.app/api/v1/react \
   -H "Authorization: Bearer ak_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx" \
   -H "Content-Type: application/json" \
   -d '{
@@ -83,7 +83,7 @@ curl -X POST https://easybooster.shop/api/v1/react \
 
 **Example (JavaScript):**
 ```javascript
-const response = await fetch('https://easybooster.shop/api/v1/react', {
+const response = await fetch('https://easyboostervip8.vercel.app/api/v1/react', {
   method: 'POST',
   headers: {
     'Authorization': 'Bearer YOUR_API_KEY',
@@ -103,7 +103,7 @@ console.log(data);
 ```python
 import requests
 
-url = 'https://easybooster.shop/api/v1/react'
+url = 'https://easyboostervip8.vercel.app/api/v1/react'
 headers = {
     'Authorization': 'Bearer YOUR_API_KEY',
     'Content-Type': 'application/json'

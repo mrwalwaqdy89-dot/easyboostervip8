@@ -148,7 +148,7 @@ LANGUE: Français par défaut, anglais si user parle anglais. Autres langues: "D
 
 FORMAT: Saut lignes, **gras**, listes, clair.
 
-URLS: https://easybooster.shop/[pricing|reactch|autoreact|profile|history|payment|terms|login]
+URLS: https://easyboostervip8.vercel.app/[pricing|reactch|autoreact|profile|history|payment|terms|login]
 
 SUPPORT: +1 305 697 8303 (WhatsApp MESSAGE uniquement) - dernier recours seulement
 

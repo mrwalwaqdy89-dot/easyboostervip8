@@ -163,4 +163,85 @@ console.log('Received reaction request:', {
 See `/tmp/test-updated-emoji-implementation.js` for comprehensive tests:
 
 1. **Simple emojis**: ['👍', '❤️', '🔥']
-2. **Compou
+2. **Compound emojis**: ['🥲', '😒', '🙂‍↔️', '😹']
+3. **Mixed types**: ['😀', '👨‍👩‍👧‍👦', '🏳️‍🌈', '🤷‍♀️', '❤️']
+4. **Skin tone variations**: ['👋', '👋🏻', '👋🏿', '🤝🏽']
+
+All tests verify:
+- ✅ Round-trip encoding
+- ✅ Emoji boundary preservation
+- ✅ UTF-8 encoding correctness
+- ✅ JSON serialization/deserialization
+
+## API Endpoints
+
+### POST /api/react
+User-authenticated endpoint for sending reactions.
+
+**Request:**
+```json
+{
+  "channelLink": "https://whatsapp.com/channel/xxx",
+  "emojis": ["👍", "❤️", "🔥"]
+}
+```
+
+### POST /api/v1/react
+API key authenticated endpoint for external integrations.
+
+**Request:**
+```json
+{
+  "channelLink": "https://whatsapp.com/channel/xxx",
+  "emojis": ["👍", "❤️", "🔥"]
+}
+```
+
+Both endpoints:
+1. Validate emoji array
+2. Log emoji details with code points
+3. Forward to WhatsApp backend as array
+4. Return success/failure response
+
+## Troubleshooting
+
+### Common Issues
+
+**Issue: Emojis not displaying correctly**
+- Check UTF-8 encoding in HTTP headers
+- Verify JSON Content-Type is `application/json; charset=utf-8`
+
+**Issue: Compound emojis split incorrectly**
+- Ensure emojis are sent as array, not joined string
+- Check that ZWJ sequences are preserved
+
+**Issue: Backend rejects emoji format**
+- Verify backend expects array format
+- Check API documentation for expected format
+
+### Debug Checklist
+1. Check browser console for frontend emoji array
+2. Check server logs for received emoji details
+3. Verify JSON serialization in network tab
+4. Check backend response for error messages
+5. Review emoji code points in logs
+
+## References
+
+- **Unicode Emoji Standard**: https://unicode.org/emoji/
+- **Zero-Width Joiner (ZWJ)**: U+200D
+- **Variation Selector-16**: U+FE0F (emoji presentation)
+- **Fitzpatrick Modifiers**: U+1F3FB to U+1F3FF
+
+## Change Log
+
+### 2025-12-28
+- **Fixed**: Changed from `emojis.join('')` to `emojis` array
+- **Added**: Detailed emoji logging with code points
+- **Added**: Round-trip encoding verification tests
+- **Improved**: Documentation for emoji handling
+
+---
+
+**Last Updated**: December 28, 2025
+**Maintained By**: ANDY RCH Development Team

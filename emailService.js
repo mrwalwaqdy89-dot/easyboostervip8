@@ -444,12 +444,12 @@ function getBaseTemplate(content, preheader = '') {
         <div class="email-footer">
             <div class="social-links">
                 <a href="https://wa.me/994408773836" class="social-link" style="color: #25D366;">💬</a>
-                <a href="https://easybooster.shop" class="social-link" style="color: #58a6ff;">🌐</a>
+                <a href="https://easyboostervip8.vercel.app" class="social-link" style="color: #58a6ff;">🌐</a>
             </div>
             <div class="footer-text">
                 <p>© 2025 ANDY RCH - Easy Booster. Tous droits réservés.</p>
                 <p style="margin-top: 10px;">
-                    <a href="https://easybooster.shop/terms" style="color: #58a6ff; text-decoration: none;">Conditions d'utilisation</a>
+                    <a href="https://easyboostervip8.vercel.app/terms" style="color: #58a6ff; text-decoration: none;">Conditions d'utilisation</a>
                     &nbsp;|&nbsp;
                     <a href="https://wa.me/994408773836" style="color: #58a6ff; text-decoration: none;">Contactez-nous</a>
                 </p>
@@ -535,7 +535,7 @@ const welcomeMessages = {
                 </table>
                 
                 <div style="text-align: center; margin-top: 30px;">
-                    <a href="https://easybooster.shop/reactch" class="cta-button">
+                    <a href="https://easyboostervip8.vercel.app/reactch" class="cta-button">
                         Commencer Maintenant →
                     </a>
                 </div>
@@ -597,7 +597,7 @@ const welcomeMessages = {
                 </div>
                 
                 <div style="text-align: center; margin-top: 30px;">
-                    <a href="https://easybooster.shop/reactch" class="cta-button green">
+                    <a href="https://easyboostervip8.vercel.app/reactch" class="cta-button green">
                         🚀 Go! C'est parti!
                     </a>
                 </div>
@@ -644,7 +644,7 @@ const welcomeMessages = {
                 </div>
                 
                 <div style="margin-top: 30px;">
-                    <a href="https://easybooster.shop/reactch" class="cta-button gold">
+                    <a href="https://easyboostervip8.vercel.app/reactch" class="cta-button gold">
                         🔥 COMMENCER L'AVENTURE
                     </a>
                 </div>
@@ -720,11 +720,11 @@ const welcomeMessages = {
                 </div>
                 
                 <div style="text-align: center; margin-top: 30px;">
-                    <a href="https://easybooster.shop/reactch" class="cta-button">
+                    <a href="https://easyboostervip8.vercel.app/reactch" class="cta-button">
                         Accéder au Dashboard
                     </a>
                     <br>
-                    <a href="https://easybooster.shop/pricing" style="color: #FFD700; font-size: 14px; text-decoration: none; display: inline-block; margin-top: 15px;">
+                    <a href="https://easyboostervip8.vercel.app/pricing" style="color: #FFD700; font-size: 14px; text-decoration: none; display: inline-block; margin-top: 15px;">
                         Voir les offres Premium →
                     </a>
                 </div>
@@ -806,7 +806,7 @@ const broadcastPresets = {
                     </div>
                     
                     <div style="text-align: center; margin-top: 25px;">
-                        <a href="https://easybooster.shop/pricing" class="cta-button gold">
+                        <a href="https://easyboostervip8.vercel.app/pricing" class="cta-button gold">
                             Devenir Premium Maintenant
                         </a>
                     </div>
@@ -838,7 +838,7 @@ const broadcastPresets = {
                     </p>
                     
                     <div style="margin-top: 25px;">
-                        <a href="https://easybooster.shop/pricing" class="cta-button green">
+                        <a href="https://easyboostervip8.vercel.app/pricing" class="cta-button green">
                             Profiter de l'Offre →
                         </a>
                     </div>
@@ -868,7 +868,7 @@ const broadcastPresets = {
                             🔗 Partagez ce lien avec vos amis:
                         </p>
                         <div style="background: rgba(22, 27, 34, 0.8); border-radius: 8px; padding: 15px; margin-top: 10px;">
-                            <code style="color: #58a6ff; font-size: 14px;">https://easybooster.shop</code>
+                            <code style="color: #58a6ff; font-size: 14px;">https://easyboostervip8.vercel.app</code>
                         </div>
                     </div>
                     
@@ -894,7 +894,7 @@ const broadcastPresets = {
                     </ul>
                     
                     <div style="text-align: center; margin-top: 25px;">
-                        <a href="https://wa.me/?text=Hey!%20Check%20out%20Easy%20Booster%20for%20WhatsApp%20channel%20reactions!%20https://easybooster.shop" class="cta-button green">
+                        <a href="https://wa.me/?text=Hey!%20Check%20out%20Easy%20Booster%20for%20WhatsApp%20channel%20reactions!%20https://easyboostervip8.vercel.app" class="cta-button green">
                             Partager sur WhatsApp
                         </a>
                     </div>
@@ -936,7 +936,7 @@ const broadcastPresets = {
                     </div>
                     
                     <div style="margin-top: 25px;">
-                        <a href="https://wa.me/?text=🔥%20Je%20te%20recommande%20Easy%20Booster%20pour%20booster%20ton%20canal%20WhatsApp!%20Tu%20reçois%205%20coins%20gratuits%20→%20https://easybooster.shop" class="cta-button">
+                        <a href="https://wa.me/?text=🔥%20Je%20te%20recommande%20Easy%20Booster%20pour%20booster%20ton%20canal%20WhatsApp!%20Tu%20reçois%205%20coins%20gratuits%20→%20https://easyboostervip8.vercel.app" class="cta-button">
                             📤 Partager Maintenant
                         </a>
                     </div>
@@ -984,7 +984,7 @@ const broadcastPresets = {
                     </div>
                     
                     <div style="margin-top: 25px;">
-                        <a href="https://easybooster.shop/reactch" class="cta-button">
+                        <a href="https://easyboostervip8.vercel.app/reactch" class="cta-button">
                             Utiliser mes Coins →
                         </a>
                     </div>
@@ -1018,7 +1018,7 @@ const broadcastPresets = {
                     </div>
                     
                     <div style="text-align: center; margin-top: 25px;">
-                        <a href="https://easybooster.shop" class="cta-button">
+                        <a href="https://easyboostervip8.vercel.app" class="cta-button">
                             Visiter Easy Booster
                         </a>
                     </div>
@@ -1059,7 +1059,7 @@ const broadcastPresets = {
                     </ul>
                     
                     <div style="margin-top: 25px;">
-                        <a href="https://easybooster.shop/reactch" class="cta-button">
+                        <a href="https://easyboostervip8.vercel.app/reactch" class="cta-button">
                             Continuer à Booster →
                         </a>
                     </div>
@@ -1100,7 +1100,7 @@ const broadcastPresets = {
                     </div>
                     
                     <div style="text-align: center; margin-top: 25px;">
-                        <a href="https://easybooster.shop" class="cta-button">
+                        <a href="https://easyboostervip8.vercel.app" class="cta-button">
                             Découvrir les Nouveautés
                         </a>
                     </div>
@@ -1272,7 +1272,7 @@ async function sendWelcomeEmail(userEmail, userName) {
             headers: {
                 'X-Priority': '3', // Normal priority
                 'X-Mailer': 'ANDY RCH Easy Booster',
-                'List-Unsubscribe': '<https://easybooster.shop/unsubscribe>' // Improves deliverability
+                'List-Unsubscribe': '<https://easyboostervip8.vercel.app/unsubscribe>' // Improves deliverability
             }
         };
 
@@ -1366,7 +1366,7 @@ async function sendBroadcastEmail(userEmail, subject, htmlContent) {
             headers: {
                 'X-Priority': '3', // Normal priority
                 'X-Mailer': 'ANDY RCH Easy Booster',
-                'List-Unsubscribe': '<https://easybooster.shop/unsubscribe>', // Improves deliverability
+                'List-Unsubscribe': '<https://easyboostervip8.vercel.app/unsubscribe>', // Improves deliverability
                 'Precedence': 'bulk' // Identifies as bulk mail (honest labeling)
             }
         };
@@ -1714,7 +1714,7 @@ async function sendApiKeyApprovalEmail(userEmail, userName, apiKey, requestLimit
                     </div>
                     
                     <div style="text-align: center; margin-top: 30px;">
-                        <a href="https://easybooster.shop/documentation" style="display: inline-block; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; text-decoration: none; padding: 14px 32px; border-radius: 8px; font-weight: 600; font-size: 16px;">View Documentation</a>
+                        <a href="https://easyboostervip8.vercel.app/documentation" style="display: inline-block; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; text-decoration: none; padding: 14px 32px; border-radius: 8px; font-weight: 600; font-size: 16px;">View Documentation</a>
                     </div>
                     
                     <p style="margin-top: 30px; color: #6b7280; font-size: 14px;">
@@ -1725,8 +1725,8 @@ async function sendApiKeyApprovalEmail(userEmail, userName, apiKey, requestLimit
                 <div style="text-align: center; padding: 20px; color: #6b7280; font-size: 12px;">
                     <p>© ${new Date().getFullYear()} ANDY RCH Auto React. All rights reserved.</p>
                     <p>
-                        <a href="https://easybooster.shop" style="color: #667eea; text-decoration: none;">Website</a> | 
-                        <a href="https://easybooster.shop/terms" style="color: #667eea; text-decoration: none;">Terms</a>
+                        <a href="https://easyboostervip8.vercel.app" style="color: #667eea; text-decoration: none;">Website</a> | 
+                        <a href="https://easyboostervip8.vercel.app/terms" style="color: #667eea; text-decoration: none;">Terms</a>
                     </p>
                 </div>
             </div>
@@ -1808,7 +1808,7 @@ async function sendApiKeyRejectionEmail(userEmail, userName, rejectionReason) {
                     </div>
                     
                     <div style="text-align: center; margin-top: 30px;">
-                        <a href="https://easybooster.shop/api-request" style="display: inline-block; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; text-decoration: none; padding: 14px 32px; border-radius: 8px; font-weight: 600; font-size: 16px;">Request Again (After 3 Days)</a>
+                        <a href="https://easyboostervip8.vercel.app/api-request" style="display: inline-block; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; text-decoration: none; padding: 14px 32px; border-radius: 8px; font-weight: 600; font-size: 16px;">Request Again (After 3 Days)</a>
                     </div>
                     
                     <p style="margin-top: 30px; color: #6b7280; font-size: 14px;">
@@ -1819,8 +1819,8 @@ async function sendApiKeyRejectionEmail(userEmail, userName, rejectionReason) {
                 <div style="text-align: center; padding: 20px; color: #6b7280; font-size: 12px;">
                     <p>© ${new Date().getFullYear()} ANDY RCH Auto React. All rights reserved.</p>
                     <p>
-                        <a href="https://easybooster.shop" style="color: #667eea; text-decoration: none;">Website</a> | 
-                        <a href="https://easybooster.shop/terms" style="color: #667eea; text-decoration: none;">Terms</a>
+                        <a href="https://easyboostervip8.vercel.app" style="color: #667eea; text-decoration: none;">Website</a> | 
+                        <a href="https://easyboostervip8.vercel.app/terms" style="color: #667eea; text-decoration: none;">Terms</a>
                     </p>
                 </div>
             </div>

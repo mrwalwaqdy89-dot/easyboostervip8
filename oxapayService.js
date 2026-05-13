@@ -18,7 +18,7 @@ const PAID_STATUSES = [PAYMENT_STATUS.PAID, PAYMENT_STATUS.CONFIRMING, PAYMENT_S
 
 // Base URL for callbacks
 const getBaseUrl = () => {
-    return config.urls.baseUrl || 'https://easybooster.shop';
+    return config.urls.baseUrl || 'https://easyboostervip8.vercel.app';
 };
 
 /**
