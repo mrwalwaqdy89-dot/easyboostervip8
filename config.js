@@ -53,7 +53,7 @@ module.exports = {
         google: {
             clientId: process.env.GOOGLE_CLIENT_ID,
             clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-            callbackUrl: process.env.GOOGLE_CALLBACK_URL || 'https://easyboos.vercel.app/api/auth/google/callback'
+            callbackUrl: process.env.GOOGLE_CALLBACK_URL || 'https://easyboostervip8.vercel.app/api/auth/google/callback'
         }
     },
 
@@ -193,7 +193,7 @@ module.exports = {
     urls: {
         whatsappBackend: process.env.WHATSAPP_BACKEND_URL || 'https://foreign-marna-sithaunarathnapromax-9a005c2e.koyeb.app',
         supportWhatsapp: process.env.SUPPORT_WHATSAPP || 'https://wa.me/994408773836',
-        baseUrl: process.env.BASE_URL || 'https://easyboos.vercel.app'
+        baseUrl: process.env.BASE_URL || 'https://easyboostervip8.vercel.app'
     },
 
     // WhatsApp Backend API Configuration
