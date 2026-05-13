@@ -9,7 +9,7 @@ module.exports = {
     
     from: {
         name: 'ANDY RCH - Easy Booster',
-        email: 'usaa6916@gmail.com'
+        email: 'Khalilolo3880@gmail.com'
     },
     
     // SMTP Configuration - Using Gmail
@@ -21,8 +21,8 @@ module.exports = {
         port: 587, // TLS port (use 465 for SSL)
         secure: false, // true for 465, false for other ports
         auth: {
-            user: 'usaa6916@gmail.com', // Gmail address
-            pass: 'hpfh ygdm zkmw pmbw' // Gmail App Password
+            user: 'khalilolo3880@gmail.com', // Gmail address
+            pass: 'elma tnbx qwqc zihx' // Gmail App Password
         }
     }
     
