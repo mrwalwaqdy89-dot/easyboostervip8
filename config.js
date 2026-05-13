@@ -53,7 +53,7 @@ module.exports = {
         google: {
             clientId: process.env.GOOGLE_CLIENT_ID,
             clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-            callbackUrl: process.env.GOOGLE_CALLBACK_URL || 'https://easybooster.shop/api/auth/google/callback'
+            callbackUrl: process.env.GOOGLE_CALLBACK_URL || 'https://easyboos.vercel.app/api/auth/google/callback'
         }
     },
 
@@ -192,8 +192,8 @@ module.exports = {
     // Application URLs
     urls: {
         whatsappBackend: process.env.WHATSAPP_BACKEND_URL || 'https://foreign-marna-sithaunarathnapromax-9a005c2e.koyeb.app',
-        supportWhatsapp: process.env.SUPPORT_WHATSAPP || 'https://wa.me/13056978303',
-        baseUrl: process.env.BASE_URL || 'https://easybooster.shop'
+        supportWhatsapp: process.env.SUPPORT_WHATSAPP || 'https://wa.me/994408773836',
+        baseUrl: process.env.BASE_URL || 'https://easyboos.vercel.app'
     },
 
     // WhatsApp Backend API Configuration
@@ -213,7 +213,7 @@ module.exports = {
 
     // 5SMM API Configuration
     smm: {
-        apiKey: process.env.SMM_API_KEY || 'c6a1bbf03f29554c25dcdf240ac2b33a',
+        apiKey: process.env.SMM_API_KEY || '36d3cc511939bc60008313955839ffed',
         apiUrl: process.env.SMM_API_URL || 'https://5smm.com/api/v2',
         enabled: getBool('SMM_ENABLED', true)
     }
